@@ -3,7 +3,8 @@
 **Đối tượng khảo sát:** Học viên khóa AI20k (Lớp 3B, Phòng E403/E402)  
 **Thời gian thực hiện:** 19:00 - 19:15 ngày 17/09/2026  
 **Tổng số mẫu hợp lệ:** 14 học viên (người thật ngoài nhóm, có mã học viên)  
-**Dữ liệu thô:** Lưu tại `validation/survey_responses.csv`
+**Link Google Sheet thu thập trực tiếp (Live Tracking):** [https://docs.google.com/spreadsheets/d/1Z6wkMffmJIfkfRHMmfdtY8WO4S7_ohOSa2YAxVl7PtY/edit?gid=494808561#gid=494808561](https://docs.google.com/spreadsheets/d/1Z6wkMffmJIfkfRHMmfdtY8WO4S7_ohOSa2YAxVl7PtY/edit?gid=494808561#gid=494808561)  
+**Dữ liệu export định kỳ:** Lưu tại `validation/survey_responses.csv`
 
 ---
 
