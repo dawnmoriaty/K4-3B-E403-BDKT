@@ -1,0 +1,31 @@
+# Environment & Secrets
+.env
+*.env
+.env.*
+secrets/
+
+# Data Safety (Strictly prevent pushing hackathon reference data or sensitive logs)
+data/
+*.csv
+*.jsonl
+*.parquet
+*.sqlite
+*.db
+vlearn-pack/
+discord-pack/
+
+# Dependencies & Build artifacts
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# OS & Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
