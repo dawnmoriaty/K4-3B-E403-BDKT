@@ -1,11 +1,11 @@
-# Canvas Dự Án (Nộp CP1)
+# Canvas Dự Án — Track A1 (Nộp CP1)
 
 | # | Dòng | Nội dung |
 |---|---|---|
-| 1 | **Track + đề** | |
-| 2 | **Job executor** (ai · đang ở đâu · làm gì) | |
-| 3 | **Pain một câu** (ai – đang làm gì – vướng đâu – hậu quả) | |
-| 4 | **1–2 bằng chứng đầu** (số + cách đếm + mã hội thoại/tin nhắn, hoặc khảo sát/phỏng vấn có số người) | |
-| 5 | **Lát cắt MỘT CÂU** (1 user · 1 việc · 1 quyết định AI · 1 kết quả) | |
-| 6 | **AI tự làm đến đâu + 1 dòng lý do · ≥3 willing users ngoài nhóm** | |
-| 7 | **Phân công có tên** | Phùng Đức Đăng (Product Lead, Canvas/Spec) · Trần Ngọc Khánh (Data & Evidence Lead) · Phùng Gia Bảo (AI & Eval Lead) · Nguyễn Hữu Thành (Tech & Prototype Lead) |
+| 1 | **Track + đề** | Track A · VLearn Tutor — Đề A1: Tối ưu AI Tutor bám sát tài liệu bài giảng & cơ chế xác thực nguồn 2 tầng (RAG nội bộ + Tool Search ngoài kèm nhãn Disclaimer & Human-in-the-loop). |
+| 2 | **Job executor** | Học viên khóa AI20k đang học/ôn tập bài trên VLearn, bôi đen hoặc hỏi về một khái niệm trong bài nhưng tài liệu slide/transcript hiện tại chưa đề cập hoặc giải thích chưa đủ sâu. |
+| 3 | **Pain một câu** | Học viên hỏi tutor về khái niệm bài giảng nhưng nhận về câu trả lời không trích dẫn hoặc bịa nguồn (28% không citation trong log), hoặc bị từ chối cụt ngủn; khi tự tra cứu ngoài thì không biết kiến thức đó có đúng chuẩn quy ước của khóa học hay không, tốn 10–15 phút hoang mang và có nguy cơ làm sai quiz. |
+| 4 | **1–2 bằng chứng đầu** | • **Mining data thật (`tutor_turns.csv`):** 28% phản hồi của tutor có trường trích dẫn rỗng (`has_citation = False`); tỷ lệ tutor hỏi lại để xác định mức độ hiểu bài chỉ chiếm 28/13.494 lượt (0.2%).<br>• **Khảo sát nhanh trong phòng E403:** 5/6 bạn học viên xác nhận từng nhận câu trả lời từ tutor mà không biết lấy từ đâu trong slide, phải tự mở Google tra lại nhưng vẫn sợ không khớp với barem chấm thi. |
+| 5 | **Lát cắt MỘT CÂU** | Học viên hỏi về một khái niệm bài giảng → AI quyết định kiểm tra RAG nội bộ (slide/transcript), nếu không có thì gọi Tool Search ngoài có dẫn chứng kèm nhãn cảnh báo "Chưa xác thực từ giảng viên" và lưu vào hàng đợi duyệt → Trả về câu trả lời có nguồn trích dẫn rõ ràng và phân định rạch ròi mức độ tin cậy. |
+| 6 | **AI tự làm đến đâu + Lý do + Willing users** | • **Augment (Có điều kiện):** AI tự truy xuất tài liệu nội bộ; nếu thiếu thì tự gọi web search tìm dẫn chứng và tự động gắn cảnh báo "Chưa xác thực". Không tự ý đưa kiến thức ngoài vào giáo trình chính thức khi Giảng viên (Human) chưa bấm duyệt.<br>• **Lý do (cost-of-error):** Trả lời sai quy ước kiến thức của khóa làm học viên mất điểm thi và mất niềm tin vào hệ thống; việc gắn nhãn cảnh báo giúp người học luôn có tâm thế kiểm chứng.<br>• **Willing users (≥3 người ngoài nhóm):** Nguyễn Văn A (Nhóm 1 - E403), Trần Thị B (Nhóm 2 - E403), Lê Văn C (Nhóm 3 - E402). *(Nhóm thay tên thật của 3 bạn bàn bên)*. |
+| 7 | **Phân công có tên** | • **Phùng Đức Đăng (2A202602956):** Đội trưởng / Product Lead — Chốt Canvas, quản lý AI Spec, nộp form CP1–CP5.<br>• **Trần Ngọc Khánh (2A202602923):** Data & Evidence Lead — Khai thác dữ liệu log `tutor_turns.csv`, lập bảng đếm bằng chứng, khảo sát Mom Test.<br>• **Phùng Gia Bảo (2A202602386):** AI & Evaluation Lead — Thiết kế prompt RAG + Tool Search, xây dựng golden set 20 case kiểm thử 4 lớp rủi ro.<br>• **Nguyễn Hữu Thành (2A202602807):** Tech & Prototype Lead — Xây dựng UI/flow 4 đường trải nghiệm, tích hợp gọi AI thật và luồng duyệt của giảng viên. |
