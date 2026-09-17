@@ -33,7 +33,9 @@ Dưới đây là ảnh chụp màn hình giao diện thực tế của hệ th�
 
 ## 🧭 2. Sơ Đồ Luồng Xử Lý 4 Tác Nhân (Archify Workflow Diagram)
 
-Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn (RAG nội bộ $ightarrow$ Tra cứu ngoài có Disclaimer $ightarrow$ Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Actors)**:
+Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn (RAG nội bộ $
+ightarrow$ Tra cứu ngoài có Disclaimer $
+ightarrow$ Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Actors)**:
 
 ![Sơ đồ luồng xử lý 4 Tác nhân Archify](./codebase/vlearn-workflow.png)
 
@@ -53,44 +55,54 @@ Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn
 ```mermaid
 flowchart TD
     subgraph S1["1. HỌC VIÊN (VLearn Reader)"]
-        A[Đang học bài giảng trên VLearn<br><i>Ví dụ: Slide Day 1 - Trang 65</i>] --> B{Gặp thuật ngữ bài học chưa hiểu rõ}
+        A[Đang học bài giảng trên VLearn<br><i>Ví dụ: Đang mở Slide Day 1 hoặc Day 3</i>] --> B{Gặp thuật ngữ / khái niệm bài học chưa hiểu sâu}
         B -->|Thao tác 1| B1[Bấm nút '+ Đặt câu hỏi với AI'<br>trên thanh Topbar]
         B -->|Thao tác 2| B2[Bôi đen trực tiếp từ khóa khó<br>ngay trên trang slide]
-        B1 --> C[Mở AI Tutor Right Drawer bên phải<br>Hệ thống tự động neo ngữ cảnh trang slide đang xem]
+        B1 --> C[Mở AI Tutor Right Drawer bên phải<br>Tự động neo ngữ cảnh bài học & trang slide hiện tại]
         B2 --> C
     end
 
-    subgraph S2["2. AI TUTOR ENGINE (Bộ Điều Phối RAG & Router)"]
+    subgraph S2["2. AI TUTOR ENGINE (Bộ Điều Phối RAG Phân Cấp & Router)"]
         C --> D[Kiểm tra Ý định & Guardrail An Toàn]
-        D -->|Học viên đòi code giải hộ bài Lab / Gian lận| D_Reject[Từ chối giải bài hộ<br>Đưa ra gợi ý phương pháp debug sư phạm<br><i>Nguyên tắc HAX G10</i>]
-        D -->|Hỏi về khái niệm bài giảng| E[RAG nội bộ: Tra cứu Vector DB<br>Bộ Slide & Transcript bài học Day 1]
+        D -->|Hỏi giải hộ bài Lab / Gian lận| D_Reject[Từ chối giải bài hộ<br>Đưa ra gợi ý phương pháp debug sư phạm<br><i>HAX G10</i>]
         
-        E --> F{Bộ Định Tuyến CRAG<br>Phân loại 3 Dải Tự Tin}
+        D -->|Hỏi khái niệm bài học| E1[Vòng 1 - RAG Cục bộ:<br>Tra cứu Vector DB của Bài học hiện tại]
         
-        %% Nhánh 1: Happy Path
-        F -->|Điểm >= alpha: Có căn cứ trong bài| G[Sinh câu trả lời chuẩn xác bám sát giáo trình<br>Gắn Badge Xanh: <b>TRONG BÀI GIẢNG · SLIDE TRANG 65</b><br>Nút: <i>Highlight đoạn trên slide</i>]
+        E1 --> F1{Điểm tự tin Vòng 1<br>có đạt chuẩn?}
         
-        %% Nhánh 2: Mơ hồ (HAX G10)
-        F -->|beta <= Điểm < alpha: Mơ hồ vùng xám| H[Kích hoạt <b>HAX G10 Clarification</b><br>Không đoán bừa, hỏi lại 1 câu thu hẹp phạm vi<br>Hiển thị 2 Chips lựa chọn nhanh]
+        %% Nhánh 1a: Trúng bài hiện tại
+        F1 -->|>= alpha_local: Trúng bài hiện tại| G1[Sinh câu trả lời bám sát giáo trình<br>Gắn Badge Xanh: <b>TRONG BÀI GIẢNG · SLIDE HIỆN TẠI</b><br>Nút: <i>Highlight đoạn trên slide</i>]
+        
+        %% Mở rộng Cross-Lecture sang Vòng 2
+        F1 -->|< alpha_local: Chưa thấy trong bài này| E2[Vòng 2 - Mở rộng toàn khóa học:<br>Truy vấn Global Course Corpus (Day 01 - Day 15)<br><i>Tránh False Alarm ra ngoài mạng!</i>]
+        
+        E2 --> F2{Phân loại tự tin CRAG<br>trên Toàn Khóa Học}
+        
+        %% Nhánh 1b: Trúng bài khác trong khóa
+        F2 -->|>= alpha_global: Trúng bài học khác trong khóa| G2[Sinh câu trả lời định hướng liên bài<br>Gắn Badge Xanh Lam: <b>THUỘC GIÁO TRÌNH · BÀI DAY 01 (TRANG 12)</b><br>Nút: <i>[👉 Chuyển đến Slide Day 1 Trang 12]</i>]
+        
+        %% Nhánh 2: Mơ hồ
+        F2 -->|beta <= Điểm < alpha: Mơ hồ vùng xám| H[Kích hoạt <b>HAX G10 Clarification</b><br>Không đoán bừa, hỏi lại 1 câu thu hẹp phạm vi<br>Hiển thị 2 Chips lựa chọn nhanh]
     end
 
-    H -.->|Học viên bấm chọn Chip phạm vi| E
+    H -.->|Học viên bấm chọn Chip phạm vi| E1
 
     subgraph S3["3. AGENT TRA CỨU (External Tool Calling)"]
-        %% Nhánh 3: Ngoài giáo trình
-        F -->|Điểm < beta: Bài giảng chưa dạy khái niệm này| I[Kích hoạt Tool Calling tra cứu Web ngoài<br>Chỉ tìm kiếm trên Whitelist: arXiv / Docs chuẩn]
-        I --> J[Sinh câu trả lời kèm link dẫn chứng gốc<br>Gắn Badge Vàng Nổi Bật: <b>THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN DUYỆT</b><br>Cảnh báo nguy cơ lệch quy ước làm quiz]
+        %% Nhánh 3: Ngoài toàn bộ khóa học
+        F2 -->|< beta: Toàn bộ 15 buổi đều chưa dạy| I[Kích hoạt Tool Calling tra cứu Web ngoài<br>Chỉ tìm kiếm trên Whitelist: arXiv / Docs chuẩn]
+        I --> J[Sinh câu trả lời kèm link tài liệu gốc<br>Gắn Badge Vàng Nổi Bật: <b>THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN DUYỆT</b><br>Cảnh báo nguy cơ lệch barem làm quiz]
         J --> K[Tự động đẩy vào Hàng Đợi Duyệt - Review Queue]
     end
 
     subgraph S4["4. GIẢNG VIÊN / TRỢ GIẢNG (Human-in-the-Loop)"]
         K --> L[Dashboard Hàng Đợi Duyệt của Giảng viên / TA]
         L --> M{Giảng viên / TA thẩm định nội dung}
-        M -->|Nội dung sai / Không phù hợp| M_Drop[Bác bỏ / Gắn cờ cảnh báo không nạp]
+        M -->|Nội dung sai / Lệch chuẩn| M_Drop[Bác bỏ / Gắn cờ cảnh báo không nạp]
         M -->|Nội dung chuẩn xác| N[Bấm: <b>Duyệt & Nạp vào Vector DB</b><br>Badge câu trả lời đổi thành: <b>ĐÃ ĐƯỢC GIẢNG VIÊN XÁC THỰC</b><br>Data Flywheel: Toàn bộ lớp được học bằng nguồn chuẩn]
     end
 
-    G --> EndUser([Học viên hiểu bài chuẩn xác & tự tin làm đúng Quiz])
+    G1 --> EndUser([Học viên hiểu bài chuẩn xác & tự tin làm đúng Quiz])
+    G2 --> EndUser
     J --> EndUser
     N --> EndUser
 ```
@@ -101,7 +113,8 @@ flowchart TD
 
 | Đường đi | Tình huống học viên hỏi trên Slide 65 | Phản hồi của AI Tutor trong Right Drawer | Vị trí kiểm chứng trên Prototype |
 |---|---|---|---|
-| **1. Happy Path** *(AI tự tin cao)* | Học viên hỏi: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"* | RAG nội bộ trích đúng Slide 65, giải thích Tầng 2 ("Rẻ mà mạnh") là tầng mặc định thử trước cho việc hàng ngày. Gắn Badge Xanh `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight ô Tầng 2 trên slide. | Tab 1: **"1. Trong bài"** |
+| **1a. Happy Path (Bài hiện tại)** | Học viên hỏi: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"* | RAG nội bộ trích đúng Slide 65, giải thích Tầng 2 ("Rẻ mà mạnh") là tầng mặc định thử trước cho việc hàng ngày. Gắn Badge Xanh `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight ô Tầng 2 trên slide. | Tab 1: **"1. Trong bài"** |
+| **1b. Cross-Lecture Path (Bài khác trong khóa)** | Học viên đang ở Day 3 hỏi: *"Khái niệm này có liên quan gì đến Next-Token Prediction ở Day 1 không?"* | RAG mở rộng toàn khóa học (Global Course Corpus), tìm thấy định nghĩa ở Day 1. Trả lời cô đọng và gắn Badge Xanh Lam: `📘 THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)` kèm nút bấm `[🔗 Nhảy tới Slide Day 01]`, không nhảy ra ngoài web search. | Tab 5: **"5. Bài khác (Cross-Day)"** |
 | **2. Low-Confidence** *(Lớp chỗ khó ②)* | Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"* | AI áp dụng **HAX G10**, không đoán bừa. Phản hồi: *"DeepSeek xuất hiện ở cả mục Self-host bảo mật và thảo luận API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide trang 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips bấm nhanh. | Tab 2: **"2. Mơ hồ (G10)"** |
 | **3. Failure / No-Grounding** *(Lớp chỗ khó ①)* | Học viên hỏi khái niệm nâng cao chưa dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài không?"* | RAG phát hiện Slide Day 1 không có định nghĩa MLA (< $eta$). AI gọi tool search trên arXiv, trả lời kèm **Badge Vàng Cảnh Báo**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC` và lưu ý lệch barem quiz. Tự động chuyển vào Review Queue. | Tab 3: **"3. Ngoài bài"** |
 | **4. Correction** *(Human-in-the-loop)* | Giảng viên/TA mở modal Review Queue để thẩm định câu trả lời về MLA. | Giảng viên bấm `[✅ Duyệt & Nạp vào Vector DB]`. Tri thức mới được nạp vào Vector DB bài học. Badge trong phiên chat của học viên tự động chuyển sang `🌟 ĐÃ XÁC THỰC BỞI GIẢNG VIÊN`. | Tab 4: **"4. TA Duyệt"** / Nút chuyển chế độ Giảng viên |

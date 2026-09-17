@@ -49,6 +49,17 @@
           "ingest_vectordb"
         ],
         "note": "Giảng viên/TA phê duyệt kiến thức ngoài, tự động nạp vào Vector DB làm giàu kho tri thức."
+      },
+      {
+        "id": "cross-path",
+        "label": "5. Bài khác trong khóa (Cross-Lecture)",
+        "focus": [
+          "student_ask",
+          "rag_guard",
+          "triband_eval",
+          "internal_ans"
+        ],
+        "note": "RAG mở rộng ra toàn bộ 15 buổi của khóa học (Global Course Corpus), tránh báo động giả ra ngoài mạng."
       }
     ],
     "output": "codebase/vlearn-workflow.html"
@@ -139,8 +150,8 @@
       "lane": "student",
       "col": 0,
       "type": "frontend",
-      "label": "Chọn Slide 65",
-      "sublabel": "Bôi đen hoặc bấm nút AI",
+      "label": "Đọc Slide bài học",
+      "sublabel": "Bôi đen từ khóa khó",
       "width": 140
     },
     {
@@ -158,8 +169,8 @@
       "col": 1,
       "type": "backend",
       "label": "Kiểm Soát & RAG",
-      "sublabel": "Đối chiếu Slide Day 1",
-      "tag": "Chống gian lận",
+      "sublabel": "Cục bộ & Toàn khóa",
+      "tag": "Day 1 - Day 15",
       "width": 140
     },
     {
@@ -326,9 +337,10 @@
       "dot": "cyan",
       "title": "Định tuyến 3 dải tự tin (CRAG)",
       "items": [
-        "≥ α: Trích xuất trực tiếp Slide 65 kèm số trang xác thực",
+        "≥ α (Cục bộ): Trích xuất trực tiếp Slide hiện tại",
+        "≥ α (Toàn khóa): RAG mở rộng 15 buổi học, điều hướng sang bài tương ứng",
         "[β, α): Kích hoạt HAX G10 hỏi lại 1 câu làm rõ ý định",
-        "< β: Tra cứu ngoài có kiểm soát theo Whitelist học thuật"
+        "< β: Tra cứu ngoài có kiểm soát khi cả 15 buổi đều chưa dạy"
       ]
     },
     {

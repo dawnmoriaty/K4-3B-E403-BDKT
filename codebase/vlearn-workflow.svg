@@ -72,8 +72,8 @@
         <path data-edge-from="ta_review" data-edge-to="ingest_vectordb" data-edge-label="phê duyệt" data-edge-key="10" data-edge-id="e_ta_ingest" data-composition-points="1019.6,485;1019.6,279" d="M 1019.6 485 L 1019.6 279" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
 
         <!-- Nodes -->
-        <g id="node-student_ask" data-node-id="student_ask" data-node-label="Chọn Slide 65" tabindex="0" role="button" aria-label="Focus Chọn Slide 65, Bôi đen hoặc bấm nút AI, Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Bôi đen hoặc bấm nút AI" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi">
-          <title>Chọn Slide 65 · Bôi đen hoặc bấm nút AI · Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi</title>
+        <g id="node-student_ask" data-node-id="student_ask" data-node-label="Đọc Slide bài học" tabindex="0" role="button" aria-label="Focus Đọc Slide bài học, Bôi đen từ khóa khó, Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Bôi đen từ khóa khó" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi">
+          <title>Đọc Slide bài học · Bôi đen từ khóa khó · Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi</title>
           <rect x="48" y="94" width="140" height="52" rx="6" class="c-mask"/>
           <rect x="48" y="94" width="140" height="52" rx="6" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(54 100) scale(0.6875)">
@@ -82,8 +82,8 @@
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="118" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Chọn Slide 65</text>
-          <text data-detail="context" x="118" y="132" class="t-muted" font-size="8" text-anchor="middle">Bôi đen hoặc bấm nút AI</text>
+          <text data-node-label="" data-detail-anchor="" x="118" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Đọc Slide bài học</text>
+          <text data-detail="context" x="118" y="132" class="t-muted" font-size="8" text-anchor="middle">Bôi đen từ khóa khó</text>
         </g>
 
         <g id="node-student_clarify" data-node-id="student_clarify" data-node-label="Chọn phạm vi" tabindex="0" role="button" aria-label="Focus Chọn phạm vi, Phản hồi câu hỏi G10, Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Phản hồi câu hỏi G10" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 2. Định tuyến CRAG 3 dải">
@@ -100,16 +100,16 @@
           <text data-detail="context" x="683.6" y="132" class="t-muted" font-size="8" text-anchor="middle">Phản hồi câu hỏi G10</text>
         </g>
 
-        <g id="node-rag_guard" data-node-id="rag_guard" data-node-label="Kiểm Soát &amp; RAG" tabindex="0" role="button" aria-label="Focus Kiểm Soát &amp; RAG, Đối chiếu Slide Day 1, AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Đối chiếu Slide Day 1" data-node-tag="Chống gian lận" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi">
-          <title>Kiểm Soát &amp; RAG · Đối chiếu Slide Day 1 · AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi · Chống gian lận</title>
+        <g id="node-rag_guard" data-node-id="rag_guard" data-node-label="Kiểm Soát &amp; RAG" tabindex="0" role="button" aria-label="Focus Kiểm Soát &amp; RAG, Cục bộ &amp; Toàn khóa, AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Cục bộ &amp; Toàn khóa" data-node-tag="Day 1 - Day 15" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi">
+          <title>Kiểm Soát &amp; RAG · Cục bộ &amp; Toàn khóa · AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi · Day 1 - Day 15</title>
           <rect x="168" y="219" width="140" height="68" rx="6" class="c-mask"/>
           <rect x="168" y="219" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(174 225) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="238" y="240" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Kiểm Soát &amp; RAG</text>
-          <text data-detail="context" x="238" y="257" class="t-muted" font-size="8" text-anchor="middle">Đối chiếu Slide Day 1</text>
-        <text data-detail="fine" x="238" y="275" class="t-backend" font-size="7" text-anchor="middle">Chống gian lận</text>
+          <text data-detail="context" x="238" y="257" class="t-muted" font-size="8" text-anchor="middle">Cục bộ &amp; Toàn khóa</text>
+        <text data-detail="fine" x="238" y="275" class="t-backend" font-size="7" text-anchor="middle">Day 1 - Day 15</text>
         </g>
 
         <g id="node-triband_eval" data-node-id="triband_eval" data-node-label="Định Tuyến CRAG" tabindex="0" role="button" aria-label="Focus Định Tuyến CRAG, Phân 3 dải tự tin, AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Phân 3 dải tự tin" data-node-tag="Ngưỡng α &amp; β" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 2. Định tuyến CRAG 3 dải">

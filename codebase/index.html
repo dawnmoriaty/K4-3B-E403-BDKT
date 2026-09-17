@@ -311,18 +311,21 @@
       <!-- Scenario Selector Tabs (Dành cho Trợ giảng / BGK Test 4 Đường đi Trải nghiệm) -->
       <div class="bg-slate-100 p-1.5 border-b border-slate-200">
         <div class="text-[10px] font-bold text-slate-500 mb-1 px-1">CHỌN KỊCH BẢN KIỂM CHỨNG (4 ĐƯỜNG ĐI TRẢI NGHIỆM):</div>
-        <div class="grid grid-cols-4 gap-1 text-[10px]">
-          <button class="scenario-tab-btn active bg-white text-blue-700 font-bold p-1 rounded border border-slate-300 shadow-2xs truncate" data-scenario="happy">
+        <div class="grid grid-cols-5 gap-1 text-[10px]">
+          <button class="scenario-tab-btn active bg-white text-blue-700 font-bold p-1 rounded border border-slate-300 shadow-2xs truncate" data-scenario="happy" title="1. Trong bài hiện tại">
             1. Trong bài
           </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="clarify">
-            2. Mơ hồ (G10)
+          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="cross" title="5. Bài khác trong khóa (Cross-Lecture)">
+            2. Bài khác
           </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="external">
-            3. Ngoài bài
+          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="clarify" title="2. Mơ hồ vùng xám (HAX G10)">
+            3. Mơ hồ
           </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="correction">
-            4. TA Duyệt
+          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="external" title="3. Ngoài toàn bộ giáo trình">
+            4. Ngoài bài
+          </button>
+          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="correction" title="4. Giảng viên phê duyệt">
+            5. TA Duyệt
           </button>
         </div>
       </div>
@@ -460,6 +463,29 @@
             <div class="mt-2 p-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-between text-[11px]">
               <span class="text-slate-600"><i class="fa-regular fa-file-powerpoint text-amber-500 mr-1"></i>Trích xuất: <code>day01-slide-v2-blue.pdf#page=65</code></span>
               <button class="text-blue-600 font-bold hover:underline" onclick="highlightSlideZone()">Highlight slide</button>
+            </div>
+          </div>
+        `
+      },
+      cross: {
+        studentMsg: "Khái niệm này có liên hệ gì với Next-Token Prediction ở Day 1 không?",
+        aiResponse: `
+          <div class="space-y-2">
+            <div class="inline-flex items-center space-x-1 bg-indigo-100 text-indigo-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-300">
+              <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
+              <span>THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)</span>
+            </div>
+            <p class="text-slate-700 leading-relaxed">
+              Khái niệm <b>Next-token prediction</b> đã được giảng dạy chi tiết tại <b>Bài 1 (Day 01 - Slide trang 12)</b>:
+            </p>
+            <div class="p-2.5 bg-indigo-50/50 border border-indigo-200 rounded text-[11px] text-slate-700 space-y-1">
+              <p>Mô hình ngôn ngữ hoạt động theo cơ chế tối đa hóa hàm hợp lý của từ tiếp theo dựa trên ngữ cảnh quá khứ. Đây chính là nguyên nhân các mô hình Tầng 2 & Tầng 1 có sự khác biệt về năng lực suy luận nhiều bước.</p>
+            </div>
+            <div class="flex items-center justify-between pt-1 text-[11px]">
+              <span class="text-slate-500"><i class="fa-solid fa-compass text-indigo-500 mr-1"></i>Định vị: <code>day01-llm-foundation-1.pdf#page=12</code></span>
+              <button class="text-indigo-600 font-bold hover:underline flex items-center space-x-1" onclick="alert('Đang chuyển trang về Slide Day 01 Trang 12!')">
+                <span>👉 Mở Slide Day 1</span>
+              </button>
             </div>
           </div>
         `

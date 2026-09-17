@@ -60,7 +60,7 @@
 ---
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Học viên đang xem Slide 65 trên VLearn Reader bấm hỏi về một khái niệm → AI Tutor quyết định đối chiếu RAG nội bộ (slide/transcript Day 1), nếu mơ hồ thì kích hoạt HAX G10 hỏi lại, nếu thiếu căn cứ thì gọi Tool Search ngoài kèm Badge Vàng Disclaimer và đẩy vào Review Queue → Giảng viên/TA phê duyệt nạp ngược vào Vector DB nội bộ để làm giàu kho tri thức (Data Flywheel).
+- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn Reader bấm hỏi/bôi đen một khái niệm bài học → AI Tutor quyết định đối chiếu RAG phân cấp (ưu tiên bài hiện tại → mở rộng toàn bộ 15 buổi khóa học → nếu không có mới gọi Tool Search ngoài có Disclaimer kèm đẩy vào Review Queue) → Trả về câu trả lời có nguồn trích dẫn số trang chính xác hoặc điều hướng sang bài học tương ứng, giúp học viên không bị lệch quy ước barem chấm thi.
 - **Non-goals (≥3 thứ KHÔNG build):**
   1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat linh tinh).
   2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận).
@@ -83,18 +83,19 @@
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
 *(Chi tiết được mở rộng tại CP4)*:
-1. *Nguồn sự thật:* RAG không thấy nguồn → Kích hoạt tool search ngoài, không hallucinate trang slide.
-2. *Mơ hồ / thiếu thông tin:* Học viên hỏi cụt ("nó là gì?") → Hỏi lại 1 câu để xác định khái niệm cần giải thích.
-3. *Ngoài phạm vi / thẩm quyền:* Học viên đòi code giải bài Lab 5 → Từ chối sư phạm, chỉ đưa Socratic hint.
-4. *Đặc thù domain:* Tài liệu trên mạng dùng thư viện phiên bản mới khác với slide → Gắn cảnh báo lệch phiên bản.
+1. *Nguồn sự thật:* RAG bài hiện tại không thấy nguồn → Tự động mở rộng tìm kiếm trên toàn bộ 15 buổi của khóa học; nếu toàn khóa không có mới kích hoạt Web Search ngoài (không hallucinate trang slide và không báo động giả ra ngoài web khi bài khác đã dạy).
+2. *Tham chiếu chéo buổi học (Cross-Lecture Scope Misrouting):* Học viên đang ở Day 3 hỏi lại khái niệm nền tảng ở Day 1 (hoặc đang ở Day 1 hỏi ứng dụng nâng cao ở Day 5). Nếu chỉ RAG bài hiện tại sẽ kết luận nhầm là "ngoài giáo trình" (False Negative) → Hệ thống tự động truy xuất Global Course Corpus và trích dẫn số trang của buổi học tương ứng kèm liên kết điều hướng.
+3. *Mơ hồ / thiếu thông tin:* Học viên hỏi cụt ("nó là gì?", "dùng được không?") → Kích hoạt HAX G10 hỏi lại 1 câu kèm lựa chọn nhanh (Chips) để xác định đúng phạm vi trước khi trả lời.
+4. *Ngoài phạm vi / thẩm quyền:* Học viên đòi code giải hoàn chỉnh bài Lab 5 / Quiz → Từ chối sư phạm, chỉ đưa gợi ý phương pháp debug Socratic.
+5. *Đặc thù domain:* Tài liệu trên mạng dùng phiên bản thư viện mới khác với quy ước slide → Gắn cảnh báo lệch phiên bản để học viên không mất điểm bài thi.
 
 ---
 
 ## §6. Bốn đường đi của trải nghiệm (Khối Rubric R3)
 1. **Đường thuận lợi khi AI tự tin cao (Happy Path - Confidence >= alpha):**
-   - *Tình huống:* Học viên hỏi khái niệm có sẵn trên Slide trang 65: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"*.
-   - *Hành vi hệ thống:* RAG nội bộ trích xuất trực tiếp đoạn Tầng 2 (Rẻ mà mạnh), trả lời cô đọng và gắn Badge Xanh: `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight vùng tương ứng trên slide.
-   - *Nguyên tắc:* HAX G11 & HAX G2.
+   - *1a. Trúng bài học hiện tại (Local Match):* Học viên hỏi khái niệm có sẵn trên Slide trang 65 ("Khi nào nên chọn Tầng 2 thay vì Tầng 1?"). RAG nội bộ trích xuất trực tiếp đoạn Tầng 2, trả lời cô đọng và gắn Badge Xanh: `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight vùng trên slide.
+   - *1b. Trúng bài học khác trong khóa (Cross-Lecture Match):* Học viên đang ở Day 3 hỏi lại kiến thức Day 1 ("Khái niệm này liên hệ gì với Next-Token Prediction ở Day 1?"). RAG mở rộng toàn khóa học tìm thấy ở Day 1, trả lời cô đọng và gắn Badge Xanh Lam: `📘 THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)` kèm nút bấm `[🔗 Chuyển đến Slide Day 01]`, không nhảy ra ngoài web search.
+   - *Nguyên tắc:* HAX G11, HAX G2 & PAIR Continuity.
 
 2. **Đường xử lý khi AI thiếu tự tin (Low-Confidence / Ambiguity - Lớp chỗ khó ②):**
    - *Tình huống:* Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"*.
