@@ -1,0 +1,47 @@
+[
+  {
+    "source_id": "T04-015",
+    "title": "AI, machine learning va deep learning",
+    "text": "AI la khai niem rong nhat. Machine learning la tap con hoc quy luat tu du lieu; deep learning dung mang neuron nhieu tang de tu hoc dac trung; generative AI nam trong buc tranh cong nghe nay."
+  },
+  {
+    "source_id": "T04-030",
+    "title": "Cach deep learning hoc dac trung",
+    "text": "Deep learning dung mang neuron nhieu tang. Du lieu di qua nhieu lop va mo hinh tu nhan dien quy luat, dac trung thay vi de con nguoi viet tung luat bang tay."
+  },
+  {
+    "source_id": "T04-040",
+    "title": "Transformer va attention",
+    "text": "Transformer xu ly ca cum thay vi lan luot tung tu, tim moi lien he giua cac tu va tap trung vao nhung thanh phan quan trong trong ngu canh."
+  },
+  {
+    "source_id": "T06-051",
+    "title": "Discriminative AI",
+    "text": "Discriminative AI dung de phan loai hoac du doan, vi du gan nhan spam, nhan dien cho meo, hoac phat hien giao dich gia mao."
+  },
+  {
+    "source_id": "T06-075",
+    "title": "Dinh nghia LLM",
+    "text": "LLM la mo hinh ngon ngu lon dua tren kien truc Transformer, duoc huan luyen tren luong du lieu rat lon va co the sinh van ban, tra loi cau hoi, viet code hoac lap luan nhieu buoc."
+  },
+  {
+    "source_id": "T06-080",
+    "title": "Bon dac diem cua LLM",
+    "text": "Bon dac diem duoc neu trong bai gom decoder-only Transformer, pretraining va reinforcement learning de fine-tune, du doan tu tiep theo, va gioi han kha nang hieu cua mo hinh."
+  },
+  {
+    "source_id": "T06-083",
+    "title": "Next-token prediction",
+    "text": "Ban chat cua LLM la du doan theo xac suat tu tiep theo; du doan tu tiep theo cang chinh xac thi ket qua cang chinh xac."
+  },
+  {
+    "source_id": "T06-158",
+    "title": "Tong ket Transformer",
+    "text": "Transformer cho phep cac token nhin cac token con lai song song, xu ly nhanh hon cach tiep can tuan tu cua RNN va ho tro ngu canh dai."
+  },
+  {
+    "source_id": "SLIDE-65",
+    "title": "Chon model theo tang",
+    "text": "Tang 2 re ma manh la lua chon mac dinh cho da so viec hang ngay. Chi nang len Tang 1 khi bai toan that su kho va ket qua Tang 2 chan use case. Tang 3 phu hop khi can self-host, kiem soat du lieu hoac chi phi o quy mo lon."
+  }
+]

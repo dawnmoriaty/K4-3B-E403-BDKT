@@ -344,7 +344,7 @@
           </button>
         </form>
         <div class="flex items-center justify-between mt-1.5 text-[10px] text-slate-400">
-          <span>Khái niệm ngoài giáo trình sẽ gắn nhãn cảnh báo vàng</span>
+          <span id="live-ai-status">AI thật: đang kiểm tra kết nối...</span>
           <a href="vlearn-workflow.html" target="_blank" class="text-blue-600 hover:underline flex items-center space-x-1">
             <i class="fa-solid fa-diagram-project"></i>
             <span>Xem Archify Flow</span>
@@ -675,6 +675,78 @@
     function highlightSlideZone() {
       alert("Đã highlight vùng Tầng 2 trên Slide trang 65!");
     }
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value;
+      return div.innerHTML;
+    }
+
+    function routeBadge(route) {
+      const badges = {
+        ANSWER_GROUNDED: ["bg-emerald-100 text-emerald-800 border-emerald-300", "CÓ CĂN CỨ TRONG TÀI LIỆU"],
+        ASK_CLARIFY: ["bg-blue-100 text-blue-800 border-blue-300", "CẦN LÀM RÕ · HAX G10"],
+        ABSTAIN_ROUTE: ["bg-amber-100 text-amber-900 border-amber-300", "CHƯA ĐỦ CĂN CỨ · CHUYỂN TA"],
+      };
+      return badges[route] || badges.ABSTAIN_ROUTE;
+    }
+
+    function renderLiveResult(question, result) {
+      const [badgeClass, badgeText] = routeBadge(result.route);
+      const citations = (result.source_ids || []).map(sourceId =>
+        `<span class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono">${escapeHtml(sourceId)}</span>`
+      ).join(" ");
+      chatThread.innerHTML = `
+        <div class="flex items-start justify-end space-x-2">
+          <div class="bg-blue-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed shadow-sm">${escapeHtml(question)}</div>
+          <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">P</div>
+        </div>
+        <div class="flex items-start space-x-2">
+          <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 mt-1"><i class="fa-solid fa-robot"></i></div>
+          <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[90%] shadow-xs space-y-2">
+            <div class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeClass}">${badgeText}</div>
+            <p class="text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(result.answer)}</p>
+            ${citations ? `<div class="text-[10px] text-slate-600"><b>Nguồn:</b> ${citations}</div>` : ""}
+            <div class="text-[10px] text-slate-400">Model: ${escapeHtml(result.model || "unknown")} · ${Number(result.latency_ms || 0)} ms · prompt v1</div>
+          </div>
+        </div>`;
+    }
+
+    chatForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const question = chatInput.value.trim();
+      if (!question) return;
+      chatInput.value = "";
+      chatThread.innerHTML = `
+        <div class="flex items-start justify-end space-x-2">
+          <div class="bg-blue-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed shadow-sm">${escapeHtml(question)}</div>
+          <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">P</div>
+        </div>
+        <div class="text-slate-500 text-[11px] p-2"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Đang đối chiếu nguồn và gọi model thật...</div>`;
+      try {
+        const response = await fetch("/api/ask", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({question}),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Không gọi được model");
+        renderLiveResult(question, result);
+      } catch (error) {
+        chatThread.innerHTML += `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-700 text-[11px]"><b>Lỗi gọi AI:</b> ${escapeHtml(error.message)}</div>`;
+      }
+    });
+
+    fetch("/api/health")
+      .then(response => response.json())
+      .then(status => {
+        const element = document.getElementById("live-ai-status");
+        element.textContent = status.ok ? `AI thật sẵn sàng · ${status.model}` : "AI thật chưa được cấu hình";
+        element.className = status.ok ? "text-emerald-600 font-semibold" : "text-amber-600 font-semibold";
+      })
+      .catch(() => {
+        document.getElementById("live-ai-status").textContent = "Hãy chạy bằng python codebase/server.py";
+      });
 
     // Init with happy path
     renderThread("happy");

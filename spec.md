@@ -65,9 +65,10 @@
   1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat linh tinh).
   2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận).
   3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên/TA bấm duyệt.
-- **Mức prototype nhắm tới:** [x] Mock (CP2)  [ ] Working (CP3)
+- **Mức prototype hiện tại:** [ ] Mock (CP2)  [x] Working (CP3)
   - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng pixel-perfect (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 4 kịch bản kiểm chứng, modal Review Queue của Giảng viên.
-  - *Phần chạy thật (Working - CP3):* Gọi mô hình AI thật (Gemini 2.5 Flash / Claude Sonnet qua 9router) thực hiện phân loại ý định (Tri-Band Confidence Router), trích xuất RAG từ file slide thật (`data/vlearn-pack/day01-llm-foundation-1.pdf`), và tool calling DuckDuckGo/Tavily search.
+  - *Phần chạy thật (Working - CP3):* Backend `codebase/server.py` truy xuất các đoạn giáo trình tối thiểu trong `course_context.json`, gọi model OpenAI-compatible để quyết định `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE`, rồi kiểm tra cứng citation theo allow-list. Prompt, phản hồi thô, route và latency được ghi vào `eval/*_traces.jsonl`.
+  - *Chưa chạy thật:* Web search, Teacher Review Queue và thao tác nạp Vector DB vẫn là mock; prototype CP3 không tuyên bố các phần này đã được tích hợp.
 - **Automation:** [ ] augment  [x] conditional  [ ] automate  
   - *Lý do theo chi phí sai sót (Cost-of-Error):* 
     - Khi câu hỏi có căn cứ chắc chắn trong bài giảng (>= alpha): Cost-of-error rất thấp vì học viên có thể kiểm chứng ngay tại Slide 65 (sai thì sửa rẻ) -> AI tự động trả lời kèm trích dẫn số trang (Automate).
@@ -113,8 +114,12 @@
    - *Nguyên tắc:* PAIR Feedback & Control & HAX G9.
 
 ## §7. Kiểm thử
-- Golden set: Dự kiến ≥20 case kiểm thử trong `eval/` phủ đủ 4 lớp lỗi.
-- Quality bar: Cam kết tại CP4 (≥85% câu trả lời có trích dẫn chuẩn xác, 0% bịa nguồn nội bộ).
+- **Golden set:** `eval/golden_set.csv` có 20 case K4 phát triển từ chatlog thật: 5 case/lớp cho đủ 4 lớp chỗ khó; 10 common, 8 edge và 2 rare. Mỗi case giữ `source_turn_id`, route mong đợi, nguồn được phép và hành vi cấm.
+- **Chiều chất lượng kiểm chứng được:** (1) route đúng; (2) mọi citation thuộc allow-list của case; (3) case mơ hồ phải hỏi lại một câu; (4) case thiếu căn cứ không được trả citation hoặc biến suy đoán thành kiến thức khóa học.
+- **Quality bar chốt cho CP3/CP4:** đạt khi **≥85% case qua toàn bộ kiểm tra**, đồng thời có **0 citation nội bộ bị bịa**. Tính đúng về ngữ nghĩa của ít nhất 5 câu grounded phải được hai thành viên chấm độc lập; lệch ≥2/5 thì viết lại rubric trước khi chốt CP4.
+- **Lượt đo 1:** chạy bằng `python eval/run_eval.py`; kết quả đầy đủ nằm tại `eval/run_001.csv`, trace tại `eval/run_001_traces.jsonl`, thống kê và case lỗi tại `eval/run_001_summary.md`.
+- **Kết quả thực nghiệm:** Run 1 đạt **14/20 (70%)**, dưới quality bar; nguyên nhân gồm 1 lỗi mạng và 5 lỗi ranh giới clarify/abstain. Sau hai vòng sửa prompt nhưng không đổi golden label hay quality bar, Run 2 đạt **15/20 (75%)** và Run 3 đạt **18/20 (90%)**, với **0 citation ngoài allow-list**. Hai case domain còn lỗi được giữ nguyên tại `eval/run_003_summary.md`.
+- **Phần người chấm còn phải làm:** hai thành viên điền độc lập `eval/manual_review_5.csv` cho 5 câu grounded; kiểm tra tự động hiện chưa chứng minh đầy đủ tính đúng ngữ nghĩa.
 
 ---
 
@@ -137,3 +142,5 @@
 |---|---|---|
 | 19:15 17/9 | Thêm số liệu khảo sát 14 học viên | Hoàn thiện chuẩn A cho mốc CP1 |
 | 19:25 17/9 | Hoàn thành Spec §1, §2, §4, §6 | Đồng bộ luồng nghiệp vụ và bản mock CP2 |
+| 20:30 17/9 | Tích hợp backend AI thật, source gate và golden set 20 case | Chuẩn bị CP3; thu hẹp lõi A1 về trả lời / hỏi lại / dừng khi thiếu căn cứ |
+| 20:50 17/9 | Chạy 3 lượt eval: 70% -> 75% -> 90% | Sửa ranh giới route từ failure thật; giữ nguyên 2 case lỗi domain ở lượt cuối |

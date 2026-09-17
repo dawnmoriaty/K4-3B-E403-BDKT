@@ -2,6 +2,8 @@
 .env
 *.env
 .env.*
+!.env.example
+!codebase/.env.example
 secrets/
 
 # Data Safety (Strictly prevent pushing hackathon reference data or sensitive logs)
