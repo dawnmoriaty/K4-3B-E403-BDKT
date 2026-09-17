@@ -13,6 +13,7 @@ discord-pack/
 *.parquet
 *.sqlite
 *.db
+*vlearn_actual_ui.png
 
 # Allow team validation & eval artifacts
 !validation/

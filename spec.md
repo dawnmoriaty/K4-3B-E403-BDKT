@@ -89,6 +89,8 @@
 3. *Mơ hồ / thiếu thông tin:* Học viên hỏi cụt ("nó là gì?", "dùng được không?") → Kích hoạt HAX G10 hỏi lại 1 câu kèm lựa chọn nhanh (Chips) để xác định đúng phạm vi trước khi trả lời.
 4. *Ngoài phạm vi / thẩm quyền:* Học viên đòi code giải hoàn chỉnh bài Lab 5 / Quiz → Từ chối sư phạm, chỉ đưa gợi ý phương pháp debug Socratic.
 5. *Đặc thù domain:* Tài liệu trên mạng dùng phiên bản thư viện mới khác với quy ước slide → Gắn cảnh báo lệch phiên bản để học viên không mất điểm bài thi.
+6. *Giảng viên quá tải / Không duyệt kịp (Review Queue Bottleneck):* Áp dụng cơ chế **Async Non-blocking SLA**: Không bắt học viên phải đợi giảng viên online; hệ thống phản hồi tức thì nguồn ngoài kèm Disclaimer cảnh báo vàng; tự động chuyển vào kho lưu trữ định kỳ sau 72h để bảo toàn 100% tính toàn vẹn của dữ liệu lớp học.
+7. *Nhiều câu hỏi tương tự trùng lặp (Queue Redundancy Overload):* Áp dụng **AI Semantic Clustering** (Cosine Similarity &ge; 0.85): Tự động gom các biến thể câu hỏi trùng lặp thành 1 Cụm chủ đề; AI soạn 1 bản thảo giải đáp thống nhất; Giảng viên duyệt 1 lần cho cả cụm (One-Click Multi-Impact) giúp giảm 95% công sức cho trợ giảng và tự động cập nhật vào FAQ chung của cả lớp.
 
 ---
 
