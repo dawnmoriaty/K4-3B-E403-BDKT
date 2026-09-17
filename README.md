@@ -8,10 +8,10 @@
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| Phùng Đức Đăng | 2A202602956 | Đội trưởng / Product Lead | Quản lý tiến độ tổng thể, định hình lát cắt sản phẩm, viết AI Spec (§1, §2, §4), đại diện nộp checkpoint form |
+| Trần Ngọc Khánh | 2A202602923 | Data & Evidence Lead | Khai thác dữ liệu log thật, xây dựng bảng đếm bằng chứng định lượng (chuẩn B), thực hiện khảo sát Mom Test (chuẩn A) |
+| Phùng Gia Bảo | 2A202602386 | AI & Evaluation Lead | Thiết kế system prompt & context retrieval, xây dựng golden set ≥20 case phủ 4 lớp rủi ro, đo lường tỷ lệ đạt quality bar |
+| Nguyễn Hữu Thành | 2A202602807 | Tech & Prototype Lead | Xây dựng UI/mock luồng hoạt động (CP2), tích hợp gọi AI thật ở quyết định trung tâm (CP3), xử lý 4 đường đi trải nghiệm |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
 
