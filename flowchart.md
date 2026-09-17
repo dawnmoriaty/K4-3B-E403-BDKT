@@ -33,9 +33,7 @@ Dưới đây là ảnh chụp màn hình giao diện thực tế của hệ th�
 
 ## 🧭 2. Sơ Đồ Luồng Xử Lý 4 Tác Nhân (Archify Workflow Diagram)
 
-Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn (RAG nội bộ $
-ightarrow$ Tra cứu ngoài có Disclaimer $
-ightarrow$ Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Actors)**:
+Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn (RAG nội bộ → Tra cứu ngoài có Disclaimer → Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Actors)**:
 
 ![Sơ đồ luồng xử lý 4 Tác nhân Archify](./codebase/vlearn-workflow.png)
 
@@ -45,7 +43,7 @@ ightarrow$ Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Act
 |---|---|---|
 | **1. Học viên (Student)** | Người học đang tự học trên VLearn Reader, bôi đen từ khóa khó hoặc bấm `+ Đặt câu hỏi với AI` để hỏi bài. Nhận câu trả lời kèm nhãn xác thực hoặc phản hồi khi AI hỏi lại. | Màn hình chính `vlearn.dev/course/k4p1/reader`, Trình đọc slide và Khung chat Right Drawer. |
 | **2. AI Tutor Engine (RAG & Router)** | Bộ điều phối trung tâm: tiếp nhận câu hỏi, tự động neo ngữ cảnh trang slide học viên đang xem, kiểm tra Guardrail chống gian lận, đối chiếu RAG nội bộ và phân loại tự tin theo mô hình 3 Dải Ngưỡng Thích Ứng (CRAG Evaluator). | Khung trò chuyện Right Drawer và Bộ điều phối RAG backend. |
-| **3. Agent Tra Cứu (External Search Agent)** | Kích hoạt khi bài giảng chưa đề cập (< $eta$). Tra cứu web mở rộng trên **Whitelist học thuật có kiểm soát** (arXiv, tài liệu kỹ thuật chính thức), sinh câu trả lời kèm **Badge Vàng Cảnh Báo (Disclaimer)** và tự động đẩy vào Hàng đợi duyệt. | Agent tra cứu phụ trợ ngầm. |
+| **3. Agent Tra Cứu (External Search Agent)** | Kích hoạt khi bài giảng chưa đề cập (< &beta;). Tra cứu web mở rộng trên **Whitelist học thuật có kiểm soát** (arXiv, tài liệu kỹ thuật chính thức), sinh câu trả lời kèm **Badge Vàng Cảnh Báo (Disclaimer)** và tự động đẩy vào Hàng đợi duyệt. | Agent tra cứu phụ trợ ngầm. |
 | **4. Giảng viên / Trợ giảng (Reviewer)** | Giữ quyền kiểm soát cao nhất (Human-in-the-loop). Nhận thông báo trên Hàng đợi duyệt (`vlearn.dev/teacher/review`), thẩm định kiến thức ngoài bài và phê duyệt nạp vào Vector DB chung của cả lớp (Data Flywheel). | Giao diện quản trị duyệt bài của giảng viên / TA. |
 
 ---
@@ -116,7 +114,7 @@ flowchart TD
 | **1a. Happy Path (Bài hiện tại)** | Học viên hỏi: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"* | RAG nội bộ trích đúng Slide 65, giải thích Tầng 2 ("Rẻ mà mạnh") là tầng mặc định thử trước cho việc hàng ngày. Gắn Badge Xanh `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight ô Tầng 2 trên slide. | Tab 1: **"1. Trong bài"** |
 | **1b. Cross-Lecture Path (Bài khác trong khóa)** | Học viên đang ở Day 3 hỏi: *"Khái niệm này có liên quan gì đến Next-Token Prediction ở Day 1 không?"* | RAG mở rộng toàn khóa học (Global Course Corpus), tìm thấy định nghĩa ở Day 1. Trả lời cô đọng và gắn Badge Xanh Lam: `📘 THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)` kèm nút bấm `[🔗 Nhảy tới Slide Day 01]`, không nhảy ra ngoài web search. | Tab 5: **"5. Bài khác (Cross-Day)"** |
 | **2. Low-Confidence** *(Lớp chỗ khó ②)* | Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"* | AI áp dụng **HAX G10**, không đoán bừa. Phản hồi: *"DeepSeek xuất hiện ở cả mục Self-host bảo mật và thảo luận API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide trang 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips bấm nhanh. | Tab 2: **"2. Mơ hồ (G10)"** |
-| **3. Failure / No-Grounding** *(Lớp chỗ khó ①)* | Học viên hỏi khái niệm nâng cao chưa dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài không?"* | RAG phát hiện Slide Day 1 không có định nghĩa MLA (< $eta$). AI gọi tool search trên arXiv, trả lời kèm **Badge Vàng Cảnh Báo**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC` và lưu ý lệch barem quiz. Tự động chuyển vào Review Queue. | Tab 3: **"3. Ngoài bài"** |
+| **3. Failure / No-Grounding** *(Lớp chỗ khó ①)* | Học viên hỏi khái niệm nâng cao chưa dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài không?"* | RAG phát hiện Slide Day 1 không có định nghĩa MLA (< &beta;). AI gọi tool search trên arXiv, trả lời kèm **Badge Vàng Cảnh Báo**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC` và lưu ý lệch barem quiz. Tự động chuyển vào Review Queue. | Tab 3: **"3. Ngoài bài"** |
 | **4. Correction** *(Human-in-the-loop)* | Giảng viên/TA mở modal Review Queue để thẩm định câu trả lời về MLA. | Giảng viên bấm `[✅ Duyệt & Nạp vào Vector DB]`. Tri thức mới được nạp vào Vector DB bài học. Badge trong phiên chat của học viên tự động chuyển sang `🌟 ĐÃ XÁC THỰC BỞI GIẢNG VIÊN`. | Tab 4: **"4. TA Duyệt"** / Nút chuyển chế độ Giảng viên |
 
 ---
@@ -148,7 +146,7 @@ codebase/
   Sau đó mở trình duyệt truy cập: `http://localhost:8080`
 * **Trải nghiệm trên giao diện:**
   * Bấm nút `+ Đặt câu hỏi với AI` hoặc icon AI trên slide để đóng/mở AI Tutor Right Drawer.
-  * Bấm thử qua 4 tabs: `1. Trong bài`, `2. Mơ hồ (G10)`, `3. Ngoài bài`, `4. TA Duyệt` để xem AI xử lý từng trường hợp.
+  * Bấm thử qua 5 tabs kịch bản: `1. Trong bài`, `2. Mơ hồ (G10)`, `3. Ngoài bài`, `4. TA Duyệt`, `5. Bài khác (Cross-Day)` để xem AI Tutor xử lý từng trường hợp thực tế.
   * Bấm nút `Giảng viên/TA` trên thanh Topbar để mở Hàng đợi thẩm định và thử tính năng bấm Duyệt & Nạp tri thức.
 
 #### Cách 2: Mở Sơ Đồ Luồng Tương Tác Archify (`codebase/vlearn-workflow.html`)
