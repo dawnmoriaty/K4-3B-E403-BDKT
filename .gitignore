@@ -6,13 +6,17 @@ secrets/
 
 # Data Safety (Strictly prevent pushing hackathon reference data or sensitive logs)
 data/
-*.csv
-*.jsonl
+vlearn-pack/
+discord-pack/
 *.parquet
 *.sqlite
 *.db
-vlearn-pack/
-discord-pack/
+
+# Allow team validation & eval artifacts
+!validation/
+!validation/*.csv
+!eval/
+!eval/*.csv
 
 # Dependencies & Build artifacts
 node_modules/
