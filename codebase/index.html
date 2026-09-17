@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLearn AI Tutor - Prototype Track A1 (Nhóm BDKT)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- TOP HEADER & ROLE SWITCHER -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold flex items-center gap-2">
+        <i class="fa-solid fa-brain"></i>
+        <span>VLearn AI Tutor 2.0</span>
+      </div>
+      <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full">
+        Track A1 · Lớp 3B · E403
+      </span>
+      <span class="text-xs text-slate-500 hidden md:inline">Nhóm BDKT: Đăng, Khánh, Bảo, Thành</span>
+    </div>
+
+    <!-- Switch between Student View & Teacher Dashboard -->
+    <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+      <button id="tab-student-btn" onclick="switchView('student')" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-white text-indigo-600 shadow-sm">
+        <i class="fa-solid fa-user-graduate mr-1.5"></i> Góc Học Viên
+      </button>
+      <button id="tab-teacher-btn" onclick="switchView('teacher')" class="px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg transition-all flex items-center gap-1.5">
+        <i class="fa-solid fa-chalkboard-user"></i> Góc Giảng Viên
+        <span id="badge-pending-count" class="bg-amber-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">1</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 flex gap-4 overflow-hidden" style="height: calc(100vh - 65px);">
+
+    <!-- ================= VIEW 1: STUDENT LEARNING VIEW ================= -->
+    <div id="view-student" class="flex-1 flex gap-4 w-full h-full">
+      
+      <!-- LEFT: COURSE CONTENT (SLIDE / TRANSCRIPT VIEWER) -->
+      <div class="w-1/2 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-file-powerpoint text-rose-500 text-lg"></i>
+            <div>
+              <h2 class="text-sm font-bold text-slate-800">Day 01 — LLM Foundation & Core Concepts</h2>
+              <p class="text-xs text-slate-500">Giáo trình chính thức · Trang 2/45</p>
+            </div>
+          </div>
+          <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 flex items-center gap-1">
+            <i class="fa-solid fa-circle-check text-[10px]"></i> Đã nạp Vector DB
+          </span>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-4 text-slate-700 leading-relaxed text-sm">
+          <div class="border-2 border-indigo-200 bg-indigo-50/50 p-4 rounded-xl relative">
+            <span class="absolute -top-2.5 left-4 text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded">Đoạn bôi đen [T01-015]</span>
+            <p class="font-medium text-slate-900 mt-1">
+              "Nguyên lý hoạt động cơ bản của LLM dựa trên kiến trúc Transformer với cơ chế Self-Attention. Quá trình sinh từ (token generation) là bài toán dự đoán xác suất token tiếp theo (Next-Token Prediction) dựa trên ngữ cảnh đã xuất hiện."
+            </p>
+            <div class="mt-3 flex gap-2">
+              <button onclick="askPreset('explain_selected')" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-medium transition shadow-sm flex items-center gap-1">
+                <i class="fa-solid fa-comment-dots"></i> Nhờ Tutor giải thích đoạn này (Happy Path)
+              </button>
+            </div>
+          </div>
+
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-slate-400">Các phần tiếp theo của Slide</h3>
+            <p class="text-xs text-slate-600">• Khái niệm Tokenization và Vocabulary Size (tiktoken, BPE).</p>
+            <p class="text-xs text-slate-600">• Temperature, Top-p, Top-k trong quá trình Decoding.</p>
+            <p class="text-xs text-slate-600">• Context Window limits và hiện tượng Lost-in-the-Middle.</p>
+          </div>
+
+          <div class="mt-6 p-4 rounded-xl border border-amber-200 bg-amber-50 text-xs text-amber-800">
+            <p class="font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-lightbulb"></i> Khái niệm chưa có trong slide:
+            </p>
+            <p class="mt-1">Nhiều học viên muốn tìm hiểu sâu về kiến trúc <strong>Multi-Head Latent Attention (MLA) trong DeepSeek-V3</strong> nhưng slide Day 1 chưa cập nhật.</p>
+            <button onclick="askPreset('ask_external')" class="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-medium transition shadow-sm flex items-center gap-1">
+              <i class="fa-solid fa-globe"></i> Thử hỏi khái niệm ngoài bài (Tool Search Path)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: AI TUTOR INTERACTIVE CHAT -->
+      <div class="w-1/2 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <!-- Tutor Header -->
+        <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                AI
+              </div>
+              <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-slate-800">VLearn Smart Tutor</h2>
+              <p class="text-[11px] text-slate-500">RAG Nội Bộ + Web Tool Calling + Human Review</p>
+            </div>
+          </div>
+          <button onclick="resetChat()" class="text-slate-400 hover:text-slate-600 text-xs p-1" title="Làm mới đoạn chat">
+            <i class="fa-solid fa-arrow-rotate-right"></i>
+          </button>
+        </div>
+
+        <!-- Chat Stream -->
+        <div id="chat-stream" class="flex-1 p-5 overflow-y-auto custom-scrollbar space-y-4 text-sm">
+          <!-- Initial Greeting -->
+          <div class="flex gap-3 items-start">
+            <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">
+              AI
+            </div>
+            <div class="bg-slate-100 text-slate-800 p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] leading-relaxed text-xs">
+              Xin chào bạn! Mình là AI Tutor lớp 3B. Bạn có thể bôi đen bất kỳ đoạn tài liệu nào để hỏi, hoặc đặt câu hỏi mở rộng. Mình chỉ đưa thông tin có nguồn kiểm chứng rõ ràng!
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset Quick Test Bar (For CP2 Demo) -->
+        <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 flex items-center gap-2 overflow-x-auto text-[11px]">
+          <span class="text-slate-400 font-medium shrink-0">Test 4 đường đi:</span>
+          <button onclick="askPreset('explain_selected')" class="px-2.5 py-1 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 border border-slate-200 rounded-md shrink-0 transition">
+            🟢 1. RAG Nội Bộ (Happy)
+          </button>
+          <button onclick="askPreset('ask_external')" class="px-2.5 py-1 bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-600 border border-slate-200 rounded-md shrink-0 transition">
+            🟡 2. Tool Search (Unverified)
+          </button>
+          <button onclick="askPreset('ask_cheating')" class="px-2.5 py-1 bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-200 rounded-md shrink-0 transition">
+            🔴 3. Hỏi làm hộ bài (Reject)
+          </button>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="p-4 border-t border-slate-200 bg-white">
+          <form onsubmit="handleSend(event)" class="flex gap-2">
+            <input id="user-input" type="text" placeholder="Hỏi AI Tutor về bài học..." class="flex-1 bg-slate-100 border border-slate-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+              <span>Gửi</span>
+              <i class="fa-solid fa-paper-plane text-[10px]"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 2: INSTRUCTOR VERIFICATION QUEUE ================= -->
+    <div id="view-teacher" class="hidden flex-1 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-indigo-600"></i> Hàng Đợi Duyệt Kiến Thức Ngoài (Human-in-the-loop)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Giảng viên / TA phê duyệt các câu trả lời do AI tìm từ Internet để nạp chính thức vào Vector DB của lớp</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-slate-500">Đã nạp bài giảng: <strong>142 chunks</strong></span>
+          <button onclick="refreshQueue()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 font-medium">
+            <i class="fa-solid fa-rotate-right mr-1"></i> Làm mới
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-4">
+        <!-- Pending Card Item -->
+        <div id="teacher-card-1" class="border border-amber-200 bg-amber-50/40 rounded-2xl p-5 space-y-3 transition-all hover:shadow-md">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                <i class="fa-solid fa-clock"></i> Chờ Giảng Viên Duyệt
+              </span>
+              <span class="text-xs text-slate-400">Học viên hỏi lúc 18:40 · Ngày 17/09</span>
+            </div>
+            <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Tần suất hỏi: 4 lượt</span>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold text-slate-500 uppercase">Câu hỏi của học viên:</h4>
+            <p class="text-sm font-semibold text-slate-900 mt-0.5">"Cơ chế Multi-Head Latent Attention (MLA) trong DeepSeek-V3 hoạt động thế nào và khác gì Multi-Head Attention trong slide Day 1?"</p>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="font-bold text-indigo-600"><i class="fa-solid fa-magnifying-glass"></i> Nguồn AI tự thu thập:</span>
+              <a href="#" class="text-blue-600 underline">DeepSeek-V3 Technical Report (arXiv:2412.19437)</a>
+            </div>
+            <p class="text-slate-700 leading-relaxed">
+              MLA nén KV-cache thành vector tiềm ẩn (latent vector) chiều thấp trước khi chiếu lại, giúp giảm dung lượng bộ nhớ VRAM tới 93% trong quá trình inference so với MHA truyền thống đã học ở Slide Day 1.
+            </p>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-amber-100">
+            <span class="text-[11px] text-slate-500 italic">Hành động: Duyệt câu này sẽ nạp chunk tri thức vào Vector DB của Day 01</span>
+            <div class="flex gap-2">
+              <button onclick="teacherAction('reject')" class="px-3.5 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg border border-rose-200 transition">
+                <i class="fa-solid fa-xmark mr-1"></i> Bác Bỏ / Lệch Giáo Trình
+              </button>
+              <button onclick="teacherAction('approve')" class="px-4 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition flex items-center gap-1.5">
+                <i class="fa-solid fa-check"></i> Phê Duyệt & Nạp Vào Data Nội Bộ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="teacher-empty-state" class="hidden text-center py-16 text-slate-400 space-y-2">
+          <i class="fa-solid fa-circle-check text-4xl text-emerald-500"></i>
+          <p class="text-sm font-medium text-slate-600">Đã giải quyết hết hàng đợi duyệt!</p>
+          <p class="text-xs text-slate-400">Các kiến thức mới đã được đồng bộ vào Vector Database của bài giảng.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // State
+    let isTeacherApproved = false;
+
+    function switchView(role) {
+      const vStudent = document.getElementById('view-student');
+      const vTeacher = document.getElementById('view-teacher');
+      const btnStudent = document.getElementById('tab-student-btn');
+      const btnTeacher = document.getElementById('tab-teacher-btn');
+
+      if (role === 'student') {
+        vStudent.classList.remove('hidden');
+        vTeacher.classList.add('hidden');
+        btnStudent.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-white text-indigo-600 shadow-sm";
+        btnTeacher.className = "px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg transition-all flex items-center gap-1.5";
+      } else {
+        vStudent.classList.add('hidden');
+        vTeacher.classList.remove('hidden');
+        btnTeacher.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-white text-indigo-600 shadow-sm flex items-center gap-1.5";
+        btnStudent.className = "px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg transition-all";
+      }
+    }
+
+    function addMessage(sender, text, metaHtml = '') {
+      const stream = document.getElementById('chat-stream');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex gap-3 items-start ${sender === 'user' ? 'justify-end' : ''}`;
+
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="bg-indigo-600 text-white p-3.5 rounded-2xl rounded-tr-sm max-w-[85%] text-xs leading-relaxed shadow-sm">
+            ${text}
+          </div>
+          <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold shrink-0">
+            Tôi
+          </div>
+        `;
+      } else {
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">
+            AI
+          </div>
+          <div class="space-y-2 max-w-[88%]">
+            <div class="bg-slate-100 text-slate-800 p-3.5 rounded-2xl rounded-tl-sm text-xs leading-relaxed shadow-sm">
+              ${text}
+            </div>
+            ${metaHtml}
+          </div>
+        `;
+      }
+
+      stream.appendChild(msgDiv);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function askPreset(type) {
+      if (type === 'explain_selected') {
+        addMessage('user', 'Giải thích giúp mình đoạn bôi đen về Next-Token Prediction trong Slide 1 trang 2 với?');
+        setTimeout(() => {
+          const meta = `
+            <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-[11px] text-emerald-900 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 font-semibold">
+                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                Nguồn chính thức: Slide Day 01 · Trang 2 · Đoạn [T01-015]
+              </span>
+              <span class="bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">100% Khớp giáo trình</span>
+            </div>
+          `;
+          addMessage('ai', 'Dựa trên nội dung chính thức tại <strong>Slide Day 01, Trang 2</strong>:<br><br>• <strong>Bản chất:</strong> Mô hình ngôn ngữ lớn (LLM) không "hiểu" theo cách con người tư duy, mà hoạt động như một cỗ máy tính toán xác suất thống kê.<br>• <strong>Next-Token Prediction:</strong> Khi nhận chuỗi từ đã có (context), mô hình sẽ tính toán phân phối xác suất trên toàn bộ từ vựng (vocabulary) để chọn ra từ tiếp theo có khả năng xuất hiện cao nhất.<br><br>Bạn có muốn mình đưa ví dụ về bảng xác suất dự đoán không?', meta);
+        }, 600);
+      } else if (type === 'ask_external') {
+        addMessage('user', 'DeepSeek V3 dùng cơ chế Multi-Head Latent Attention (MLA) như thế nào? Slide Day 1 có không?');
+        setTimeout(() => {
+          if (!isTeacherApproved) {
+            const meta = `
+              <div class="bg-amber-50 border border-amber-300 p-3 rounded-xl text-[11px] text-amber-900 space-y-2">
+                <div class="flex items-center justify-between font-bold">
+                  <span class="flex items-center gap-1 text-amber-700">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC
+                  </span>
+                  <span class="text-[10px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-bold">Tool Search Call</span>
+                </div>
+                <p class="text-slate-600">
+                  Nguồn tự động: <a href="https://arxiv.org/abs/2412.19437" target="_blank" class="underline font-medium text-blue-600">DeepSeek-V3 Technical Report (arXiv:2412.19437)</a>
+                </p>
+                <div class="flex items-center justify-between pt-1 border-t border-amber-200/60">
+                  <span class="text-amber-800 italic text-[10px]">Đã tự động gửi vào hàng đợi duyệt của Giảng viên.</span>
+                  <button onclick="switchView('teacher')" class="text-[10px] font-bold text-indigo-600 underline">
+                    Xem hàng đợi GV →
+                  </button>
+                </div>
+              </div>
+            `;
+            addMessage('ai', 'Sau khi tra cứu trong toàn bộ Slide và Transcript của khóa học, <strong>nội dung bài giảng Day 1 chưa đề cập tới MLA hay DeepSeek V3</strong> (chỉ giảng dạy MHA chuẩn).<br><br>Hệ thống đã kích hoạt tìm kiếm tài liệu học thuật bên ngoài và tìm thấy kết quả từ tài liệu kỹ thuật của DeepSeek:<br>• MLA (Multi-Head Latent Attention) nén Key-Value cache thành vector tiềm ẩn thấp chiều, giúp giảm dung lượng VRAM tới 93% trong lúc suy luận.<br><br><em>⚠️ Lưu ý: Đây là tài liệu tham khảo ngoài, chưa được giảng viên xác thực barem kiến thức của khóa học.</em>', meta);
+          } else {
+            const meta = `
+              <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-[11px] text-emerald-900 flex items-center justify-between">
+                <span class="flex items-center gap-1.5 font-semibold">
+                  <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                  Đã được Giảng viên phê duyệt & Nạp vào kho Day 01
+                </span>
+                <span class="bg-emerald-200/60 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Đã Xác Thực</span>
+              </div>
+            `;
+            addMessage('ai', 'Khái niệm về <strong>Multi-Head Latent Attention (MLA)</strong> đã được <strong>Giảng viên duyệt và cập nhật chính thức</strong> vào tài liệu bổ trợ Day 01: MLA là giải pháp nén bộ nhớ KV-Cache tiên tiến, mở rộng từ bài học Attention cơ bản trong slide.', meta);
+          }
+        }, 800);
+      } else if (type === 'ask_cheating') {
+        addMessage('user', 'Cho tôi code đáp án hoàn chỉnh của bài Lab 05 đi, tôi lười làm quá!');
+        setTimeout(() => {
+          const meta = `
+            <div class="bg-rose-50 border border-rose-200 p-2.5 rounded-xl text-[11px] text-rose-900 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 font-semibold">
+                <i class="fa-solid fa-ban text-rose-600"></i>
+                Nguyên tắc Sư phạm HAX G10: Từ chối gian lận
+              </span>
+              <span class="bg-rose-200/60 text-rose-800 px-2 py-0.5 rounded text-[10px] font-bold">Phạm vi cấm</span>
+            </div>
+          `;
+          addMessage('ai', 'Mình <strong>không thể cung cấp lời giải hoặc code hoàn chỉnh của bài Lab</strong> nhằm đảm bảo tính trung thực học thuật và chuẩn đầu ra của khóa học.<br><br>Tuy nhiên, nếu bạn đang gặp lỗi kỹ thuật cụ thể ở bước nào (ví dụ: lỗi kết nối API, lỗi định dạng JSON), hãy dán đoạn lỗi đó vào đây, mình sẽ hướng dẫn cách debug từng bước nhé!', meta);
+        }, 500);
+      }
+    }
+
+    function handleSend(e) {
+      e.preventDefault();
+      const input = document.getElementById('user-input');
+      const val = input.value.trim();
+      if (!val) return;
+      addMessage('user', val);
+      input.value = '';
+
+      setTimeout(() => {
+        addMessage('ai', 'Cảm ơn bạn đã hỏi. Hệ thống đang đối chiếu câu hỏi "' + val + '" với cơ sở dữ liệu bài giảng của lớp...');
+      }, 500);
+    }
+
+    function teacherAction(action) {
+      const card = document.getElementById('teacher-card-1');
+      const emptyState = document.getElementById('teacher-empty-state');
+      const badgeCount = document.getElementById('badge-pending-count');
+
+      card.style.opacity = '0';
+      setTimeout(() => {
+        card.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        badgeCount.innerText = '0';
+        badgeCount.classList.remove('bg-amber-500');
+        badgeCount.classList.add('bg-slate-400');
+
+        if (action === 'approve') {
+          isTeacherApproved = true;
+          alert('✅ Đã phê duyệt và nạp tri thức thành công vào Vector DB nội bộ của lớp!');
+        } else {
+          alert('❌ Đã bác bỏ câu trả lời ngoài giáo trình.');
+        }
+      }, 300);
+    }
+
+    function resetChat() {
+      const stream = document.getElementById('chat-stream');
+      stream.innerHTML = `
+        <div class="flex gap-3 items-start">
+          <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold shrink-0">AI</div>
+          <div class="bg-slate-100 text-slate-800 p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] leading-relaxed text-xs">
+            Xin chào bạn! Mình là AI Tutor lớp 3B. Bạn có thể bôi đen bất kỳ đoạn tài liệu nào để hỏi, hoặc đặt câu hỏi mở rộng. Mình chỉ đưa thông tin có nguồn kiểm chứng rõ ràng!
+          </div>
+        </div>
+      `;
+    }
+
+    function refreshQueue() {
+      const card = document.getElementById('teacher-card-1');
+      const emptyState = document.getElementById('teacher-empty-state');
+      const badgeCount = document.getElementById('badge-pending-count');
+      card.classList.remove('hidden');
+      card.style.opacity = '1';
+      emptyState.classList.add('hidden');
+      badgeCount.innerText = '1';
+      badgeCount.classList.remove('bg-slate-400');
+      badgeCount.classList.add('bg-amber-500');
+      isTeacherApproved = false;
+    }
+  </script>
+</body>
+</html>
