@@ -1,167 +1,161 @@
-# Sơ Đồ Luồng Hoạt Động & Kiến Trúc Sản Phẩm (CP2)
+# Luồng Trải Nghiệm VLearn AI Tutor (CP2)
 
-**Khóa học:** VinUni AI20k · Mini Hackathon AI (Batch 04 · Lớp 3B · Phòng E403)  
-**Nhóm dự thi:** BDKT (Đội trưởng: Phùng Đức Đăng - 2A202602956)  
-**Đề tài (Track A · Đề A1):** VLearn AI Tutor — Trợ lý học tập bám sát bài giảng & Cơ chế xác thực nguồn 2 tầng (RAG nội bộ + Web Search có Disclaimer & Human-in-the-loop).
+**Track:** A · A1 — Tối ưu AI Tutor hiện có
 
----
+**Nhóm:** BDKT · Lớp 3B · Phòng E403
 
-## 📌 LƯU Ý QUAN TRỌNG DÀNH CHO NGƯỜI ĐỌC (NON-TECH CLARIFICATION)
-
-> [!IMPORTANT]
-> **ĐÂY LÀ HỆ THỐNG GIA SƯ AI TRỢ GIẢNG (AI TUTOR), KHÔNG PHẢI LÀ CÔNG CỤ CHỌN MÔ HÌNH!**
->
-> 1. **Vấn đề thực tế của học viên:** Khi đang tự học slide bài giảng trên nền tảng VLearn, học viên thường bắt gặp các **từ khóa chuyên môn khó hiểu hoặc khái niệm mới** mà tài liệu slide chỉ tóm tắt ngắn gọn.
-> 2. **Hành vi bôi đen từ khóa để hỏi bài:** Thay vì phải copy từ khóa đó ra ngoài tìm kiếm trên Google (vừa tốn 10–15 phút, vừa dễ đọc phải tài liệu trôi nổi trên mạng gây lệch barem chấm thi), học viên chỉ cần:
->    * **Bôi đen trực tiếp từ khóa khó ngay trên trang slide** (hoặc bấm nút `+ Đặt câu hỏi với AI` trên thanh công cụ).
-> 3. **AI Tutor giải quyết thế nào:** Trợ lý AI sẽ mở khung trò chuyện ở góc phải màn hình, tự động nhận diện học viên đang thắc mắc về từ khóa ở trang slide nào để giải thích cặn kẽ bám sát giáo trình, trích dẫn đúng số trang và mã bài giảng để học viên ôn thi và làm quiz chính xác nhất.
-> *(Slide trang 65 "Chọn model theo TẦNG" được dùng trong tài liệu này là **ví dụ minh họa thực tế** của bài học Day 1 trên VLearn, không phải bản thân sản phẩm là bộ chọn mô hình).*
+**Lát cắt:** Học viên đang học trên VLearn hỏi một khái niệm → Tutor quyết định trả lời có căn cứ, hỏi lại khi mơ hồ hoặc dừng khi thiếu nguồn → học viên biết câu trả lời dựa trên đâu và cần làm gì tiếp theo.
 
 ---
 
-## 🖼️ 1. Giao Diện Thực Tế Nền Tảng VLearn Reader & Vị Trí Tích Hợp AI Tutor
+## 1. Phạm Vi Bản Mẫu
 
-Dưới đây là ảnh chụp màn hình giao diện thực tế của hệ thống học tập VLearn (`vlearn.dev/course/k4p1/reader`):
+Đây là **luồng trải nghiệm của AI Tutor**, không phải công cụ chọn mô hình. Slide "Chọn model theo tầng" chỉ là nội dung minh họa để học viên đặt câu hỏi.
 
-![Giao diện VLearn Reader Thực Tế](./codebase/vlearn_actual_ui.png)
+| Thành phần | Trạng thái tại CP2 |
+|---|---|
+| Giao diện VLearn Reader và AI Tutor Drawer | Mock bấm được |
+| Trả lời có nguồn, hỏi lại, no-grounding và correction | Dữ liệu giả lập để kiểm tra luồng |
+| Truy xuất tài liệu và lời gọi mô hình thật | Chưa bắt buộc tại CP2 |
+| Web search, Review Queue và cập nhật kho tri thức | Chỉ mô phỏng, không tuyên bố đã chạy thật |
 
-* **Vị trí 1 (Thanh Topbar phía trên):** Nút bấm `+ Đặt câu hỏi với AI` có biểu tượng lấp lánh (sparkle ✨), cho phép học viên chủ động mở khung chat trợ lý bất kỳ lúc nào.
-* **Vị trí 2 (Trình đọc Slide trung tâm):** Nơi học viên đọc bài giảng (trong ảnh là Slide 65 của Day 1). Học viên có thể **bôi đen bất kỳ cụm từ khóa nào** để kích hoạt menu hỏi bài nhanh.
-* **Vị trí 3 (Góc phải màn hình - Điểm đổi mới):** Khung chat **AI Tutor Right Drawer** (rộng 460px) sẽ trượt mượt mà từ cạnh phải màn hình sang, giữ nguyên trang slide bên trái để học viên vừa đọc vừa trao đổi với gia sư AI.
+**Automation:** Conditional. Tutor chỉ tự trả lời khi có đoạn tài liệu trực tiếp hỗ trợ. Khi input mơ hồ, Tutor hỏi lại. Khi không có căn cứ hoặc cần thẩm quyền, Tutor dừng và chuyển người.
 
----
-
-## 🧭 2. Sơ Đồ Luồng Xử Lý 4 Tác Nhân (Archify Workflow Diagram)
-
-Sơ đồ dưới đây mô tả chi tiết quy trình xử lý 2 tầng nguồn (RAG nội bộ $
-ightarrow$ Tra cứu ngoài có Disclaimer $
-ightarrow$ Cổng thẩm định Giảng viên) phân theo **4 Tác nhân (4 Actors)**:
-
-![Sơ đồ luồng xử lý 4 Tác nhân Archify](./codebase/vlearn-workflow.png)
-
-### 👥 Phân vai 4 Tác nhân (4 Actors / Swimlanes):
-
-| Tác nhân (Actor) | Vai trò trong hệ thống | Vị trí giao diện tương ứng trên VLearn |
-|---|---|---|
-| **1. Học viên (Student)** | Người học đang tự học trên VLearn Reader, bôi đen từ khóa khó hoặc bấm `+ Đặt câu hỏi với AI` để hỏi bài. Nhận câu trả lời kèm nhãn xác thực hoặc phản hồi khi AI hỏi lại. | Màn hình chính `vlearn.dev/course/k4p1/reader`, Trình đọc slide và Khung chat Right Drawer. |
-| **2. AI Tutor Engine (RAG & Router)** | Bộ điều phối trung tâm: tiếp nhận câu hỏi, tự động neo ngữ cảnh trang slide học viên đang xem, kiểm tra Guardrail chống gian lận, đối chiếu RAG nội bộ và phân loại tự tin theo mô hình 3 Dải Ngưỡng Thích Ứng (CRAG Evaluator). | Khung trò chuyện Right Drawer và Bộ điều phối RAG backend. |
-| **3. Agent Tra Cứu (External Search Agent)** | Kích hoạt khi bài giảng chưa đề cập (< $eta$). Tra cứu web mở rộng trên **Whitelist học thuật có kiểm soát** (arXiv, tài liệu kỹ thuật chính thức), sinh câu trả lời kèm **Badge Vàng Cảnh Báo (Disclaimer)** và tự động đẩy vào Hàng đợi duyệt. | Agent tra cứu phụ trợ ngầm. |
-| **4. Giảng viên / Trợ giảng (Reviewer)** | Giữ quyền kiểm soát cao nhất (Human-in-the-loop). Nhận thông báo trên Hàng đợi duyệt (`vlearn.dev/teacher/review`), thẩm định kiến thức ngoài bài và phê duyệt nạp vào Vector DB chung của cả lớp (Data Flywheel). | Giao diện quản trị duyệt bài của giảng viên / TA. |
+**Lý do theo cost-of-error:** Trả lời sai quy ước khóa học có thể khiến học viên học sai và mất điểm. Vì vậy, phản hồi được gửi cho Product/Dev phân loại trước; chỉ khoảng trống kiến thức chính thức mới chuyển giảng viên, còn lỗi retrieval/citation do Dev xử lý.
 
 ---
 
-## 🔀 3. Sơ Đồ Luồng Logic Chi Tiết (Mermaid Flowchart)
+## 2. Bốn Tác Nhân
+
+| Tác nhân | Trách nhiệm |
+|---|---|
+| **Học viên** | Bôi đen đoạn slide hoặc nhập câu hỏi; kiểm tra nguồn; yêu cầu làm rõ hoặc đề xuất sửa kết quả. |
+| **AI Tutor** | Kiểm tra phạm vi và độ đầy đủ của input; tìm căn cứ trong corpus được phép; trả lời, hỏi lại hoặc dừng đúng lúc. |
+| **Product/Dev team** | Gộp và phân loại phản hồi; tự xử lý lỗi hệ thống; tổng hợp khoảng trống kiến thức thành báo cáo ngắn cho giảng viên. |
+| **Giảng viên / Chủ sở hữu nội dung** | Chỉ xử lý Content Gap Report; bổ sung, sửa, phê duyệt hoặc bác bỏ kiến thức chính thức. |
+
+Review Queue chỉ dùng mã case hoặc mã học viên ẩn danh. Dev chỉ chuyển cho giảng viên phần nội dung tối thiểu cần thẩm định, không chuyển toàn bộ lịch sử học viên.
+
+---
+
+## 3. Sơ Đồ Luồng Chính
 
 ```mermaid
 flowchart TD
-    subgraph S1["1. HỌC VIÊN (VLearn Reader)"]
-        A[Đang học bài giảng trên VLearn<br><i>Ví dụ: Đang mở Slide Day 1 hoặc Day 3</i>] --> B{Gặp thuật ngữ / khái niệm bài học chưa hiểu sâu}
-        B -->|Thao tác 1| B1[Bấm nút '+ Đặt câu hỏi với AI'<br>trên thanh Topbar]
-        B -->|Thao tác 2| B2[Bôi đen trực tiếp từ khóa khó<br>ngay trên trang slide]
-        B1 --> C[Mở AI Tutor Right Drawer bên phải<br>Tự động neo ngữ cảnh bài học & trang slide hiện tại]
-        B2 --> C
-    end
+    Start([Học viên đang đọc bài trên VLearn]) --> Ask[Nhập câu hỏi hoặc bôi đen một đoạn slide]
 
-    subgraph S2["2. AI TUTOR ENGINE (Bộ Điều Phối RAG Phân Cấp & Router)"]
-        C --> D[Kiểm tra Ý định & Guardrail An Toàn]
-        D -->|Hỏi giải hộ bài Lab / Gian lận| D_Reject[Từ chối giải bài hộ<br>Đưa ra gợi ý phương pháp debug sư phạm<br><i>HAX G10</i>]
-        
-        D -->|Hỏi khái niệm bài học| E1[Vòng 1 - RAG Cục bộ:<br>Tra cứu Vector DB của Bài học hiện tại]
-        
-        E1 --> F1{Điểm tự tin Vòng 1<br>có đạt chuẩn?}
-        
-        %% Nhánh 1a: Trúng bài hiện tại
-        F1 -->|>= alpha_local: Trúng bài hiện tại| G1[Sinh câu trả lời bám sát giáo trình<br>Gắn Badge Xanh: <b>TRONG BÀI GIẢNG · SLIDE HIỆN TẠI</b><br>Nút: <i>Highlight đoạn trên slide</i>]
-        
-        %% Mở rộng Cross-Lecture sang Vòng 2
-        F1 -->|< alpha_local: Chưa thấy trong bài này| E2[Vòng 2 - Mở rộng toàn khóa học:<br>Truy vấn Global Course Corpus (Day 01 - Day 15)<br><i>Tránh False Alarm ra ngoài mạng!</i>]
-        
-        E2 --> F2{Phân loại tự tin CRAG<br>trên Toàn Khóa Học}
-        
-        %% Nhánh 1b: Trúng bài khác trong khóa
-        F2 -->|>= alpha_global: Trúng bài học khác trong khóa| G2[Sinh câu trả lời định hướng liên bài<br>Gắn Badge Xanh Lam: <b>THUỘC GIÁO TRÌNH · BÀI DAY 01 (TRANG 12)</b><br>Nút: <i>[👉 Chuyển đến Slide Day 1 Trang 12]</i>]
-        
-        %% Nhánh 2: Mơ hồ
-        F2 -->|beta <= Điểm < alpha: Mơ hồ vùng xám| H[Kích hoạt <b>HAX G10 Clarification</b><br>Không đoán bừa, hỏi lại 1 câu thu hẹp phạm vi<br>Hiển thị 2 Chips lựa chọn nhanh]
-    end
+    Ask --> Scope{Câu hỏi thuộc phạm vi học tập<br/>và không yêu cầu gian lận?}
+    Scope -->|Không| Refuse[Từ chối ngắn gọn<br/>Nêu giới hạn và gợi ý bước học an toàn]
+    Refuse --> SafeEnd([Học viên biết yêu cầu nào được hỗ trợ])
 
-    H -.->|Học viên bấm chọn Chip phạm vi| E1
+    Scope -->|Có| Clear{Input đã đủ rõ?<br/>Biết khái niệm hoặc đoạn đang hỏi?}
+    Clear -->|Chưa rõ| Clarify[Hỏi đúng một câu để thu hẹp phạm vi<br/>Có thể kèm lựa chọn nhanh]
+    Clarify --> Ask
 
-    subgraph S3["3. AGENT TRA CỨU (External Tool Calling)"]
-        %% Nhánh 3: Ngoài toàn bộ khóa học
-        F2 -->|< beta: Toàn bộ 15 buổi đều chưa dạy| I[Kích hoạt Tool Calling tra cứu Web ngoài<br>Chỉ tìm kiếm trên Whitelist: arXiv / Docs chuẩn]
-        I --> J[Sinh câu trả lời kèm link tài liệu gốc<br>Gắn Badge Vàng Nổi Bật: <b>THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN DUYỆT</b><br>Cảnh báo nguy cơ lệch barem làm quiz]
-        J --> K[Tự động đẩy vào Hàng Đợi Duyệt - Review Queue]
-    end
+    Clear -->|Đã rõ| Retrieve[Tra cứu corpus chính thức được cấp<br/>Ưu tiên bài hiện tại, sau đó bài khác trong khóa]
+    Retrieve --> Evidence{Trạng thái căn cứ}
 
-    subgraph S4["4. GIẢNG VIÊN / TRỢ GIẢNG (Human-in-the-Loop)"]
-        K --> L[Dashboard Hàng Đợi Duyệt của Giảng viên / TA]
-        L --> M{Giảng viên / TA thẩm định nội dung}
-        M -->|Nội dung sai / Lệch chuẩn| M_Drop[Bác bỏ / Gắn cờ cảnh báo không nạp]
-        M -->|Nội dung chuẩn xác| N[Bấm: <b>Duyệt & Nạp vào Vector DB</b><br>Badge câu trả lời đổi thành: <b>ĐÃ ĐƯỢC GIẢNG VIÊN XÁC THỰC</b><br>Data Flywheel: Toàn bộ lớp được học bằng nguồn chuẩn]
-    end
+    Evidence -->|Có đoạn nguồn trực tiếp hỗ trợ| Grounded[Trả lời ngắn gọn theo nguồn<br/>Hiển thị mã đoạn hoặc trang và nút mở nguồn]
+    Grounded --> Verify([Học viên tự đối chiếu được câu trả lời])
 
-    G1 --> EndUser([Học viên hiểu bài chuẩn xác & tự tin làm đúng Quiz])
-    G2 --> EndUser
-    J --> EndUser
-    N --> EndUser
+    Evidence -->|Có nguồn liên quan nhưng chưa đủ<br/>hoặc có mâu thuẫn| Narrow[Thu hẹp phần có thể trả lời<br/>Nói rõ phần chưa chắc và hỏi thêm nếu cần]
+    Narrow --> Verify
+
+    Evidence -->|Không có căn cứ| Abstain[Không sinh kiến thức từ trí nhớ mô hình<br/>Thông báo chưa có nguồn chính thức]
+    Abstain --> NextStep{Học viên chọn bước tiếp theo}
+    NextStep -->|Gửi phản hồi| Queue[Đưa mã case ẩn danh vào Review Queue]
+    NextStep -->|Xem nguồn ngoài| External[Hiển thị riêng nguồn tham khảo ngoài<br/>Nhãn: Không phải nội dung chính thức của khóa]
+    External --> NoGroundEnd([Học viên biết giới hạn và không nhầm với barem])
+
+    Verify --> Correct{Học viên phát hiện sai<br/>hoặc muốn bổ sung?}
+    Correct -->|Không| Done([Kết thúc lượt hỏi đáp])
+    Correct -->|Có| Suggest[Học viên bấm Đề xuất sửa<br/>Chỉnh nội dung hoặc citation]
+    Suggest --> Queue
+
+    Queue --> Received([Đã ghi nhận phản hồi<br/>Học viên tiếp tục học ngay])
+    Queue --> Group[Gộp case tương tự, đếm lượt hỏi và mức ảnh hưởng]
+    Group --> Dev[Product/Dev kiểm tra log, retrieval và nguồn đã cấp]
+    Dev --> Type{Loại vấn đề}
+
+    Type -->|Lỗi retrieval, citation hoặc giao diện| Bug[Đưa vào Technical Backlog<br/>Dev sửa hệ thống]
+    Bug --> Regression[Chạy regression test trên golden set]
+    Regression --> Audit([Lưu trạng thái, thay đổi và kết quả kiểm tra])
+
+    Type -->|Thiếu kiến thức chính thức| Report[Tạo Content Gap Report theo lô<br/>Ví dụ đại diện, số lượt hỏi, mức ảnh hưởng, nguồn đã kiểm tra]
+    Report --> Pending[Trạng thái: Chờ giảng viên xác nhận<br/>Chưa được dùng làm nguồn chính thức]
+    Pending -.->|Khi giảng viên có thời gian| Review[Giảng viên bổ sung, sửa hoặc bác bỏ nội dung]
+    Review --> Decision{Quyết định của giảng viên}
+    Decision -->|Bác bỏ| Reject[Đóng khoảng trống nội dung<br/>Ghi lý do và hướng dẫn thay thế]
+    Decision -->|Phê duyệt| Publish[Dev phát hành bản đã duyệt<br/>Có version, nguồn, người duyệt và thời điểm]
+    Reject --> Audit
+    Publish --> Audit
+
+    Type -->|Trùng, thiếu thông tin hoặc không cần xử lý| Close[Gộp vào case có sẵn hoặc đóng<br/>Ghi rõ lý do]
+    Close --> Audit
 ```
+
+### Quy tắc quan trọng
+
+- Cross-lecture là bước tra cứu bên trong happy path, không phải đường trải nghiệm thứ năm.
+- "Tìm thấy đoạn liên quan" không đồng nghĩa "đã xác thực hoàn toàn"; mọi citation phải thực sự hỗ trợ claim.
+- Không có căn cứ thì không đưa câu trả lời kiến thức chưa duyệt vào khung trả lời chính.
+- Nguồn ngoài chỉ là lựa chọn tham khảo tách biệt và luôn có cảnh báo.
+- Dev được quyết định cách sửa hệ thống nhưng không được tự quyết định kiến thức chuyên môn chính thức.
+- Giảng viên chỉ nhận Content Gap Report đã gộp theo lô, không nhận từng câu hỏi riêng lẻ.
+- Content Gap Report ưu tiên nội dung liên quan quiz/barem, nhiều người gặp hoặc có hậu quả cao.
+- Case chờ giảng viên không chặn phiên học và không tự động trở thành nguồn chính thức.
+- Bản phát hành cần version, nguồn, người duyệt, thời điểm và kết quả regression test.
 
 ---
 
-## 🧪 4. Bốn Đường Đi Trải Nghiệm Cụ Thể (Khối Rubric R3)
+## 4. Bốn Đường Đi Bắt Buộc
 
-| Đường đi | Tình huống học viên hỏi trên Slide 65 | Phản hồi của AI Tutor trong Right Drawer | Vị trí kiểm chứng trên Prototype |
+| Đường đi | Trigger | Hành vi mong muốn | Kết quả kiểm chứng được |
 |---|---|---|---|
-| **1a. Happy Path (Bài hiện tại)** | Học viên hỏi: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"* | RAG nội bộ trích đúng Slide 65, giải thích Tầng 2 ("Rẻ mà mạnh") là tầng mặc định thử trước cho việc hàng ngày. Gắn Badge Xanh `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight ô Tầng 2 trên slide. | Tab 1: **"1. Trong bài"** |
-| **1b. Cross-Lecture Path (Bài khác trong khóa)** | Học viên đang ở Day 3 hỏi: *"Khái niệm này có liên quan gì đến Next-Token Prediction ở Day 1 không?"* | RAG mở rộng toàn khóa học (Global Course Corpus), tìm thấy định nghĩa ở Day 1. Trả lời cô đọng và gắn Badge Xanh Lam: `📘 THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)` kèm nút bấm `[🔗 Nhảy tới Slide Day 01]`, không nhảy ra ngoài web search. | Tab 5: **"5. Bài khác (Cross-Day)"** |
-| **2. Low-Confidence** *(Lớp chỗ khó ②)* | Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"* | AI áp dụng **HAX G10**, không đoán bừa. Phản hồi: *"DeepSeek xuất hiện ở cả mục Self-host bảo mật và thảo luận API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide trang 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips bấm nhanh. | Tab 2: **"2. Mơ hồ (G10)"** |
-| **3. Failure / No-Grounding** *(Lớp chỗ khó ①)* | Học viên hỏi khái niệm nâng cao chưa dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài không?"* | RAG phát hiện Slide Day 1 không có định nghĩa MLA (< $eta$). AI gọi tool search trên arXiv, trả lời kèm **Badge Vàng Cảnh Báo**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC` và lưu ý lệch barem quiz. Tự động chuyển vào Review Queue. | Tab 3: **"3. Ngoài bài"** |
-| **4. Correction** *(Human-in-the-loop)* | Giảng viên/TA mở modal Review Queue để thẩm định câu trả lời về MLA. | Giảng viên bấm `[✅ Duyệt & Nạp vào Vector DB]`. Tri thức mới được nạp vào Vector DB bài học. Badge trong phiên chat của học viên tự động chuyển sang `🌟 ĐÃ XÁC THỰC BỞI GIẢNG VIÊN`. | Tab 4: **"4. TA Duyệt"** / Nút chuyển chế độ Giảng viên |
+| **1. Happy path** | Câu hỏi rõ và có nguồn trực tiếp trong bài hiện tại hoặc bài khác của khóa. | Trả lời theo đúng phần nguồn hỗ trợ, hiện mã đoạn/trang và nút mở nguồn. | Học viên mở được nguồn để tự đối chiếu. |
+| **2. Low-confidence** | Câu hỏi mơ hồ, thiếu đối tượng hoặc chỉ có nguồn liên quan nhưng chưa đủ. | Hỏi đúng một câu làm rõ hoặc thu hẹp phần có thể trả lời; không tự đoán. | Học viên cung cấp thêm ngữ cảnh trước khi Tutor trả lời tiếp. |
+| **3. Failure / no-grounding** | Không tìm thấy căn cứ trong corpus chính thức hoặc câu hỏi cần dữ liệu/thẩm quyền hệ thống không có. | Dừng trả lời kiến thức; cho xem nguồn ngoài tách biệt hoặc gửi phản hồi. Dev gộp và phân loại trước khi quyết định có cần giảng viên. | Không có claim/citation bị bịa; học viên tiếp tục học ngay. |
+| **4. Correction** | Học viên phát hiện nội dung/citation sai hoặc thiếu. | Học viên đề xuất sửa; Dev phân loại thành lỗi hệ thống hoặc khoảng trống kiến thức; chỉ nhánh kiến thức mới gửi giảng viên. | Có owner, trạng thái, bản sửa, nguồn và lịch sử phát hành rõ ràng. |
+
+Nhánh từ chối gian lận là guardrail bổ sung, không thay thế bốn đường đi trên.
 
 ---
 
-## 💻 5. Tham Chiếu Mã Nguồn & Hướng Dẫn Cách Mở Xem
+## 5. HAX / PAIR Áp Dụng
 
-Toàn bộ mã nguồn giao diện, sơ đồ tương tác và dữ liệu đã được lưu trữ trong thư mục `codebase/`:
-
-```
-codebase/
- ├── index.html                  # Bản mẫu tương tác (Interactive Clickable Prototype)
- ├── vlearn-workflow.html        # Sơ đồ luồng tương tác sinh bởi Archify Engine (100% tiếng Việt)
- ├── vlearn-tutor.workflow.json  # File đặc tả cấu trúc sơ đồ theo chuẩn Archify Schema v2
- ├── vlearn_actual_ui.png        # Ảnh chụp giao diện thực tế VLearn Reader (Độ nét cao)
- ├── vlearn-workflow.png         # Ảnh xuất chất lượng cao của sơ đồ luồng Archify (1600x887 PNG)
- └── vlearn-workflow.svg         # File vector SVG nguyên gốc của sơ đồ luồng
-```
-
-### 🚀 Cách mở và trải nghiệm:
-
-#### Cách 1: Mở Bản Mẫu Tương Tác VLearn (`codebase/index.html`)
-* **Cách mở trực tiếp:** Nhấp đúp chuột vào file [codebase/index.html](./codebase/index.html) hoặc kéo thả file vào trình duyệt web (Chrome, Edge, Firefox, Brave).
-* **Đường dẫn local:** `file:///mnt/win_d/VinUni/Hackathon/K4-3B-E403-BDKT/codebase/index.html`
-* **Cách mở qua máy chủ mini (nếu muốn chia sẻ mạng nội bộ):**
-  ```bash
-  cd codebase
-  python3 -m http.server 8080
-  ```
-  Sau đó mở trình duyệt truy cập: `http://localhost:8080`
-* **Trải nghiệm trên giao diện:**
-  * Bấm nút `+ Đặt câu hỏi với AI` hoặc icon AI trên slide để đóng/mở AI Tutor Right Drawer.
-  * Bấm thử qua 4 tabs: `1. Trong bài`, `2. Mơ hồ (G10)`, `3. Ngoài bài`, `4. TA Duyệt` để xem AI xử lý từng trường hợp.
-  * Bấm nút `Giảng viên/TA` trên thanh Topbar để mở Hàng đợi thẩm định và thử tính năng bấm Duyệt & Nạp tri thức.
-
-#### Cách 2: Mở Sơ Đồ Luồng Tương Tác Archify (`codebase/vlearn-workflow.html`)
-* **Cách mở:** Nhấp đúp chuột vào file [codebase/vlearn-workflow.html](./codebase/vlearn-workflow.html) hoặc mở trên trình duyệt:
-  `file:///mnt/win_d/VinUni/Hackathon/K4-3B-E403-BDKT/codebase/vlearn-workflow.html`
-* **Tính năng tương tác:**
-  * Hỗ trợ chuyển đổi giao diện **Sáng / Tối**.
-  * Bấm nút **Kịch bản trải nghiệm** để xem tiêu điểm (focus) từng luồng nghiệp vụ.
-  * Bật chế độ **Chuyển động (Live trace)** để xem luồng dữ liệu chạy qua các hộp xử lý.
-  * Xuất ảnh sơ đồ độ nét cao ra PNG, JPEG hoặc vector SVG qua menu **Xuất ảnh / SVG**.
+| Nguyên tắc | Áp cụ thể vào đâu trong luồng |
+|---|---|
+| **HAX G10 — Thu hẹp phạm vi khi nghi ngờ** | Nút `Clear`: input thiếu đối tượng thì hỏi đúng một câu; nút `Evidence`: nguồn chưa đủ thì chỉ trả lời phần được hỗ trợ. |
+| **HAX G11 — Giải thích vì sao** | Câu trả lời grounded hiển thị mã đoạn/trang; no-grounding nói rõ không tìm thấy nguồn nào. |
+| **HAX G8 — Gạt bỏ dễ dàng** | Học viên có thể đóng Tutor Drawer, bỏ qua nguồn ngoài hoặc không gửi phản hồi. Gửi xong vẫn tiếp tục học ngay. |
+| **HAX G9 — Sửa dễ dàng** | Nút `Đề xuất sửa` cho phép chỉnh nội dung/citation; Dev và giảng viên sửa tiếp đúng theo loại vấn đề. |
+| **PAIR Feedback & Control** | Dev kiểm soát thay đổi hệ thống; giảng viên kiểm soát nội dung chính thức; mọi quyết định có lịch sử. |
 
 ---
 
-### 🔗 Liên kết kiểm chứng mã nguồn trực tuyến (GitHub):
-* **Repository:** [https://github.com/dawnmoriaty/K4-3B-E403-BDKT](https://github.com/dawnmoriaty/K4-3B-E403-BDKT)
-* **Thư mục Codebase:** [https://github.com/dawnmoriaty/K4-3B-E403-BDKT/tree/main/codebase](https://github.com/dawnmoriaty/K4-3B-E403-BDKT/tree/main/codebase)
+## 6. Walkthrough Trên Sơ Đồ CP2
+
+| Tình huống walkthrough | Kết quả phải đi tới trên luồng |
+|---|---|
+| Hỏi một khái niệm có trong bài | Câu trả lời có nhãn `Có căn cứ trong tài liệu` và citation mở được. |
+| Nhập `Nó khác gì?` | Tutor hỏi đối tượng nào đang được so sánh. |
+| Hỏi một khái niệm chưa có trong khóa | Tutor báo chưa có nguồn, không tự giải thích; hiện `Gửi phản hồi` và `Xem nguồn ngoài`. Gửi xong hiển thị `Đã ghi nhận`, không bắt học viên chờ. |
+| Học viên chọn `Đề xuất sửa` | Case đi tới Product/Dev; lỗi kỹ thuật vào backlog, thiếu kiến thức vào Content Gap Report gửi giảng viên theo lô. |
+
+**Điểm kết thúc đúng:** Học viên biết mức độ căn cứ, mở được nguồn hoặc biết bước tiếp theo. Sản phẩm không cam kết học viên chắc chắn làm đúng quiz.
+
+---
+
+## 7. Artifact Kiểm Chứng
+
+- **Artifact chính để nộp CP2:** sơ đồ Mermaid và bốn walkthrough ngay trong [`flowchart.md`](./flowchart.md).
+- Giao diện tham khảo: [`codebase/index.html`](./codebase/index.html). Một số tương tác nâng cao vẫn là mock; khi khác với artifact cũ, luồng trong tài liệu này là thiết kế CP2 đã chốt.
+- Repository: <https://github.com/dawnmoriaty/K4-3B-E403-BDKT>
+
+Mở bản mẫu CP2 trực tiếp bằng trình duyệt để xem các kịch bản giả lập. Khi chạy phần AI thật của CP3, dùng:
+
+```powershell
+python codebase/server.py
+```
+
+Sau đó mở <http://127.0.0.1:8000>.

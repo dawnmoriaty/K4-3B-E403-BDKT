@@ -60,58 +60,44 @@
 ---
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn Reader bấm hỏi/bôi đen một khái niệm bài học → AI Tutor quyết định đối chiếu RAG phân cấp (ưu tiên bài hiện tại → mở rộng toàn bộ 15 buổi khóa học → nếu không có mới gọi Tool Search ngoài có Disclaimer kèm đẩy vào Review Queue) → Trả về câu trả lời có nguồn trích dẫn số trang chính xác hoặc điều hướng sang bài học tương ứng, giúp học viên không bị lệch quy ước barem chấm thi.
+- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn Reader bấm hỏi hoặc bôi đen một khái niệm → AI Tutor quyết định trả lời khi có căn cứ, hỏi lại khi mơ hồ hoặc dừng và gửi case đã gộp/xếp ưu tiên cho giảng viên khi thiếu nguồn → học viên biết câu trả lời dựa trên đâu và tiếp tục học mà không phải chờ duyệt.
 - **Non-goals (≥3 thứ KHÔNG build):**
   1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat linh tinh).
   2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận).
-  3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên/TA bấm duyệt.
+  3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên hoặc chủ sở hữu nội dung bấm duyệt.
 - **Mức prototype hiện tại:** [ ] Mock (CP2)  [x] Working (CP3)
   - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng pixel-perfect (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 4 kịch bản kiểm chứng, modal Review Queue của Giảng viên.
   - *Phần chạy thật (Working - CP3):* Backend `codebase/server.py` truy xuất các đoạn giáo trình tối thiểu trong `course_context.json`, gọi model OpenAI-compatible để quyết định `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE`, rồi kiểm tra cứng citation theo allow-list. Prompt, phản hồi thô, route và latency được ghi vào `eval/*_traces.jsonl`.
   - *Chưa chạy thật:* Web search, Teacher Review Queue và thao tác nạp Vector DB vẫn là mock; prototype CP3 không tuyên bố các phần này đã được tích hợp.
 - **Automation:** [ ] augment  [x] conditional  [ ] automate  
   - *Lý do theo chi phí sai sót (Cost-of-Error):* 
-    - Khi câu hỏi có căn cứ chắc chắn trong bài giảng (>= alpha): Cost-of-error rất thấp vì học viên có thể kiểm chứng ngay tại Slide 65 (sai thì sửa rẻ) -> AI tự động trả lời kèm trích dẫn số trang (Automate).
-    - Khi câu hỏi ngoài giáo trình (< beta) hoặc thuộc vùng xám mơ hồ: Cost-of-error cực kỳ đắt vì nếu AI bịa nguồn hoặc học viên tiếp thu kiến thức ngoài lệch quy ước khóa học, hậu quả là học viên làm sai bài Quiz chấm tự động, mất 10–15 phút hoang mang, đổ lỗi cho trợ giảng (học viên chịu thiệt, chi phí sửa đắt vì ảnh hưởng kết quả học tập). Vì vậy, hệ thống chọn mức **Conditional**: AI chỉ đưa câu trả lời kèm nhãn cảnh báo (Disclaimer màu vàng) và bắt buộc giữ cổng phê duyệt (Human-in-the-loop Gate) của Giảng viên/TA trước khi chính thức hóa kiến thức.
+    - Khi câu hỏi có đoạn nguồn trực tiếp hỗ trợ, AI tự động trả lời kèm citation để học viên tự kiểm tra.
+    - Khi input mơ hồ, AI hỏi lại đúng một câu. Khi không có nguồn hoặc cần thẩm quyền, AI không sinh kiến thức từ trí nhớ mô hình mà gửi case vào hàng đợi giảng viên bất đồng bộ. Sai trong các case này có thể khiến học viên học lệch barem và mất điểm; học viên vẫn tiếp tục học, còn case giữ trạng thái `Chờ duyệt` cho tới khi người có thẩm quyền xử lý.
 - **§4b. Nguyên tắc đã áp dụng (HAX/PAIR):**
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
-  | **HAX G10** *(Bắt buộc - Thu hẹp phạm vi khi nghi ngờ)* | 1. Khi câu hỏi rơi vào vùng mơ hồ [beta, alpha) (VD: "DeepSeek có dùng được không?"), AI không đoán bừa mà hiển thị câu hỏi gạn lọc kèm 2 lựa chọn nhanh (Chips) để học viên chọn đúng ý định.<br>2. Khi học viên yêu cầu giải hộ bài Lab, AI từ chối giải trực tiếp và đưa ra gợi ý Socratic. |
-  | **HAX G11** *(Giải thích vì sao)* | Mọi câu trả lời trong bài đều hiển thị số trang slide chính xác: `✅ TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút `[Highlight slide]`. Câu trả lời ngoài bài nêu rõ link nguồn tra cứu gốc (arXiv:2412.19437) và lý do tài liệu Day 1 chưa đề cập. |
-  | **HAX G8** *(Gạt bỏ dễ dàng)* | Nút `✕` trên góc phải Drawer cho phép học viên thu gọn khung chat ngay lập tức bằng 1 click; nút đóng Disclaimer cảnh báo để tập trung vào nội dung. |
-  | **HAX G9** *(Sửa dễ dàng)* | Học viên có thể click lại vào các câu gợi ý trên slide để đổi prompt tức thì; Giảng viên trong Review Queue có nút `[Sửa nội dung]` trước khi bấm phê duyệt nạp vào Vector DB. |
-  | **PAIR Feedback & Control** | Giữ quyền kiểm soát tuyệt đối cho con người qua giao diện Teacher Review Queue (`vlearn.dev/teacher/review`), biến kiến thức ngoài thành nguồn chuẩn chính thức. |
+  | **HAX G10** *(Thu hẹp phạm vi khi nghi ngờ)* | Input thiếu đối tượng thì Tutor hỏi đúng một câu; nguồn chỉ liên quan một phần thì Tutor thu hẹp phần trả lời thay vì đoán. |
+  | **HAX G11** *(Giải thích vì sao)* | Câu trả lời grounded hiện mã đoạn/trang; no-grounding nói rõ không tìm thấy nguồn chính thức. |
+  | **HAX G8** *(Gạt bỏ dễ dàng)* | Học viên có thể đóng Tutor Drawer, bỏ qua nguồn ngoài hoặc không gửi case cho giảng viên; gửi xong vẫn tiếp tục học ngay. |
+  | **HAX G9** *(Sửa dễ dàng)* | Học viên dùng `Đề xuất sửa` để chỉnh nội dung/citation; giảng viên sửa tiếp trước khi duyệt hoặc bác bỏ. |
+  | **PAIR Feedback & Control** | Chỉ nội dung có nguồn, bản sửa, người duyệt và thời điểm mới được cập nhật vào kho tri thức. |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
 *(Chi tiết được mở rộng tại CP4)*:
-1. *Nguồn sự thật:* RAG bài hiện tại không thấy nguồn → Tự động mở rộng tìm kiếm trên toàn bộ 15 buổi của khóa học; nếu toàn khóa không có mới kích hoạt Web Search ngoài (không hallucinate trang slide và không báo động giả ra ngoài web khi bài khác đã dạy).
-2. *Tham chiếu chéo buổi học (Cross-Lecture Scope Misrouting):* Học viên đang ở Day 3 hỏi lại khái niệm nền tảng ở Day 1 (hoặc đang ở Day 1 hỏi ứng dụng nâng cao ở Day 5). Nếu chỉ RAG bài hiện tại sẽ kết luận nhầm là "ngoài giáo trình" (False Negative) → Hệ thống tự động truy xuất Global Course Corpus và trích dẫn số trang của buổi học tương ứng kèm liên kết điều hướng.
-3. *Mơ hồ / thiếu thông tin:* Học viên hỏi cụt ("nó là gì?", "dùng được không?") → Kích hoạt HAX G10 hỏi lại 1 câu kèm lựa chọn nhanh (Chips) để xác định đúng phạm vi trước khi trả lời.
-4. *Ngoài phạm vi / thẩm quyền:* Học viên đòi code giải hoàn chỉnh bài Lab 5 / Quiz → Từ chối sư phạm, chỉ đưa gợi ý phương pháp debug Socratic.
-5. *Đặc thù domain:* Tài liệu trên mạng dùng phiên bản thư viện mới khác với quy ước slide → Gắn cảnh báo lệch phiên bản để học viên không mất điểm bài thi.
+1. *Nguồn sự thật:* (a) không tìm thấy đoạn hỗ trợ → dừng và gửi hàng đợi giảng viên bất đồng bộ; (b) citation liên quan nhưng không hỗ trợ claim → không được gắn nhãn grounded.
+2. *Mơ hồ / thiếu thông tin:* (a) "nó là gì?" → hỏi đối tượng; (b) "tiếp tục đi" nhưng thiếu lượt trước → yêu cầu khôi phục ngữ cảnh.
+3. *Ngoài phạm vi / thẩm quyền:* (a) hỏi chính sách điểm hiện hành → chuyển nguồn chính thức; (b) đòi code hoàn chỉnh bài Lab → từ chối và đưa gợi ý học an toàn.
+4. *Đặc thù domain:* (a) hai tài liệu dùng phiên bản khác nhau → nêu mâu thuẫn, không tự chọn; (b) học viên báo đáp án/slide sai nhưng thiếu artifact → tạo case để giảng viên thẩm định.
 
 ---
 
 ## §6. Bốn đường đi của trải nghiệm (Khối Rubric R3)
-1. **Đường thuận lợi khi AI tự tin cao (Happy Path - Confidence >= alpha):**
-   - *1a. Trúng bài học hiện tại (Local Match):* Học viên hỏi khái niệm có sẵn trên Slide trang 65 ("Khi nào nên chọn Tầng 2 thay vì Tầng 1?"). RAG nội bộ trích xuất trực tiếp đoạn Tầng 2, trả lời cô đọng và gắn Badge Xanh: `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight vùng trên slide.
-   - *1b. Trúng bài học khác trong khóa (Cross-Lecture Match):* Học viên đang ở Day 3 hỏi lại kiến thức Day 1 ("Khái niệm này liên hệ gì với Next-Token Prediction ở Day 1?"). RAG mở rộng toàn khóa học tìm thấy ở Day 1, trả lời cô đọng và gắn Badge Xanh Lam: `📘 THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)` kèm nút bấm `[🔗 Chuyển đến Slide Day 01]`, không nhảy ra ngoài web search.
-   - *Nguyên tắc:* HAX G11, HAX G2 & PAIR Continuity.
+1. **Happy path:** Câu hỏi rõ và có đoạn nguồn trực tiếp trong bài hiện tại hoặc bài khác thuộc corpus được cấp → trả lời ngắn gọn, hiện mã đoạn/trang và nút mở nguồn để học viên tự kiểm tra.
+2. **Low-confidence:** Input thiếu đối tượng hoặc nguồn chỉ liên quan một phần → hỏi đúng một câu làm rõ hoặc thu hẹp phần có thể trả lời; không tự đoán.
+3. **Failure / no-grounding:** Không có căn cứ hoặc câu hỏi cần dữ liệu/thẩm quyền hệ thống không có → không sinh câu trả lời kiến thức; hiện `Gửi giảng viên` và nguồn ngoài tách biệt. Case được gộp trùng, xếp ưu tiên và giữ `Chờ duyệt`; học viên không phải chờ tại màn hình.
+4. **Correction:** Học viên bấm `Đề xuất sửa` để chỉnh nội dung/citation → case vào hàng đợi bất đồng bộ → giảng viên kiểm tra nguồn, sửa trực tiếp, duyệt hoặc bác bỏ khi có thời gian và lưu lịch sử xử lý.
 
-2. **Đường xử lý khi AI thiếu tự tin (Low-Confidence / Ambiguity - Lớp chỗ khó ②):**
-   - *Tình huống:* Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"*.
-   - *Hành vi hệ thống:* Tri-Band Router xác định độ tin cậy nằm trong dải xám [beta, alpha). Áp dụng **HAX G10**, AI phản hồi: *"DeepSeek xuất hiện ở cả mục Self-host và API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide trang 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips bấm nhanh (Option 1: Tầng 3 Self-host bảo mật dữ liệu; Option 2: So sánh chi phí API với Tầng 2).
-   - *Nguyên tắc:* HAX G10 & HAX G9.
-
-3. **Đường xử lý khi không tìm thấy căn cứ nội bộ (Failure / No-grounding - Lớp chỗ khó ①):**
-   - *Tình huống:* Học viên hỏi khái niệm nâng cao chưa được dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài giảng không?"*.
-   - *Hành vi hệ thống:* RAG Evaluator nhận diện tài liệu Day 1 không có định nghĩa MLA (< beta). Hệ thống kích hoạt Tool Calling tra cứu Web Whitelist (arXiv/Docs chính thống). Sinh câu trả lời kèm **Badge Vàng Cảnh Báo Nổi Bật**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC`, kèm ghi chú: *"Khái niệm này chưa nằm trong barem chấm thi của Day 1. Hãy bám sát quy ước Tầng 1/2/3 trong slide để làm quiz"*. Đồng thời tự động đẩy câu trả lời vào Review Queue của Giảng viên.
-   - *Nguyên tắc:* HAX G10, HAX G11 & PAIR Uncertainty.
-
-4. **Cơ chế cho phép con người sửa trực tiếp kết quả (Correction / Human-in-the-loop):**
-   - *Tình huống:* Giảng viên/TA mở modal Review Queue, kiểm tra câu trả lời về kiến trúc MLA mà AI đã tra cứu từ arXiv.
-   - *Hành vi hệ thống:* Giảng viên bấm `[✅ Phê duyệt & Nạp vào Vector DB]` (hoặc chỉnh sửa văn phong). Hệ thống nạp chunk tri thức mới vào Vector DB nội bộ. Ngay lập tức, Badge câu trả lời trong phiên học viên chuyển thành `🌟 ĐÃ ĐƯỢC GIẢNG VIÊN XÁC THỰC`, và toàn bộ học viên khác trong lớp khi hỏi về khái niệm này sau đó sẽ được phục vụ trực tiếp bằng nguồn chuẩn chính thức (Data Flywheel).
-   - *Nguyên tắc:* PAIR Feedback & Control & HAX G9.
+Cross-lecture là chi tiết retrieval bên trong happy path. Nhánh từ chối gian lận là guardrail bổ sung, không thay thế bốn đường bắt buộc.
 
 ## §7. Kiểm thử
 - **Golden set:** `eval/golden_set.csv` có 20 case K4 phát triển từ chatlog thật: 5 case/lớp cho đủ 4 lớp chỗ khó; 10 common, 8 edge và 2 rare. Mỗi case giữ `source_turn_id`, route mong đợi, nguồn được phép và hành vi cấm.
