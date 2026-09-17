@@ -60,25 +60,26 @@
 ---
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Học viên hỏi về một khái niệm bài giảng → AI quyết định kiểm tra RAG nội bộ (slide/transcript), nếu không có thì gọi Tool Search ngoài có dẫn chứng kèm nhãn cảnh báo "Chưa xác thực từ giảng viên" và lưu vào hàng đợi duyệt → Trả về câu trả lời có nguồn trích dẫn rõ ràng và phân định rạch ròi mức độ tin cậy.
+- **Lát cắt MỘT CÂU:** Học viên đang xem Slide 65 trên VLearn Reader bấm hỏi về một khái niệm → AI Tutor quyết định đối chiếu RAG nội bộ (slide/transcript Day 1), nếu mơ hồ thì kích hoạt HAX G10 hỏi lại, nếu thiếu căn cứ thì gọi Tool Search ngoài kèm Badge Vàng Disclaimer và đẩy vào Review Queue → Giảng viên/TA phê duyệt nạp ngược vào Vector DB nội bộ để làm giàu kho tri thức (Data Flywheel).
 - **Non-goals (≥3 thứ KHÔNG build):**
   1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat linh tinh).
   2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận).
-  3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên bấm duyệt.
+  3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên/TA bấm duyệt.
 - **Mức prototype nhắm tới:** [x] Mock (CP2)  [ ] Working (CP3)
-  - *Phần mock:* Giao diện web tĩnh (`codebase/index.html`), cơ chế duyệt của giảng viên.
-  - *Phần thật:* Gọi AI thật (Gemini / Claude qua 9router) ở quyết định RAG vs Web Search (CP3).
+  - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng pixel-perfect (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 4 kịch bản kiểm chứng, modal Review Queue của Giảng viên.
+  - *Phần chạy thật (Working - CP3):* Gọi mô hình AI thật (Gemini 2.5 Flash / Claude Sonnet qua 9router) thực hiện phân loại ý định (Tri-Band Confidence Router), trích xuất RAG từ file slide thật (`data/vlearn-pack/day01-llm-foundation-1.pdf`), và tool calling DuckDuckGo/Tavily search.
 - **Automation:** [ ] augment  [x] conditional  [ ] automate  
-  - *Lý do theo cost-of-error:* Kiến thức nội bộ có căn cứ xác thực thì tự động trả lời (Automate vì sai sửa rẻ). Kiến thức ngoài có nguy cơ làm học viên học sai/lệch barem thi (sai thì đắt), nên chỉ tăng cường có điều kiện (Conditional) kèm nhãn cảnh báo và giữ quyền quyết định cho Giảng viên.
+  - *Lý do theo chi phí sai sót (Cost-of-Error):* 
+    - Khi câu hỏi có căn cứ chắc chắn trong bài giảng (>= alpha): Cost-of-error rất thấp vì học viên có thể kiểm chứng ngay tại Slide 65 (sai thì sửa rẻ) -> AI tự động trả lời kèm trích dẫn số trang (Automate).
+    - Khi câu hỏi ngoài giáo trình (< beta) hoặc thuộc vùng xám mơ hồ: Cost-of-error cực kỳ đắt vì nếu AI bịa nguồn hoặc học viên tiếp thu kiến thức ngoài lệch quy ước khóa học, hậu quả là học viên làm sai bài Quiz chấm tự động, mất 10–15 phút hoang mang, đổ lỗi cho trợ giảng (học viên chịu thiệt, chi phí sửa đắt vì ảnh hưởng kết quả học tập). Vì vậy, hệ thống chọn mức **Conditional**: AI chỉ đưa câu trả lời kèm nhãn cảnh báo (Disclaimer màu vàng) và bắt buộc giữ cổng phê duyệt (Human-in-the-loop Gate) của Giảng viên/TA trước khi chính thức hóa kiến thức.
 - **§4b. Nguyên tắc đã áp dụng (HAX/PAIR):**
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
-  | **HAX G2** (Làm rõ làm tốt đến đâu) | Gắn Badge Xanh `[100% Khớp giáo trình]` hoặc Badge Vàng `[Tham khảo ngoài — Chưa xác thực]`. |
-  | **HAX G10** (Thu hẹp phạm vi khi nghi ngờ) | Khi RAG nội bộ không có, không tự bịa nguồn mà nói rõ bài giảng chưa đề cập và kích hoạt tool search có disclaimer. Từ chối giải hộ bài thi. |
-  | **HAX G11** (Giải thích vì sao) | Mọi câu trả lời đều trỏ rõ số trang slide `[Slide 1, Trang 2, Đoạn T01-015]` hoặc link bài báo arXiv gốc. |
-  | **PAIR Feedback & Control** | Giảng viên có quyền Duyệt / Bác bỏ câu trả lời ngoài giáo trình trước khi nạp vào bộ nhớ bài học. |
-
----
+  | **HAX G10** *(Bắt buộc - Thu hẹp phạm vi khi nghi ngờ)* | 1. Khi câu hỏi rơi vào vùng mơ hồ [beta, alpha) (VD: "DeepSeek có dùng được không?"), AI không đoán bừa mà hiển thị câu hỏi gạn lọc kèm 2 lựa chọn nhanh (Chips) để học viên chọn đúng ý định.<br>2. Khi học viên yêu cầu giải hộ bài Lab, AI từ chối giải trực tiếp và đưa ra gợi ý Socratic. |
+  | **HAX G11** *(Giải thích vì sao)* | Mọi câu trả lời trong bài đều hiển thị số trang slide chính xác: `✅ TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút `[Highlight slide]`. Câu trả lời ngoài bài nêu rõ link nguồn tra cứu gốc (arXiv:2412.19437) và lý do tài liệu Day 1 chưa đề cập. |
+  | **HAX G8** *(Gạt bỏ dễ dàng)* | Nút `✕` trên góc phải Drawer cho phép học viên thu gọn khung chat ngay lập tức bằng 1 click; nút đóng Disclaimer cảnh báo để tập trung vào nội dung. |
+  | **HAX G9** *(Sửa dễ dàng)* | Học viên có thể click lại vào các câu gợi ý trên slide để đổi prompt tức thì; Giảng viên trong Review Queue có nút `[Sửa nội dung]` trước khi bấm phê duyệt nạp vào Vector DB. |
+  | **PAIR Feedback & Control** | Giữ quyền kiểm soát tuyệt đối cho con người qua giao diện Teacher Review Queue (`vlearn.dev/teacher/review`), biến kiến thức ngoài thành nguồn chuẩn chính thức. |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
 *(Chi tiết được mở rộng tại CP4)*:
@@ -89,13 +90,26 @@
 
 ---
 
-## §6. Bốn đường đi của trải nghiệm
-- **Happy path (Đường 1):** RAG nội bộ tìm thấy nguồn → Trả lời bám sát slide kèm trích dẫn số trang.
-- **Low-confidence / Fallback (Đường 2):** RAG nội bộ thiếu → Kích hoạt Tool Search ngoài → Trả lời kèm nhãn vàng cảnh báo "Chưa xác thực".
-- **Correction (Đường 3):** Giảng viên vào hàng đợi duyệt → Bấm phê duyệt → Tri thức được nạp vào Vector DB nội bộ.
-- **Guardrail Failure (Đường 4):** Học viên hỏi đáp án bài nộp → AI từ chối giải hộ, hướng dẫn cách tự debug.
+## §6. Bốn đường đi của trải nghiệm (Khối Rubric R3)
+1. **Đường thuận lợi khi AI tự tin cao (Happy Path - Confidence >= alpha):**
+   - *Tình huống:* Học viên hỏi khái niệm có sẵn trên Slide trang 65: *"Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?"*.
+   - *Hành vi hệ thống:* RAG nội bộ trích xuất trực tiếp đoạn Tầng 2 (Rẻ mà mạnh), trả lời cô đọng và gắn Badge Xanh: `✅ ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65` kèm nút bấm highlight vùng tương ứng trên slide.
+   - *Nguyên tắc:* HAX G11 & HAX G2.
 
----
+2. **Đường xử lý khi AI thiếu tự tin (Low-Confidence / Ambiguity - Lớp chỗ khó ②):**
+   - *Tình huống:* Học viên hỏi câu ngắn, đa nghĩa: *"DeepSeek có dùng được không?"*.
+   - *Hành vi hệ thống:* Tri-Band Router xác định độ tin cậy nằm trong dải xám [beta, alpha). Áp dụng **HAX G10**, AI phản hồi: *"DeepSeek xuất hiện ở cả mục Self-host và API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide trang 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips bấm nhanh (Option 1: Tầng 3 Self-host bảo mật dữ liệu; Option 2: So sánh chi phí API với Tầng 2).
+   - *Nguyên tắc:* HAX G10 & HAX G9.
+
+3. **Đường xử lý khi không tìm thấy căn cứ nội bộ (Failure / No-grounding - Lớp chỗ khó ①):**
+   - *Tình huống:* Học viên hỏi khái niệm nâng cao chưa được dạy: *"DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài giảng không?"*.
+   - *Hành vi hệ thống:* RAG Evaluator nhận diện tài liệu Day 1 không có định nghĩa MLA (< beta). Hệ thống kích hoạt Tool Calling tra cứu Web Whitelist (arXiv/Docs chính thống). Sinh câu trả lời kèm **Badge Vàng Cảnh Báo Nổi Bật**: `⚠️ THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC`, kèm ghi chú: *"Khái niệm này chưa nằm trong barem chấm thi của Day 1. Hãy bám sát quy ước Tầng 1/2/3 trong slide để làm quiz"*. Đồng thời tự động đẩy câu trả lời vào Review Queue của Giảng viên.
+   - *Nguyên tắc:* HAX G10, HAX G11 & PAIR Uncertainty.
+
+4. **Cơ chế cho phép con người sửa trực tiếp kết quả (Correction / Human-in-the-loop):**
+   - *Tình huống:* Giảng viên/TA mở modal Review Queue, kiểm tra câu trả lời về kiến trúc MLA mà AI đã tra cứu từ arXiv.
+   - *Hành vi hệ thống:* Giảng viên bấm `[✅ Phê duyệt & Nạp vào Vector DB]` (hoặc chỉnh sửa văn phong). Hệ thống nạp chunk tri thức mới vào Vector DB nội bộ. Ngay lập tức, Badge câu trả lời trong phiên học viên chuyển thành `🌟 ĐÃ ĐƯỢC GIẢNG VIÊN XÁC THỰC`, và toàn bộ học viên khác trong lớp khi hỏi về khái niệm này sau đó sẽ được phục vụ trực tiếp bằng nguồn chuẩn chính thức (Data Flywheel).
+   - *Nguyên tắc:* PAIR Feedback & Control & HAX G9.
 
 ## §7. Kiểm thử
 - Golden set: Dự kiến ≥20 case kiểm thử trong `eval/` phủ đủ 4 lớp lỗi.

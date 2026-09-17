@@ -1,0 +1,353 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "VLearn AI Tutor — Quy Trình Xác Thực Nguồn 2 Tầng & Human-in-the-Loop",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "standard",
+    "views": [
+      {
+        "id": "happy-path",
+        "label": "1. Trong bài giảng (Happy Path)",
+        "focus": [
+          "student_ask",
+          "rag_guard",
+          "triband_eval",
+          "internal_ans"
+        ],
+        "note": "RAG trúng tài liệu Slide 65, sinh câu trả lời kèm số trang và Badge Xanh xác thực."
+      },
+      {
+        "id": "clarify-path",
+        "label": "2. Mơ hồ (HAX G10 Clarification)",
+        "focus": [
+          "triband_eval",
+          "clarify_g10",
+          "student_clarify",
+          "internal_ans"
+        ],
+        "note": "Câu hỏi trong dải mơ hồ [β, α), AI hỏi lại 1 câu để thu hẹp phạm vi."
+      },
+      {
+        "id": "external-path",
+        "label": "3. Ngoài giáo trình (Tool Search + Cảnh báo)",
+        "focus": [
+          "triband_eval",
+          "tool_search",
+          "external_ans",
+          "review_queue"
+        ],
+        "note": "Thiếu căn cứ trong bài, AI tra cứu web whitelist và gắn nhãn Vàng cảnh báo chưa duyệt."
+      },
+      {
+        "id": "review-loop",
+        "label": "4. Vòng lặp thẩm định (TA Phê duyệt)",
+        "focus": [
+          "review_queue",
+          "ta_review",
+          "ingest_vectordb"
+        ],
+        "note": "Giảng viên/TA phê duyệt kiến thức ngoài, tự động nạp vào Vector DB làm giàu kho tri thức."
+      }
+    ],
+    "output": "codebase/vlearn-workflow.html"
+  },
+  "lanes": [
+    {
+      "id": "student",
+      "label": "Học viên (Giao diện VLearn Reader)"
+    },
+    {
+      "id": "tutor_engine",
+      "label": "AI Tutor (Bộ Điều Phối & RAG)"
+    },
+    {
+      "id": "search_agent",
+      "label": "Agent Tra Cứu (Nguồn Whitelist)"
+    },
+    {
+      "id": "teacher_ta",
+      "label": "Giảng viên / Trợ giảng (Thẩm Định)",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "phase_intake",
+      "label": "1. Khởi tạo & Đặt câu hỏi",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "phase_eval",
+      "label": "2. Định tuyến CRAG 3 dải",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "phase_deliver",
+      "label": "3. Phản hồi & Kiểm soát",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "groups": [
+    {
+      "id": "grp_student",
+      "label": "Tương tác trên Slide 65",
+      "lane": "student",
+      "fromCol": 0,
+      "toCol": 3
+    },
+    {
+      "id": "grp_routing",
+      "label": "Bộ Định Tuyến 3 Dải Tự Tin",
+      "lane": "tutor_engine",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "grp_search",
+      "label": "Tra Cứu Mở Rộng Ngoài Bài",
+      "lane": "search_agent",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "dashed"
+    },
+    {
+      "id": "grp_review",
+      "label": "Cơ Chế Phê Duyệt Tri Thức",
+      "lane": "teacher_ta",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "student_ask",
+    "rag_guard",
+    "triband_eval",
+    "internal_ans"
+  ],
+  "nodes": [
+    {
+      "id": "student_ask",
+      "lane": "student",
+      "col": 0,
+      "type": "frontend",
+      "label": "Chọn Slide 65",
+      "sublabel": "Bôi đen hoặc bấm nút AI",
+      "width": 140
+    },
+    {
+      "id": "student_clarify",
+      "lane": "student",
+      "col": 3,
+      "type": "frontend",
+      "label": "Chọn phạm vi",
+      "sublabel": "Phản hồi câu hỏi G10",
+      "width": 140
+    },
+    {
+      "id": "rag_guard",
+      "lane": "tutor_engine",
+      "col": 1,
+      "type": "backend",
+      "label": "Kiểm Soát & RAG",
+      "sublabel": "Đối chiếu Slide Day 1",
+      "tag": "Chống gian lận",
+      "width": 140
+    },
+    {
+      "id": "triband_eval",
+      "lane": "tutor_engine",
+      "col": 2,
+      "type": "backend",
+      "label": "Định Tuyến CRAG",
+      "sublabel": "Phân 3 dải tự tin",
+      "tag": "Ngưỡng α & β",
+      "width": 140
+    },
+    {
+      "id": "clarify_g10",
+      "lane": "tutor_engine",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Hỏi Lại G10",
+      "sublabel": "Thu hẹp vùng mơ hồ",
+      "tag": "HAX G10",
+      "width": 140
+    },
+    {
+      "id": "internal_ans",
+      "lane": "tutor_engine",
+      "col": 4,
+      "type": "backend",
+      "label": "Trả Lời Bám Slide",
+      "sublabel": "Badge Xanh + Trang 65",
+      "tag": "Đã xác thực",
+      "width": 140
+    },
+    {
+      "id": "tool_search",
+      "lane": "search_agent",
+      "col": 3,
+      "type": "cloud",
+      "label": "Tra Cứu Web Ngoài",
+      "sublabel": "Chỉ tìm trên Whitelist",
+      "tag": "Tài liệu & arXiv",
+      "width": 140
+    },
+    {
+      "id": "external_ans",
+      "lane": "search_agent",
+      "col": 4,
+      "type": "external",
+      "label": "Trả Lời Cảnh Báo",
+      "sublabel": "Nhãn Vàng Disclaimer",
+      "tag": "Chưa kiểm chứng",
+      "width": 140
+    },
+    {
+      "id": "review_queue",
+      "lane": "teacher_ta",
+      "col": 4,
+      "type": "security",
+      "label": "Hàng Đợi Duyệt",
+      "sublabel": "Tự động đẩy case ngoài",
+      "width": 140
+    },
+    {
+      "id": "ta_review",
+      "lane": "teacher_ta",
+      "col": 5,
+      "type": "security",
+      "label": "Giảng Viên Duyệt",
+      "sublabel": "Phê duyệt hoặc chỉnh sửa",
+      "tag": "Cổng kiểm soát",
+      "width": 140
+    },
+    {
+      "id": "ingest_vectordb",
+      "lane": "tutor_engine",
+      "col": 5,
+      "type": "database",
+      "label": "Nạp Vector DB",
+      "sublabel": "Thành nguồn chính thức",
+      "width": 140
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_ask_rag",
+      "from": "student_ask",
+      "to": "rag_guard",
+      "label": "gửi câu hỏi",
+      "variant": "default"
+    },
+    {
+      "id": "e_rag_eval",
+      "from": "rag_guard",
+      "to": "triband_eval",
+      "label": "đối chiếu nguồn",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e_eval_internal",
+      "from": "triband_eval",
+      "to": "internal_ans",
+      "label": "≥ α (Trong bài)",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e_eval_clarify",
+      "from": "triband_eval",
+      "to": "clarify_g10",
+      "label": "mơ hồ [β, α)",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_g10_student",
+      "from": "clarify_g10",
+      "to": "student_clarify",
+      "label": "hỏi làm rõ",
+      "variant": "default"
+    },
+    {
+      "id": "e_student_reanswer",
+      "from": "student_clarify",
+      "to": "internal_ans",
+      "label": "chốt ý định",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e_eval_search",
+      "from": "triband_eval",
+      "to": "tool_search",
+      "label": "< β (Ngoài bài)",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_search_reply",
+      "from": "tool_search",
+      "to": "external_ans",
+      "variant": "default"
+    },
+    {
+      "id": "e_external_queue",
+      "from": "external_ans",
+      "to": "review_queue",
+      "label": "tự động chuyển",
+      "variant": "security"
+    },
+    {
+      "id": "e_queue_ta",
+      "from": "review_queue",
+      "to": "ta_review",
+      "variant": "security"
+    },
+    {
+      "id": "e_ta_ingest",
+      "from": "ta_review",
+      "to": "ingest_vectordb",
+      "label": "phê duyệt",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Định tuyến 3 dải tự tin (CRAG)",
+      "items": [
+        "≥ α: Trích xuất trực tiếp Slide 65 kèm số trang xác thực",
+        "[β, α): Kích hoạt HAX G10 hỏi lại 1 câu làm rõ ý định",
+        "< β: Tra cứu ngoài có kiểm soát theo Whitelist học thuật"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Kiểm soát rủi ro & Nhãn cảnh báo",
+      "items": [
+        "Câu trả lời ngoài bắt buộc gắn Badge Vàng Disclaimer",
+        "Cảnh báo nguy cơ lệch barem chấm bài thi quiz",
+        "Tự động đẩy vào Review Queue để Giảng viên/TA thẩm định"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Vòng lặp phê duyệt tri thức (Human-in-the-loop)",
+      "items": [
+        "Giảng viên/TA phê duyệt nội dung trên Dashboard quản trị",
+        "Tri thức mới được nạp ngược vào Vector DB bài giảng",
+        "Các thế hệ học viên sau được trả lời trực tiếp bằng nguồn chuẩn"
+      ]
+    }
+  ]
+}
