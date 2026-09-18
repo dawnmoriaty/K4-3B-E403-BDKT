@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLearn Tutor · CP3 Input Lab</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
+    body { margin: 0; }
+    main { max-width: 1000px; margin: 0 auto; padding: 36px 20px 72px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 3vw, 2.2rem); }
+    h2 { font-size: 1.05rem; margin: 0 0 12px; }
+    .intro { color: #526077; line-height: 1.55; max-width: 780px; }
+    .card { background: white; border: 1px solid #dbe2ee; border-radius: 14px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 7px #1720330d; }
+    label { display: block; font-weight: 650; margin: 0 0 7px; }
+    textarea, input, select { box-sizing: border-box; width: 100%; border: 1px solid #bac6d8; border-radius: 8px; font: inherit; padding: 10px; color: inherit; background: white; }
+    textarea { min-height: 112px; resize: vertical; line-height: 1.45; }
+    .row { display: grid; grid-template-columns: 1fr 180px; gap: 14px; margin-top: 12px; }
+    button, .link-button { border: 0; border-radius: 8px; padding: 10px 14px; font: inherit; font-weight: 650; cursor: pointer; background: #155eef; color: white; text-decoration: none; }
+    button:hover { background: #004eea; } button:disabled { opacity: .6; cursor: progress; }
+    .actions { display: flex; gap: 10px; align-items: end; margin-top: 14px; flex-wrap: wrap; }
+    .secondary { background: #edf2fa; color: #344054; } .secondary:hover { background: #dfe8f6; }
+    #status { color: #667085; font-size: .9rem; margin-left: 4px; }
+    .result { display: none; } .result.show { display: block; }
+    .route { display: inline-block; border-radius: 999px; padding: 4px 9px; font-size: .78rem; font-weight: 750; }
+    .grounded { background: #d1fadf; color: #05603a; } .clarify { background: #dbeafe; color: #1d4ed8; } .abstain { background: #fef0c7; color: #8a4b06; }
+    .answer { white-space: pre-wrap; line-height: 1.55; margin: 12px 0; }
+    .meta { color: #667085; font-size: .86rem; line-height: 1.6; }
+    .chips span { display: inline-block; background: #f2f4f7; border: 1px solid #dfe5ee; border-radius: 5px; padding: 2px 6px; margin: 3px 5px 0 0; font: .78rem ui-monospace, monospace; }
+    .history-item { border-top: 1px solid #eaecf0; padding: 14px 0; }
+    .history-item:first-child { border-top: 0; padding-top: 0; }
+    .history-question { font-weight: 650; margin-bottom: 5px; white-space: pre-wrap; }
+    .history-grid { display: grid; grid-template-columns: 170px 1fr; gap: 10px; margin-top: 9px; }
+    .small { font-size: .86rem; } .error { color: #b42318; } .hidden { display: none; }
+    @media (max-width: 620px) { .row, .history-grid { grid-template-columns: 1fr; } main { padding: 24px 14px 48px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="index.html" class="small">← Quay lại prototype VLearn</a>
+    <h1>CP3 Input Lab</h1>
+    <p class="intro">Chạy tay các input trước khi viết golden set. Mỗi lượt dùng đúng API/model thật của Tutor, lưu trace phía server và giữ nhận xét sơ bộ trong trình duyệt để bạn tải thành CSV.</p>
+
+    <section class="card">
+      <form id="input-form">
+        <label for="question">Input cần thử</label>
+        <textarea id="question" maxlength="4000" required placeholder="Ví dụ: LLM là gì? / Nó khác nhau thế nào? / Quiz không đạt có ảnh hưởng điểm cuối khóa không?"></textarea>
+        <div class="row">
+          <div>
+            <label for="case-id">Mã nháp (không bắt buộc)</label>
+            <input id="case-id" maxlength="80" placeholder="Ví dụ: DRAFT-001">
+          </div>
+          <div>
+            <label for="input-type">Nhóm dự kiến</label>
+            <select id="input-type">
+              <option value="chưa phân loại">Chưa phân loại</option>
+              <option value="nguồn sự thật">Nguồn sự thật</option>
+              <option value="mơ hồ">Mơ hồ</option>
+              <option value="ngoài phạm vi/thẩm quyền">Ngoài phạm vi/thẩm quyền</option>
+              <option value="đặc thù domain">Đặc thù domain</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="submit-button" type="submit">Chạy input với AI thật</button>
+          <span id="status">Đang kiểm tra cấu hình API…</span>
+        </div>
+      </form>
+    </section>
+
+    <section id="result" class="card result" aria-live="polite">
+      <h2>Kết quả lượt vừa chạy</h2>
+      <span id="route" class="route"></span>
+      <p id="answer" class="answer"></p>
+      <div id="citations" class="chips"></div>
+      <p id="result-meta" class="meta"></p>
+      <p id="flow-note" class="meta"></p>
+      <form id="correction-form" class="hidden">
+        <label for="correction-note" class="small">Đề xuất sửa kết quả/citation có căn cứ</label>
+        <textarea id="correction-note" maxlength="4000" placeholder="Nêu nội dung hoặc citation cần kiểm tra…"></textarea>
+        <div class="actions"><button type="submit" class="secondary">Gửi phản hồi cho nhóm phát triển</button><span id="feedback-status" class="small"></span></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="actions" style="margin-top:0; justify-content:space-between">
+        <div><h2>Lịch sử thử tay (<span id="count">0</span>)</h2><p class="meta">Đánh giá ngay sau khi đọc output: dùng được, cần sửa, hoặc không chấp nhận.</p></div>
+        <button id="download" type="button" class="secondary">Tải CSV nháp</button>
+      </div>
+      <div id="history" class="meta">Chưa có input nào được chạy trong phiên này.</div>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector('#input-form');
+    const question = document.querySelector('#question');
+    const caseId = document.querySelector('#case-id');
+    const inputType = document.querySelector('#input-type');
+    const submitButton = document.querySelector('#submit-button');
+    const status = document.querySelector('#status');
+    const result = document.querySelector('#result');
+    const historyEl = document.querySelector('#history');
+    const records = [];
+    let currentRecord = null;
+
+    const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const routeClass = route => route === 'ANSWER_GROUNDED' ? 'grounded' : route === 'ASK_CLARIFY' ? 'clarify' : 'abstain';
+    const routeText = route => ({ANSWER_GROUNDED: 'ANSWER_GROUNDED · Có căn cứ', ASK_CLARIFY: 'ASK_CLARIFY · Cần làm rõ', ABSTAIN_ROUTE: 'ABSTAIN_ROUTE · Chưa đủ căn cứ'}[route] || route);
+
+    function renderHistory() {
+      document.querySelector('#count').textContent = records.length;
+      if (!records.length) { historyEl.textContent = 'Chưa có input nào được chạy trong phiên này.'; return; }
+      historyEl.innerHTML = records.map((record, index) => `
+        <article class="history-item">
+          <div class="history-question">${index + 1}. ${escapeHtml(record.question)}</div>
+          <div class="small"><span class="route ${routeClass(record.route)}">${escapeHtml(record.route)}</span> · ${escapeHtml(record.model || 'unknown')} · ${escapeHtml(record.latency_ms)} ms${record.case_id ? ` · ${escapeHtml(record.case_id)}` : ''}</div>
+          <div class="history-grid">
+            <select data-index="${index}" class="verdict" aria-label="Đánh giá lượt ${index + 1}">
+              ${['chưa đánh giá', 'dùng được', 'cần sửa', 'không chấp nhận'].map(value => `<option ${record.verdict === value ? 'selected' : ''}>${value}</option>`).join('')}
+            </select>
+            <input data-index="${index}" class="note" value="${escapeHtml(record.note)}" placeholder="Ghi chú: sai ở đâu, sửa prompt/UX/citation thế nào?">
+          </div>
+          <div class="meta">${escapeHtml(record.answer)}</div>
+        </article>`).join('');
+      document.querySelectorAll('.verdict').forEach(el => el.addEventListener('change', event => { records[event.target.dataset.index].verdict = event.target.value; }));
+      document.querySelectorAll('.note').forEach(el => el.addEventListener('input', event => { records[event.target.dataset.index].note = event.target.value; }));
+    }
+
+    function showResult(record) {
+      currentRecord = record;
+      const route = document.querySelector('#route');
+      route.className = `route ${routeClass(record.route)}`;
+      route.textContent = routeText(record.route);
+      document.querySelector('#answer').textContent = record.answer;
+      document.querySelector('#citations').innerHTML = record.source_ids.length
+        ? `<b class="small">Citations:</b> ${record.source_ids.map(id => `<span>${escapeHtml(id)}</span>`).join('')}`
+        : '<span>Không có citation nội bộ được trả về.</span>';
+      document.querySelector('#result-meta').textContent = `Model: ${record.model || 'unknown'} · ${record.latency_ms} ms · Context đã truy xuất: ${record.retrieved_context.map(item => item.source_id).join(', ') || 'không có'}${record.reason ? ` · Lý do: ${record.reason}` : ''}`;
+      const external = record.external_reference;
+      const flowNote = document.querySelector('#flow-note');
+      if (external) {
+        const links = (external.sources || []).map(source => `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title || source.url)}</a></li>`).join('');
+        flowNote.innerHTML = `<b>${escapeHtml(external.label)}:</b> ${escapeHtml(external.message)} Nhánh no-grounding đã được tự động ghi log.${external.answer ? `<p>${escapeHtml(external.answer)}</p>` : ''}${links ? `<ul>${links}</ul>` : ''}`;
+      } else if (record.next_step) {
+        flowNote.textContent = `Bước tiếp theo theo flowchart: ${record.next_step}.`;
+      } else {
+        flowNote.textContent = '';
+      }
+      const correctionForm = document.querySelector('#correction-form');
+      correctionForm.classList.toggle('hidden', record.route_origin !== 'grounded');
+      document.querySelector('#correction-note').value = '';
+      document.querySelector('#feedback-status').textContent = '';
+      result.classList.add('show');
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const text = question.value.trim();
+      if (!text) return;
+      submitButton.disabled = true;
+      status.textContent = 'Đang đối chiếu nguồn và gọi model…';
+      status.className = '';
+      try {
+        const response = await fetch('/api/ask', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({question: text, case_id: caseId.value.trim() || null}) });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Không gọi được model');
+        const record = { timestamp: new Date().toISOString(), case_id: caseId.value.trim(), input_type: inputType.value, question: text, route: payload.route, answer: payload.answer, source_ids: payload.source_ids || [], retrieved_context: payload.retrieved_context || [], model: payload.model, latency_ms: payload.latency_ms, reason: payload.reason || '', route_origin: payload.route_origin, next_step: payload.next_step, external_reference: payload.external_reference, verdict: 'chưa đánh giá', note: '' };
+        records.unshift(record);
+        showResult(record);
+        renderHistory();
+        question.value = '';
+        caseId.value = '';
+        status.textContent = 'Đã lưu trace phía server và thêm vào lịch sử phiên này.';
+        status.className = '';
+      } catch (error) {
+        status.textContent = `Lỗi gọi AI: ${error.message}`;
+        status.className = 'error';
+      } finally { submitButton.disabled = false; }
+    });
+
+    document.querySelector('#correction-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const feedbackStatus = document.querySelector('#feedback-status');
+      const feedbackNote = document.querySelector('#correction-note').value.trim();
+      if (!currentRecord || !feedbackNote) return;
+      feedbackStatus.textContent = 'Đang gửi…';
+      try {
+        const response = await fetch('/api/feedback', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ route_origin: currentRecord.route_origin, case_id: currentRecord.case_id || null, question: currentRecord.question, ai_output: currentRecord.answer, citation_ids: currentRecord.source_ids, feedback_type: 'correction', feedback_note: feedbackNote }) });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Không gửi được phản hồi');
+        feedbackStatus.textContent = payload.message;
+      } catch (error) { feedbackStatus.textContent = `Lỗi: ${error.message}`; }
+    });
+
+    document.querySelector('#download').addEventListener('click', () => {
+      if (!records.length) { status.textContent = 'Hãy chạy ít nhất một input trước khi tải CSV.'; return; }
+      const headers = ['timestamp', 'case_id', 'input_type', 'question', 'actual_route', 'source_ids', 'retrieved_context_ids', 'model', 'latency_ms', 'verdict', 'note', 'answer', 'reason'];
+      const quote = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
+      const rows = records.map(record => [record.timestamp, record.case_id, record.input_type, record.question, record.route, record.source_ids.join('|'), record.retrieved_context.map(item => item.source_id).join('|'), record.model, record.latency_ms, record.verdict, record.note, record.answer, record.reason]);
+      const csv = '\ufeff' + [headers, ...rows].map(row => row.map(quote).join(',')).join('\n');
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'cp3-manual-inputs.csv'; link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    fetch('/api/health').then(response => response.json()).then(health => {
+      status.textContent = health.ok ? `AI thật sẵn sàng · ${health.model}` : `Chưa cấu hình: ${health.error || 'unknown error'}`;
+      status.className = health.ok ? '' : 'error';
+    }).catch(() => { status.textContent = 'Hãy chạy: python codebase/server.py'; status.className = 'error'; });
+  </script>
+</body>
+</html>

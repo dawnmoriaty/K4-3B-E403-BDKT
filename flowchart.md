@@ -19,7 +19,7 @@
 | Truy xuất tài liệu và lời gọi mô hình thật | Chưa bắt buộc tại CP2 |
 | Nguồn ngoài, gửi phản hồi và lưu log theo nhánh | Chỉ mô phỏng, không tuyên bố đã chạy thật |
 
-**Automation:** Conditional. Tutor chỉ tự trả lời khi có đoạn tài liệu trực tiếp hỗ trợ. Khi input mơ hồ, Tutor hỏi lại. Khi không có căn cứ hoặc cần thẩm quyền, Tutor dừng và chuyển người.
+**Automation:** Conditional. Tutor chỉ tự trả lời khi có đoạn tài liệu trực tiếp hỗ trợ. Khi input mơ hồ, Tutor hỏi lại. Khi không có căn cứ, Tutor tự tra cứu nguồn ngoài, hiển thị trong khối tham khảo tách biệt và ghi log nền; giao diện hỏi đáp không chuyển học viên sang TA hay hàng đợi duyệt.
 
 **Lý do theo cost-of-error:** Trả lời sai quy ước khóa học có thể khiến học viên học sai và mất điểm. Vì vậy, hệ thống không kết luận khi thiếu căn cứ và luôn lưu phản hồi kèm nhánh phát sinh để Dev có dữ liệu kiểm tra sau.
 

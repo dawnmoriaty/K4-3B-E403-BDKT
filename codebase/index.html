@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VLearn Reader · Bài 1 Day01 — AI Tutor 2 Tầng & Human-in-the-Loop</title>
+  <title>VLearn Reader · Bài 1 Day01 — AI Tutor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -43,14 +43,8 @@
 
     <!-- Right action buttons -->
     <div class="flex items-center space-x-3">
-      <!-- Role Switcher for Hackathon Demo -->
-      <div class="bg-slate-100 p-0.5 rounded-lg flex text-xs font-medium border border-slate-200">
-        <button id="mode-student-btn" class="px-2.5 py-1 rounded bg-white text-blue-600 shadow-sm transition">
-          <i class="fa-solid fa-user-graduate mr-1"></i>Học viên
-        </button>
-        <button id="mode-teacher-btn" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-800 transition">
-          <i class="fa-solid fa-chalkboard-user mr-1"></i>Giảng viên/TA <span class="ml-1 px-1.5 py-0.2 bg-amber-500 text-white rounded-full text-[10px]" id="badge-queue-count">1</span>
-        </button>
+      <div class="bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-medium border border-slate-200 text-blue-600">
+        <i class="fa-solid fa-user-graduate mr-1"></i>Học viên
       </div>
 
       <!-- VLearn Core Action Buttons -->
@@ -294,40 +288,21 @@
           </div>
         </div>
 
-        <button id="close-drawer-btn" class="text-slate-400 hover:text-slate-700 w-7 h-7 rounded-lg hover:bg-slate-200/60 flex items-center justify-center transition">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
+        <div class="flex items-center gap-1">
+          <button id="end-conversation-btn" type="button" class="text-[10px] text-slate-500 hover:text-rose-700 px-1.5 py-1 rounded hover:bg-rose-50 transition">Kết thúc</button>
+          <button id="close-drawer-btn" class="text-slate-400 hover:text-slate-700 w-7 h-7 rounded-lg hover:bg-slate-200/60 flex items-center justify-center transition" title="Đóng và kết thúc hội thoại">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
       </div>
 
-      <!-- Auto Context Chip Bar (HAX G2 - Minh bạch căn cứ) -->
+      <!-- Retrieval scope (HAX G2 - minh bạch căn cứ) -->
       <div class="bg-blue-50/70 border-b border-blue-100 px-3 py-1.5 flex items-center justify-between text-[11px] text-blue-900">
         <div class="flex items-center space-x-1.5 truncate">
           <i class="fa-solid fa-location-dot text-blue-600 text-xs"></i>
-          <span><b>Ngữ cảnh neo:</b> Day 1 · Slide trang 65 / 83</span>
+          <span id="retrieval-scope"><b>Bài đang mở:</b> Day 1 · Slide 65 / 83 &nbsp;·&nbsp; Tutor tìm trong toàn bộ corpus đã nạp</span>
         </div>
         <span class="text-[10px] bg-white text-blue-700 font-semibold px-1.5 py-0.5 rounded border border-blue-200 shadow-2xs">RAG Active</span>
-      </div>
-
-      <!-- Scenario Selector Tabs (Dành cho Trợ giảng / BGK Test 4 Đường đi Trải nghiệm) -->
-      <div class="bg-slate-100 p-1.5 border-b border-slate-200">
-        <div class="text-[10px] font-bold text-slate-500 mb-1 px-1">CHỌN KỊCH BẢN KIỂM CHỨNG (4 ĐƯỜNG ĐI TRẢI NGHIỆM):</div>
-        <div class="grid grid-cols-5 gap-1 text-[10px]">
-          <button class="scenario-tab-btn active bg-white text-blue-700 font-bold p-1 rounded border border-slate-300 shadow-2xs truncate" data-scenario="happy" title="1. Trong bài hiện tại">
-            1. Trong bài
-          </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="cross" title="5. Bài khác trong khóa (Cross-Lecture)">
-            2. Bài khác
-          </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="clarify" title="2. Mơ hồ vùng xám (HAX G10)">
-            3. Mơ hồ
-          </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="external" title="3. Ngoài toàn bộ giáo trình">
-            4. Ngoài bài
-          </button>
-          <button class="scenario-tab-btn bg-slate-200/70 text-slate-600 p-1 rounded hover:bg-white truncate" data-scenario="correction" title="4. Giảng viên phê duyệt">
-            5. TA Duyệt
-          </button>
-        </div>
       </div>
 
       <!-- Chat Thread Message Container -->
@@ -338,268 +313,61 @@
       <!-- Input Bar (HAX G9 - Sửa dễ dàng, G8 - Thu hồi) -->
       <div class="p-3 border-t border-slate-200 bg-white shrink-0">
         <form id="chat-form" class="flex items-center space-x-2">
-          <input type="text" id="chat-input" placeholder="Hỏi AI Tutor về Slide 65 hoặc dán khái niệm..." class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
+          <input type="text" id="chat-input" placeholder="Hỏi khái niệm hoặc nội dung bài học…" class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
           <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-sm shrink-0 transition">
             <i class="fa-solid fa-paper-plane text-xs"></i>
           </button>
         </form>
         <div class="flex items-center justify-between mt-1.5 text-[10px] text-slate-400">
           <span id="live-ai-status">AI thật: đang kiểm tra kết nối...</span>
-          <a href="vlearn-workflow.html" target="_blank" class="text-blue-600 hover:underline flex items-center space-x-1">
-            <i class="fa-solid fa-diagram-project"></i>
-            <span>Xem Archify Flow</span>
+          <a href="input-lab.html" class="text-blue-600 hover:underline flex items-center space-x-1">
+            <i class="fa-solid fa-flask"></i>
+            <span>CP3 Input Lab</span>
           </a>
         </div>
       </div>
 
     </aside>
 
-    <!-- ========================================================================= -->
-    <!-- TEACHER / TA REVIEW MODAL (HUMAN-IN-THE-LOOP DASHBOARD)                   -->
-    <!-- ========================================================================= -->
-    <div id="teacher-review-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 hidden p-4">
-      <div class="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        <div class="h-14 border-b border-slate-200 px-5 bg-slate-50 flex items-center justify-between shrink-0">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center text-sm shadow-sm">
-              <i class="fa-solid fa-list-check"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-sm text-slate-800">Hàng Đợi Thẩm Định Giảng Viên (Review Queue)</h3>
-              <div class="text-xs text-slate-500">Các câu trả lời AI tra cứu ngoài giáo trình cần TA phê duyệt</div>
-            </div>
-          </div>
-          <button id="close-teacher-modal-btn" class="text-slate-400 hover:text-slate-700 text-sm p-1 rounded-lg">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
-          <div class="p-4 rounded-lg border border-amber-200 bg-amber-50/50 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-amber-900 flex items-center space-x-1.5">
-                <i class="fa-solid fa-circle-exclamation text-amber-600"></i>
-                <span>Câu hỏi từ Học viên: Phùng Đức Đăng (Day 1 - Slide 65)</span>
-              </span>
-              <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded border border-amber-300">Chờ duyệt</span>
-            </div>
-
-            <div class="text-xs text-slate-800 font-semibold bg-white p-2.5 rounded border border-slate-200">
-              "DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài giảng không?"
-            </div>
-
-            <div class="space-y-1.5 text-xs text-slate-600 bg-white p-3 rounded border border-slate-200">
-              <div class="font-bold text-slate-700 flex items-center justify-between">
-                <span>Nội dung AI đề xuất nạp (Nguồn ngoài: arXiv:2412.19437):</span>
-                <span class="text-[10px] text-blue-600">bge-m3 confidence: 0.52 (Ngoài bài)</span>
-              </div>
-              <p class="text-slate-600 text-[11px] leading-relaxed">
-                "Multi-Head Latent Attention (MLA) là kiến trúc nén KV cache thành vector tiềm ẩn chiều thấp, giúp tiết kiệm bộ nhớ GPU khi phục vụ context dài trong mô hình Tầng 3 (Self-host). Khái niệm này không nằm trong nội dung thi chính thức của Day 1."
-              </p>
-            </div>
-
-            <div class="flex items-center justify-between pt-2">
-              <span class="text-[11px] text-slate-500">Hành động của Giảng viên:</span>
-              <div class="flex items-center space-x-2">
-                <button id="reject-review-btn" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-medium">
-                  Bác bỏ / Không nạp
-                </button>
-                <button id="approve-review-btn" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm flex items-center space-x-1">
-                  <i class="fa-solid fa-check"></i>
-                  <span>Duyệt & Nạp vào Vector DB</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
   <!-- SCRIPT LOGIC MÔ PHỎNG 4 ĐƯỜNG ĐI TRẢI NGHIỆM -->
   <script>
     // State management
-    let currentScenario = "happy";
     let isDrawerOpen = true;
-    let isApprovedByTeacher = false;
+    let conversation = [];
+    let conversationId = crypto.randomUUID();
 
     // Elements
     const drawer = document.getElementById("ai-tutor-drawer");
     const openBtn = document.getElementById("open-ai-tutor-btn");
     const floatingBtn = document.getElementById("floating-ai-trigger");
     const closeBtn = document.getElementById("close-drawer-btn");
+    const endConversationBtn = document.getElementById("end-conversation-btn");
     const chatThread = document.getElementById("chat-thread");
     const chatForm = document.getElementById("chat-form");
     const chatInput = document.getElementById("chat-input");
-    const tabBtns = document.querySelectorAll(".scenario-tab-btn");
-    const teacherModal = document.getElementById("teacher-review-modal");
-    const modeTeacherBtn = document.getElementById("mode-teacher-btn");
-    const modeStudentBtn = document.getElementById("mode-student-btn");
-    const closeTeacherModalBtn = document.getElementById("close-teacher-modal-btn");
-    const approveBtn = document.getElementById("approve-review-btn");
-    const rejectBtn = document.getElementById("reject-review-btn");
 
-    // Scenarios data
-    const scenarios = {
-      happy: {
-        studentMsg: "Khi nào tôi nên chọn Tầng 2 thay vì Tầng 1 theo quy ước của bài học?",
-        aiResponse: `
-          <div class="space-y-2">
-            <div class="inline-flex items-center space-x-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">
-              <i class="fa-solid fa-circle-check text-emerald-600"></i>
-              <span>ĐÃ XÁC THỰC TRONG BÀI GIẢNG · SLIDE TRANG 65</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed">
-              Theo quy ước tại <b>Slide Day 1 (Trang 65)</b>:
-            </p>
-            <ul class="list-disc pl-4 space-y-1 text-slate-700 text-[11px]">
-              <li><b>Tầng 2 (Rẻ mà mạnh):</b> Là tầng <i>mặc định bạn nên thử trước</i> cho đa số công việc hàng ngày (viết code, tóm tắt, automation).</li>
-              <li><b>Tầng 1 (Frontier đóng):</b> Là tầng đắt nhất, chỉ nâng tầng khi công việc thuộc dạng khó nhất (suy luận nhiều bước, code phức tạp) mà Tầng 2 bị chặn use case.</li>
-            </ul>
-            <div class="mt-2 p-2 bg-slate-50 border border-slate-200 rounded flex items-center justify-between text-[11px]">
-              <span class="text-slate-600"><i class="fa-regular fa-file-powerpoint text-amber-500 mr-1"></i>Trích xuất: <code>day01-slide-v2-blue.pdf#page=65</code></span>
-              <button class="text-blue-600 font-bold hover:underline" onclick="highlightSlideZone()">Highlight slide</button>
-            </div>
-          </div>
-        `
-      },
-      cross: {
-        studentMsg: "Khái niệm này có liên hệ gì với Next-Token Prediction ở Day 1 không?",
-        aiResponse: `
-          <div class="space-y-2">
-            <div class="inline-flex items-center space-x-1 bg-indigo-100 text-indigo-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-300">
-              <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
-              <span>THUỘC GIÁO TRÌNH KHÓA HỌC · BÀI DAY 01 (TRANG 12)</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed">
-              Khái niệm <b>Next-token prediction</b> đã được giảng dạy chi tiết tại <b>Bài 1 (Day 01 - Slide trang 12)</b>:
-            </p>
-            <div class="p-2.5 bg-indigo-50/50 border border-indigo-200 rounded text-[11px] text-slate-700 space-y-1">
-              <p>Mô hình ngôn ngữ hoạt động theo cơ chế tối đa hóa hàm hợp lý của từ tiếp theo dựa trên ngữ cảnh quá khứ. Đây chính là nguyên nhân các mô hình Tầng 2 & Tầng 1 có sự khác biệt về năng lực suy luận nhiều bước.</p>
-            </div>
-            <div class="flex items-center justify-between pt-1 text-[11px]">
-              <span class="text-slate-500"><i class="fa-solid fa-compass text-indigo-500 mr-1"></i>Định vị: <code>day01-llm-foundation-1.pdf#page=12</code></span>
-              <button class="text-indigo-600 font-bold hover:underline flex items-center space-x-1" onclick="alert('Đang chuyển trang về Slide Day 01 Trang 12!')">
-                <span>👉 Mở Slide Day 1</span>
-              </button>
-            </div>
-          </div>
-        `
-      },
-      clarify: {
-        studentMsg: "DeepSeek có dùng được không?",
-        aiResponse: `
-          <div class="space-y-2">
-            <div class="inline-flex items-center space-x-1 bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-300">
-              <i class="fa-solid fa-magnifying-glass text-blue-600"></i>
-              <span>DẢI MƠ HỒ [beta, alpha) · HAX G10 CLARIFICATION</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed">
-              Khái niệm <b>DeepSeek</b> xuất hiện ở cả mục <i>Self-host</i> và các thảo luận API ngoài bài giảng. Để đối chiếu chuẩn nhất với nội dung <b>Slide trang 65</b>, bạn đang muốn hỏi về khía cạnh nào?
-            </p>
-            <div class="space-y-1.5 pt-1">
-              <button class="w-full text-left p-2 rounded border border-blue-200 bg-blue-50/50 hover:bg-blue-100 text-blue-900 text-[11px] font-medium transition" onclick="selectClarifyOption(1)">
-                🔹 1. Dùng DeepSeek cho việc cần kiểm soát dữ liệu / Self-host (Tầng 3 của Slide 65)
-              </button>
-              <button class="w-full text-left p-2 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 text-[11px] font-medium transition" onclick="selectClarifyOption(2)">
-                🔹 2. So sánh hiệu năng và chi phí của DeepSeek API so với Tầng 2
-              </button>
-            </div>
-          </div>
-        `
-      },
-      external: {
-        studentMsg: "DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài giảng không?",
-        aiResponse: `
-          <div class="space-y-2">
-            <div class="inline-flex items-center space-x-1 bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300">
-              <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-              <span>THAM KHẢO NGOÀI — CHƯA ĐƯỢC GIẢNG VIÊN XÁC THỰC</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed">
-              Tài liệu Slide Day 1 chỉ đề cập DeepSeek ở <b>Tầng 3 (Self-host)</b> và <b>không có định nghĩa về Multi-Head Latent Attention (MLA)</b>.
-            </p>
-            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-700 space-y-1">
-              <div class="font-bold text-slate-800">Nguồn mở rộng (arXiv:2412.19437 · Whitelist tra cứu):</div>
-              <p>MLA là kiến trúc nén Key-Value cache thành không gian vector tiềm ẩn chiều thấp, giảm tải bộ nhớ RAM GPU cho context dài.</p>
-            </div>
-            <div class="p-2 bg-amber-50 border border-amber-200 rounded text-[10px] text-amber-900">
-              ⚠️ <b>Cảnh báo quan trọng:</b> Kiến thức này chưa được kiểm chứng trong barem chấm thi của lớp. Không dùng MLA để trả lời câu hỏi quiz về Tầng Model của Day 1.
-            </div>
-            <div class="flex items-center justify-between pt-1 text-[11px]">
-              <span class="text-slate-500"><i class="fa-solid fa-paper-plane text-slate-400 mr-1"></i>Đã tự động gửi tới TA Review Queue</span>
-              <button class="text-blue-600 font-bold hover:underline" onclick="openTeacherModal()">Xem hàng đợi</button>
-            </div>
-          </div>
-        `
-      },
-      correction: {
-        studentMsg: "DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì?",
-        aiResponse: `
-          <div class="space-y-2">
-            <div class="inline-flex items-center space-x-1 bg-purple-100 text-purple-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-300">
-              <i class="fa-solid fa-star text-purple-600"></i>
-              <span>ĐÃ ĐƯỢC GIẢNG VIÊN XÁC THỰC & NẠP VÀO VECTOR DB</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed">
-              Nội dung bổ trợ đã được <b>Giảng viên (Thầy Đức)</b> phê duyệt vào kho tri thức bổ sung cho Day 1:
-            </p>
-            <div class="p-2.5 bg-purple-50/50 border border-purple-200 rounded text-[11px] text-purple-900 space-y-1">
-              <div class="font-bold">Định nghĩa chuẩn hóa:</div>
-              <p>Multi-Head Latent Attention (MLA) là công nghệ tối ưu bộ nhớ GPU trong các mô hình mã nguồn mở Tầng 3. Khi thi trắc nghiệm, học viên chỉ cần nhớ DeepSeek nằm ở Tầng 3 phục vụ kiểm soát dữ liệu.</p>
-            </div>
-            <div class="text-[10px] text-emerald-700 font-semibold flex items-center space-x-1">
-              <i class="fa-solid fa-check-double"></i>
-              <span>Đã cập nhật vào Vector Store chung của toàn bộ lớp học (Data Flywheel)</span>
-            </div>
-          </div>
-        `
-      }
-    };
-
-    function renderThread(scenarioKey) {
-      const data = scenarios[scenarioKey];
+    function renderWelcome() {
       chatThread.innerHTML = `
-        <!-- Student Query Bubble -->
-        <div class="flex items-start justify-end space-x-2">
-          <div class="bg-blue-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed shadow-sm">
-            ${data.studentMsg}
-          </div>
-          <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
-            P
-          </div>
-        </div>
-
-        <!-- AI Tutor Response Bubble -->
         <div class="flex items-start space-x-2">
           <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 mt-1">
             <i class="fa-solid fa-robot"></i>
           </div>
-          <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[90%] shadow-xs">
-            ${data.aiResponse}
+          <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[90%] shadow-xs text-slate-600 leading-relaxed">
+            Hãy nhập câu hỏi về nội dung bài học. Tôi sẽ tự kiểm tra transcript và slide, sau đó trả lời có citation, hỏi lại một câu nếu thiếu ngữ cảnh, hoặc nói rõ khi chưa có căn cứ.
           </div>
         </div>
       `;
     }
 
-    // Tab switching
-    tabBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        tabBtns.forEach(b => {
-          b.classList.remove("active", "bg-white", "text-blue-700", "font-bold", "shadow-2xs");
-          b.classList.add("bg-slate-200/70", "text-slate-600");
-        });
-        btn.classList.add("active", "bg-white", "text-blue-700", "font-bold", "shadow-2xs");
-        btn.classList.remove("bg-slate-200/70", "text-slate-600");
-        
-        currentScenario = btn.dataset.scenario;
-        renderThread(currentScenario);
-      });
-    });
+    function endConversation() {
+      conversation = [];
+      conversationId = crypto.randomUUID();
+      document.getElementById("retrieval-scope").innerHTML = "<b>Bài đang mở:</b> Day 1 · Slide 65 / 83 &nbsp;·&nbsp; Tutor tìm trong toàn bộ corpus đã nạp";
+      renderWelcome();
+      chatInput.focus();
+    }
 
     // Drawer toggle
     function toggleDrawer(open) {
@@ -615,7 +383,11 @@
 
     openBtn.addEventListener("click", () => toggleDrawer(true));
     floatingBtn.addEventListener("click", () => toggleDrawer(true));
-    closeBtn.addEventListener("click", () => toggleDrawer(false));
+    endConversationBtn.addEventListener("click", endConversation);
+    closeBtn.addEventListener("click", () => {
+      endConversation();
+      toggleDrawer(false);
+    });
 
     // Selection on slide triggers question
     document.querySelectorAll(".selection-trigger").forEach(el => {
@@ -623,54 +395,15 @@
         const q = el.dataset.query;
         chatInput.value = q;
         toggleDrawer(true);
-        // Switch to happy path
-        tabBtns[0].click();
+        chatInput.focus();
       });
     });
 
     document.getElementById("trigger-deepseek-outdomain").addEventListener("click", () => {
       toggleDrawer(true);
-      tabBtns[2].click(); // External tab
+      chatInput.value = "DeepSeek-V3 dùng kiến trúc Multi-Head Latent Attention (MLA) là gì và có trong bài giảng không?";
+      chatInput.focus();
     });
-
-    // Teacher modal controls
-    function openTeacherModal() {
-      teacherModal.classList.remove("hidden");
-    }
-    function closeTeacherModal() {
-      teacherModal.classList.add("hidden");
-    }
-
-    modeTeacherBtn.addEventListener("click", openTeacherModal);
-    modeStudentBtn.addEventListener("click", () => {
-      modeStudentBtn.classList.add("bg-white", "text-blue-600", "shadow-sm");
-      modeStudentBtn.classList.remove("text-slate-500");
-      modeTeacherBtn.classList.remove("bg-white", "text-blue-600", "shadow-sm");
-      modeTeacherBtn.classList.add("text-slate-500");
-    });
-    closeTeacherModalBtn.addEventListener("click", closeTeacherModal);
-
-    approveBtn.addEventListener("click", () => {
-      alert("Đã phê duyệt! Chunk tri thức được nạp vào Vector DB. Badge trong phiên học viên sẽ chuyển thành XÁC THỰC.");
-      closeTeacherModal();
-      document.getElementById("badge-queue-count").textContent = "0";
-      document.getElementById("badge-queue-count").classList.remove("bg-amber-500");
-      document.getElementById("badge-queue-count").classList.add("bg-slate-400");
-      tabBtns[3].click(); // Switch to correction tab
-    });
-
-    rejectBtn.addEventListener("click", () => {
-      alert("Đã từ chối! Nội dung ngoài giáo trình này không được nạp vào Vector DB.");
-      closeTeacherModal();
-    });
-
-    function selectClarifyOption(opt) {
-      if (opt === 1) {
-        tabBtns[0].click();
-      } else {
-        tabBtns[2].click();
-      }
-    }
 
     function highlightSlideZone() {
       alert("Đã highlight vùng Tầng 2 trên Slide trang 65!");
@@ -682,34 +415,119 @@
       return div.innerHTML;
     }
 
-    function routeBadge(route) {
+    function routeBadge(result) {
       const badges = {
         ANSWER_GROUNDED: ["bg-emerald-100 text-emerald-800 border-emerald-300", "CÓ CĂN CỨ TRONG TÀI LIỆU"],
         ASK_CLARIFY: ["bg-blue-100 text-blue-800 border-blue-300", "CẦN LÀM RÕ · HAX G10"],
-        ABSTAIN_ROUTE: ["bg-amber-100 text-amber-900 border-amber-300", "CHƯA ĐỦ CĂN CỨ · CHUYỂN TA"],
+        ABSTAIN_ROUTE: ["bg-amber-100 text-amber-900 border-amber-300", "KHÔNG THỂ HỖ TRỢ YÊU CẦU NÀY"],
       };
-      return badges[route] || badges.ABSTAIN_ROUTE;
+      if (result.route === "ABSTAIN_ROUTE" && result.abstain_kind === "NO_GROUNDING") {
+        return ["bg-amber-100 text-amber-900 border-amber-300", "CHƯA CÓ CĂN CỨ NỘI BỘ · ĐÃ TRA CỨU NGOÀI"];
+      }
+      return badges[result.route] || badges.ABSTAIN_ROUTE;
+    }
+
+    function externalSourceMarkup(externalReference) {
+      if (!externalReference) return "";
+      const sources = (externalReference.sources || []).filter(source => {
+        try { return new URL(source.url).protocol === "https:" || new URL(source.url).protocol === "http:"; }
+        catch { return false; }
+      });
+      const links = sources.map(source => `
+        <li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all">${escapeHtml(source.title || source.url)}</a></li>`).join("");
+      const answer = externalReference.answer
+        ? `<p class="text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(externalReference.answer)}</p>`
+        : "";
+      return `
+        <section class="pt-2 border-t border-slate-100 space-y-2">
+          <div class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border bg-violet-100 text-violet-900 border-violet-300">${escapeHtml(externalReference.label || "NGUỒN NGOÀI")}</div>
+          ${answer}
+          <p class="text-[10px] text-slate-500">${escapeHtml(externalReference.message || "")}</p>
+          ${links ? `<div class="text-[11px] text-slate-600"><b>Nguồn tham khảo:</b><ul class="list-disc ml-4 mt-1 space-y-1">${links}</ul></div>` : ""}
+        </section>`;
+    }
+
+    function updateRetrievalScope(retrievedContext) {
+      const scope = document.getElementById("retrieval-scope");
+      if (!retrievedContext || !retrievedContext.length) {
+        scope.innerHTML = "<b>Ứng viên đã kiểm tra:</b> Không tìm thấy đoạn phù hợp trong corpus đã nạp";
+        return;
+      }
+      const sourceIds = retrievedContext.map(item => item.source_id).join(", ");
+      scope.innerHTML = `<b>Ứng viên đã kiểm tra:</b> ${escapeHtml(sourceIds)} · Citation chính thức nằm dưới câu trả lời`;
     }
 
     function renderLiveResult(question, result) {
-      const [badgeClass, badgeText] = routeBadge(result.route);
+      const messageId = `message-${crypto.randomUUID()}`;
+      const [badgeClass, badgeText] = routeBadge(result);
+      const isGrounded = result.route === "ANSWER_GROUNDED" && (result.route_origin === "grounded" || !result.route_origin);
       const citations = (result.source_ids || []).map(sourceId =>
         `<span class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono">${escapeHtml(sourceId)}</span>`
       ).join(" ");
-      chatThread.innerHTML = `
-        <div class="flex items-start justify-end space-x-2">
-          <div class="bg-blue-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed shadow-sm">${escapeHtml(question)}</div>
-          <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">P</div>
-        </div>
+      updateRetrievalScope(result.retrieved_context || []);
+      chatThread.insertAdjacentHTML("beforeend", `
         <div class="flex items-start space-x-2">
           <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 mt-1"><i class="fa-solid fa-robot"></i></div>
           <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[90%] shadow-xs space-y-2">
             <div class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeClass}">${badgeText}</div>
             <p class="text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(result.answer)}</p>
             ${citations ? `<div class="text-[10px] text-slate-600"><b>Nguồn:</b> ${citations}</div>` : ""}
-            <div class="text-[10px] text-slate-400">Model: ${escapeHtml(result.model || "unknown")} · ${Number(result.latency_ms || 0)} ms · prompt v1</div>
+            ${externalSourceMarkup(result.external_reference)}
+            ${isGrounded ? `
+              <div class="pt-1 border-t border-slate-100">
+                <button id="open-feedback-${messageId}" type="button" class="text-[11px] text-blue-700 font-semibold hover:underline">
+                  <i class="fa-regular fa-comment-dots mr-1"></i>Góp ý / đề xuất sửa nguồn
+                </button>
+                <form id="feedback-form-${messageId}" class="hidden mt-2 space-y-2">
+                  <p class="text-[10px] text-slate-500">Ví dụ: nội dung đúng ở Slide Day 01 trang 42, không phải trang 65.</p>
+                  <input id="feedback-source-${messageId}" maxlength="300" class="w-full border border-slate-300 rounded px-2 py-1.5 text-[11px]" placeholder="Nguồn/citation bạn đề xuất (không bắt buộc)">
+                  <textarea id="feedback-note-${messageId}" maxlength="4000" required class="w-full border border-slate-300 rounded px-2 py-1.5 text-[11px]" rows="3" placeholder="Nội dung nào sai, thiếu hoặc cần kiểm tra lại?"></textarea>
+                  <div class="flex items-center gap-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded px-2.5 py-1.5 text-[11px] font-semibold">Gửi góp ý</button>
+                    <span id="feedback-status-${messageId}" class="text-[10px] text-slate-500"></span>
+                  </div>
+                </form>
+              </div>` : ""}
+            <div class="text-[10px] text-slate-400">Model: ${escapeHtml(result.model || "unknown")} · ${Number(result.latency_ms || 0)} ms · flowchart router v4</div>
           </div>
-        </div>`;
+        </div>`);
+
+      if (!isGrounded) return;
+      const feedbackForm = document.getElementById(`feedback-form-${messageId}`);
+      document.getElementById(`open-feedback-${messageId}`).addEventListener("click", () => {
+        feedbackForm.classList.toggle("hidden");
+        if (!feedbackForm.classList.contains("hidden")) document.getElementById(`feedback-note-${messageId}`).focus();
+      });
+      feedbackForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        const note = document.getElementById(`feedback-note-${messageId}`).value.trim();
+        const suggestedSource = document.getElementById(`feedback-source-${messageId}`).value.trim();
+        const feedbackStatus = document.getElementById(`feedback-status-${messageId}`);
+        if (!note) return;
+        feedbackStatus.textContent = "Đang gửi…";
+        try {
+          const feedbackNote = suggestedSource ? `Nguồn người dùng đề xuất: ${suggestedSource}\n\n${note}` : note;
+          const response = await fetch("/api/feedback", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              route_origin: "grounded",
+              question,
+              ai_output: result.answer,
+              citation_ids: result.source_ids || [],
+              feedback_type: "citation_or_content_correction",
+              feedback_note: feedbackNote,
+            }),
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.error || "Không gửi được góp ý");
+          feedbackStatus.textContent = "Đã ghi nhận để nhóm phát triển rà soát.";
+          feedbackForm.querySelector("button[type=submit]").disabled = true;
+        } catch (error) {
+          feedbackStatus.textContent = `Lỗi: ${error.message}`;
+          feedbackStatus.className = "text-[10px] text-rose-600";
+        }
+      });
     }
 
     chatForm.addEventListener("submit", async event => {
@@ -717,23 +535,29 @@
       const question = chatInput.value.trim();
       if (!question) return;
       chatInput.value = "";
-      chatThread.innerHTML = `
+      const loadingId = `loading-${crypto.randomUUID()}`;
+      chatThread.insertAdjacentHTML("beforeend", `
         <div class="flex items-start justify-end space-x-2">
           <div class="bg-blue-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[85%] leading-relaxed shadow-sm">${escapeHtml(question)}</div>
           <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">P</div>
         </div>
-        <div class="text-slate-500 text-[11px] p-2"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Đang đối chiếu nguồn và gọi model thật...</div>`;
+        <div id="${loadingId}" class="text-slate-500 text-[11px] p-2"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Đang đối chiếu nguồn và gọi model thật...</div>`);
+      chatThread.scrollTop = chatThread.scrollHeight;
       try {
         const response = await fetch("/api/ask", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({question}),
+          body: JSON.stringify({question, conversation, conversation_id: conversationId}),
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Không gọi được model");
+        document.getElementById(loadingId)?.remove();
+        conversation.push({role: "user", content: question}, {role: "assistant", content: result.answer});
         renderLiveResult(question, result);
+        chatThread.scrollTop = chatThread.scrollHeight;
       } catch (error) {
-        chatThread.innerHTML += `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-700 text-[11px]"><b>Lỗi gọi AI:</b> ${escapeHtml(error.message)}</div>`;
+        document.getElementById(loadingId)?.remove();
+        chatThread.insertAdjacentHTML("beforeend", `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-700 text-[11px]"><b>Lỗi gọi AI:</b> ${escapeHtml(error.message)}</div>`);
       }
     });
 
@@ -748,8 +572,8 @@
         document.getElementById("live-ai-status").textContent = "Hãy chạy bằng python codebase/server.py";
       });
 
-    // Init with happy path
-    renderThread("happy");
+    // The learner always starts with a blank question; the server selects the route after retrieval.
+    renderWelcome();
   </script>
 </body>
 </html>
