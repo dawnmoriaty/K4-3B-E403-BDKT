@@ -1,6 +1,6 @@
-case_id,reviewer_1,reviewer_1_pass,reviewer_1_note,reviewer_2,reviewer_2_pass,reviewer_2_note,agreement
-A1-001,,,,,,,
-A1-002,,,,,,,
-A1-003,,,,,,,
-A1-004,,,,,,,
-A1-005,,,,,,,
+case_id, reviewer_1, reviewer_1_pass, reviewer_1_note, reviewer_2, reviewer_2_pass, reviewer_2_note, agreement
+A1-001 , Đăng      , Pass           ,  Trả lời đúng tuân thủ must_not_do              ,Thành         ,pass,Nội dung và source IDs phù hợp context; không thấy claim ngoài nguồn.,agree
+A1-002 , Đăng      , Pass           ,    Câu trả lời ngắn gọn đủ tiêu chí            ,Thành,pass,Ko bịa nguồn,agree
+A1-003 , Đăng      , Not pass          ,  Câu trả lời k có thứ tự              ,Thành,pass,Ko có kiến thức ngoài video,disagree
+A1-004 , Đăng      , Pass           ,   Câu trả lời có ví dụ             ,Thành,pass,"Câu trả lời rõ, đúng nghĩa theo source",agree
+A1-005 , Đăng      , Pass           ,                ,Thành,pass,"Ko trả lời ngoài context (encoder, decoder)",agree
