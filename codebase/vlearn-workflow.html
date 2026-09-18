@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="dark" data-preset="signal-flow">
+<html lang="en" data-theme="dark" data-preset="signal-flow">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.17.0-dev.1">
-  <title>VLearn AI Tutor — Quy Trình Xác Thực Nguồn 2 Tầng &amp; Human-in-the-Loop Diagram</title>
+  <title>VLearn AI Tutor — Luồng Trải Nghiệm Xác Thực Nguồn &amp; 4 Đường Đi (CP2/CP4) Diagram</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -4858,7 +4858,7 @@
             aria-label="Toggle color theme"
             aria-pressed="false">
       <span id="theme-icon" class="toolbar-icon" aria-hidden="true"></span>
-      <span id="theme-label">Tối</span>
+      <span id="theme-label">Dark</span>
     </button>
     <div class="preset-wrap">
       <button id="btn-preset" type="button"
@@ -4869,29 +4869,29 @@
               aria-controls="preset-menu"
               aria-keyshortcuts="S">
         <span class="preset-control-mark" aria-hidden="true"></span>
-        <span id="preset-label">Giao diện</span>
+        <span id="preset-label">Style</span>
         <span class="toolbar-icon toolbar-chevron" aria-hidden="true"></span>
       </button>
       <div class="preset-menu" id="preset-menu" role="menu" aria-label="Visual style">
         <div class="preset-menu-heading" role="presentation"><span>Visual identity</span><span>S cycles</span></div>
         <button class="preset-option" data-preset-value="classic" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
           <span class="preset-option-swatch classic" aria-hidden="true"></span>
-          <span class="preset-option-copy"><strong>Mặc định</strong><small>Bố cục kỹ thuật chuẩn</small></span>
+          <span class="preset-option-copy"><strong>Classic</strong><small>Stable technical default</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
         <button class="preset-option" data-preset-value="signal-flow" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
           <span class="preset-option-swatch signal-flow" aria-hidden="true"></span>
-          <span class="preset-option-copy"><strong>Dòng tín hiệu</strong><small>Trình diễn luồng chuyển động</small></span>
+          <span class="preset-option-copy"><strong>Signal Flow</strong><small>Motion-forward presentation</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
         <button class="preset-option" data-preset-value="blueprint" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
           <span class="preset-option-swatch blueprint" aria-hidden="true"></span>
-          <span class="preset-option-copy"><strong>Bản thiết kế</strong><small>Thẩm định kỹ thuật</small></span>
+          <span class="preset-option-copy"><strong>Blueprint</strong><small>Engineering review</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
         <button class="preset-option" data-preset-value="editorial" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
           <span class="preset-option-swatch editorial" aria-hidden="true"></span>
-          <span class="preset-option-copy"><strong>Xuất bản</strong><small>Ghi chú phát hành</small></span>
+          <span class="preset-option-copy"><strong>Editorial</strong><small>Publication and launch notes</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
       </div>
@@ -4901,14 +4901,14 @@
             aria-label="Pause motion"
             aria-pressed="true">
       <span class="motion-control-dot" aria-hidden="true"></span>
-      <span id="motion-label">Chuyển động</span>
+      <span id="motion-label">Live</span>
     </button>
     <button id="btn-present" type="button"
             title="Presentation stage (F)"
             aria-label="Enter presentation stage"
             aria-pressed="false">
       <span id="present-icon" class="toolbar-icon" aria-hidden="true"></span>
-      <span id="present-label">Trình chiếu</span>
+      <span id="present-label">Present</span>
     </button>
     <div class="export-wrap">
       <button id="btn-export" type="button"
@@ -4926,22 +4926,22 @@
         </div>
         <div class="export-menu-section" role="group" aria-label="Share">
           <span class="export-menu-heading" aria-hidden="true">Share</span>
-          <button data-format="share-card" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Thẻ chia sẻ</strong><small class="hint">1200&times;630 PNG</small></span></button>
-          <button data-action="route-share-card" type="button" role="menuitem" tabindex="-1" hidden disabled><span class="export-item-copy"><strong>Thẻ chia sẻ luồng</strong><small class="hint">1200&times;630 PNG</small></span></button>
-          <button data-action="reach-share-card" type="button" role="menuitem" tabindex="-1" hidden disabled><span class="export-item-copy"><strong>Thẻ chia sẻ đầy đủ</strong><small class="hint">1200&times;630 PNG</small></span></button>
-          <button data-action="copy-share-card" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Sao chép thẻ ảnh</strong><small class="hint">Sao chép PNG vào bộ nhớ tạm</small></span></button>
-          <button data-action="copy" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Sao chép ảnh sơ đồ</strong><small class="hint">Sao chép PNG vào bộ nhớ tạm</small></span></button>
+          <button data-format="share-card" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Share Card</strong><small class="hint">1200&times;630 PNG</small></span></button>
+          <button data-action="route-share-card" type="button" role="menuitem" tabindex="-1" hidden disabled><span class="export-item-copy"><strong>Route Share Card</strong><small class="hint">1200&times;630 PNG</small></span></button>
+          <button data-action="reach-share-card" type="button" role="menuitem" tabindex="-1" hidden disabled><span class="export-item-copy"><strong>Reach Share Card</strong><small class="hint">1200&times;630 PNG</small></span></button>
+          <button data-action="copy-share-card" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Copy Share Card</strong><small class="hint">PNG to clipboard</small></span></button>
+          <button data-action="copy" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>Copy diagram</strong><small class="hint">PNG to clipboard</small></span></button>
         </div>
         <div class="export-menu-section" role="group" aria-label="Raster images">
           <span class="export-menu-heading" aria-hidden="true">Image</span>
-          <button data-format="png" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>PNG</strong><small class="hint">Ảnh không nén (PNG)</small></span></button>
-          <button data-format="jpeg" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>JPEG</strong><small class="hint">Ảnh nén gọn (JPEG)</small></span></button>
-          <button data-format="webp" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>WebP</strong><small class="hint">Ảnh WebP</small></span></button>
+          <button data-format="png" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>PNG</strong><small class="hint">Lossless image</small></span></button>
+          <button data-format="jpeg" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>JPEG</strong><small class="hint">Compact image</small></span></button>
+          <button data-format="webp" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>WebP</strong><small class="hint">Modern image</small></span></button>
         </div>
         <div class="export-menu-section" role="group" aria-label="Vector and motion">
           <span class="export-menu-heading" aria-hidden="true">Vector &amp; motion</span>
-          <button data-format="svg" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>SVG</strong><small class="hint">Vector chỉnh sửa (SVG)</small></span></button>
-          <button data-format="webm" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>WebM</strong><small class="hint">Video 6s chuyển động</small></span></button>
+          <button data-format="svg" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>SVG</strong><small class="hint">Editable vector</small></span></button>
+          <button data-format="webm" type="button" role="menuitem" tabindex="-1"><span class="export-item-copy"><strong>WebM</strong><small class="hint">6s motion</small></span></button>
         </div>
       </div>
     </div>
@@ -4955,18 +4955,19 @@
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / FIELD NOTE">
         <div class="pulse-dot"></div>
-        <h1>VLearn AI Tutor — Quy Trình Xác Thực Nguồn 2 Tầng &amp; Human-in-the-Loop</h1>
+        <h1>VLearn AI Tutor — Luồng Trải Nghiệm Xác Thực Nguồn &amp; 4 Đường Đi (CP2/CP4)</h1>
       </div>
+      <p class="subtitle">Định tuyến 3 route: ANSWER_GROUNDED, ASK_CLARIFY, ABSTAIN_ROUTE · Phân nhánh log theo rủi ro</p>
     </div>
 
-    <script id="archify-guided-views-data" type="application/json">[{"id":"happy-path","label":"1. Trong bài giảng (Happy Path)","focus":["student_ask","rag_guard","triband_eval","internal_ans"],"note":"RAG trúng tài liệu Slide 65, sinh câu trả lời kèm số trang và Badge Xanh xác thực."},{"id":"clarify-path","label":"2. Mơ hồ (HAX G10 Clarification)","focus":["triband_eval","clarify_g10","student_clarify","internal_ans"],"note":"Câu hỏi trong dải mơ hồ [β, α), AI hỏi lại 1 câu để thu hẹp phạm vi."},{"id":"external-path","label":"3. Ngoài giáo trình (Tool Search + Cảnh báo)","focus":["triband_eval","tool_search","external_ans","review_queue"],"note":"Thiếu căn cứ trong bài, AI tra cứu web whitelist và gắn nhãn Vàng cảnh báo chưa duyệt."},{"id":"review-loop","label":"4. Vòng lặp thẩm định (TA Phê duyệt)","focus":["review_queue","ta_review","ingest_vectordb"],"note":"Giảng viên/TA phê duyệt kiến thức ngoài, tự động nạp vào Vector DB làm giàu kho tri thức."},{"id":"cross-path","label":"5. Bài khác trong khóa (Cross-Lecture)","focus":["student_ask","rag_guard","triband_eval","internal_ans"],"note":"RAG mở rộng ra toàn bộ 15 buổi của khóa học (Global Course Corpus), tránh báo động giả ra ngoài mạng."}]</script>
+    <script id="archify-guided-views-data" type="application/json">[{"id":"happy-path","label":"1. Có căn cứ (Happy Path)","focus":["student_ask","scope_guard","clarify_eval","rag_retrieve","grounded_ans","student_verify"],"note":"Input rõ ràng, có căn cứ trong tài liệu: Tutor trả lời trích dẫn số trang slide và Badge Xanh xác thực."},{"id":"clarify-path","label":"2. Mơ hồ (HAX G10 Clarification)","focus":["clarify_eval","student_clarify","rag_retrieve"],"note":"Input thiếu đối tượng hoặc mơ hồ: Tutor hỏi đúng 1 câu để thu hẹp phạm vi trước khi giải thích."},{"id":"no-grounding-path","label":"3. Không căn cứ (Abstain \u0026 Nguồn ngoài)","focus":["rag_retrieve","abstain_ans","feedback_log"],"note":"Thiếu căn cứ trong khóa học: Tutor từ chối kết luận, hiển thị nguồn ngoài có cảnh báo và tự động ghi log nền no_grounding."},{"id":"correction-path","label":"4. Đề xuất sửa (Correction)","focus":["student_verify","student_suggest","feedback_log"],"note":"Học viên phát hiện câu trả lời hoặc citation chưa chuẩn: bấm Đề xuất sửa để gửi feedback có route_origin=grounded."}]</script>
 
-    <script id="archify-i18n-data" type="application/json">{"locale":"en","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Database","viewer.kind.cloud":"Cloud","viewer.kind.security":"Security","viewer.kind.messagebus":"Message bus","viewer.kind.external":"External","viewer.kind.neutral":"Neutral","viewer.kind.node":"Node","viewer.kind.start":"Start","viewer.kind.active":"Active","viewer.kind.waiting":"Waiting","viewer.kind.decision":"Decision","viewer.kind.success":"Success","viewer.kind.failure":"Failure","viewer.toolbar.actions":"Diagram actions","viewer.theme.toggle.title":"Toggle theme (T)","viewer.theme.toggle":"Toggle color theme","viewer.theme.dark":"Dark","viewer.theme.light":"Light","viewer.preset.choose.title":"Choose visual style (S cycles)","viewer.preset.choose":"Choose visual style","viewer.preset.style":"Style","viewer.preset.menu":"Visual style","viewer.preset.identity":"Visual identity","viewer.preset.cycles":"S cycles","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Stable technical default","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Motion-forward presentation","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Engineering review","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Publication and launch notes","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / FIELD NOTE","viewer.preset.badge.editorialPlate":"ARCHIFY / PLATE 04","viewer.preset.current":"Visual style: {style}. Choose visual style","viewer.motion.live":"Live","viewer.motion.still":"Still","viewer.motion.pause":"Pause motion","viewer.motion.resume":"Resume motion","viewer.motion.reduced":"Motion paused by reduced-motion preference","viewer.motion.hidden":"Motion paused while this page is hidden","viewer.motion.yielding":"Pause motion; currently yielding to {owner}","viewer.motion.yielding.title":"Live preview enabled · yielding to {owner}","viewer.owner.story":"the guided story","viewer.owner.chapter":"the active chapter","viewer.owner.chapterPreview":"the chapter delta preview","viewer.owner.handoff":"the chapter handoff","viewer.owner.route":"Route Probe","viewer.owner.lens":"Semantic Lens","viewer.owner.relationship":"Relationship Preview","viewer.owner.intent":"Intent Trace","viewer.owner.focus":"semantic focus","viewer.owner.legend":"legend preview","viewer.owner.reader":"reader interaction","viewer.present.enter":"Enter presentation stage","viewer.present.enter.title":"Presentation stage (F)","viewer.present.exit":"Exit presentation stage","viewer.present.exit.title":"Exit presentation stage (F or Escape)","viewer.present.present":"Present","viewer.present.exit.label":"Exit","viewer.export.button":"Export","viewer.export.button.title":"Export diagram (E)","viewer.export.diagram":"Export diagram","viewer.export.menu":"Export","viewer.export.subtitle":"Portable, clean outputs","viewer.export.share":"Share","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Route Share Card","viewer.export.reachShareCard":"Reach Share Card","viewer.export.copyShareCard":"Copy Share Card","viewer.export.copyDiagram":"Copy diagram","viewer.export.clipboardPng":"Sao chép PNG vào bộ nhớ tạm","viewer.export.raster":"Raster images","viewer.export.image":"Image","viewer.export.lossless":"Lossless image","viewer.export.compact":"Compact image","viewer.export.modern":"Modern image","viewer.export.vectorMotion":"Vector and motion","viewer.export.vectorMotion.heading":"Vector \u0026 motion","viewer.export.editable":"Editable vector","viewer.export.motion6s":"6s motion","viewer.export.unsupported":"Not supported by this browser","viewer.export.clipboardUnsupported":"Clipboard image write not supported by this browser","viewer.export.clipboardUnsupported.period":"Clipboard image write not supported by this browser.","viewer.export.clipboardUnsupported.short":"Clipboard image write not supported in this browser.","viewer.export.motionUnavailable":"Motion capture unavailable in this browser","viewer.export.webmUnavailable":"WebM unavailable in this browser","viewer.export.failed":"Export failed: {message}","viewer.export.unknownVariant":"Unknown Share Card variant: {variant}","viewer.export.routeRequired":"Trace a route before exporting a Route Share Card","viewer.export.reachRequired":"Trace authored reach before exporting a Reach Share Card","viewer.export.unknown":"unknown","viewer.export.routeFailed":"Route Share Card export failed: {message}","viewer.export.reachFailed":"Reach Share Card export failed: {message}","viewer.export.copyFailed":"Copy failed: {message}","viewer.export.copiedPng":"Copied Sao chép PNG vào bộ nhớ tạm","viewer.export.copiedShare":"Copied Share Card","viewer.export.downloadedShare":"Downloaded Share Card","viewer.export.downloadedRoute":"Downloaded Route Share Card","viewer.export.downloadedReach":"Downloaded Reach Share Card","viewer.export.downloadedWebm":"Downloaded WebM","viewer.export.recording":"Recording 6 seconds of motion…","viewer.export.card.routeSummary.one":"Route: {source} → {target} · {count} directed hop","viewer.export.card.routeSummary.other":"Route: {source} → {target} · {count} directed hops","viewer.export.card.reachSummary":"Authored {direction} from {origin} · {nodes} · {links} · max {hops}","viewer.export.card.node.one":"{count} node","viewer.export.card.node.other":"{count} nodes","viewer.export.card.link.one":"{count} link","viewer.export.card.link.other":"{count} links","viewer.export.card.hop.one":"{count} hop","viewer.export.card.hop.other":"{count} hops","viewer.export.card.routeBadge":"ARCHIFY · ROUTE · {hops}","viewer.export.card.reachBadge":"ARCHIFY · {direction} REACH","viewer.export.card.defaultBadge":"ARCHIFY · {preset} · {theme}","viewer.export.direction.upstream":"Upstream","viewer.export.direction.downstream":"Downstream","viewer.export.error.canvasUnavailable":"Canvas unavailable for {label}","viewer.export.error.contextUnavailable":"2D canvas context unavailable for {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob unavailable for {label}","viewer.export.error.toBlobNull":"canvas.toBlob returned no data for {label}","viewer.export.error.variantsCombined":"Share Card variants cannot be combined","viewer.export.error.viewerState":"Share Card export could not remove temporary viewer state","viewer.export.error.routeState":"Route Card export could not preserve the resolved route safely","viewer.export.error.reachState":"Reach Card export could not preserve authored reach safely","viewer.export.error.webmRequirements":"WebM motion export requires a trace animation and browser MediaRecorder support","viewer.export.error.mediaRecorder":"MediaRecorder failed","viewer.export.error.emptyWebm":"MediaRecorder produced an empty WebM","viewer.export.error.webmBackground":"SVG background could not be loaded for WebM export","viewer.guided.region":"Guided diagram views","viewer.guided.previous":"Kịch bản trước","viewer.guided.previous.title":"Kịch bản trước ([)","viewer.guided.next":"Kịch bản sau","viewer.guided.next.title":"Kịch bản sau (])","viewer.guided.views":"Guided views","viewer.guided.explore":"Explore this system","viewer.guided.intro":"Step through curated paths without changing the source diagram.","viewer.guided.trail":"Story trail","viewer.guided.beat":"Beat","viewer.guided.nextBeat":"Next","viewer.guided.play":"Play guided story","viewer.guided.play.title":"Play guided story (P)","viewer.guided.pause":"Pause guided story","viewer.guided.pause.title":"Pause guided story (P)","viewer.guided.replay":"Replay guided story","viewer.guided.replay.title":"Replay guided story (P)","viewer.guided.playStory":"Play story","viewer.guided.pauseStory":"Pause","viewer.guided.replayStory":"Replay story","viewer.guided.motionUnavailable":"Story playback unavailable while motion is Still","viewer.guided.enableMotion":"Switch motion to Live to play the guided story","viewer.guided.selectBeatLink":"Select a Story Beat to copy its exact link","viewer.guided.copyMoment":"Copy moment","viewer.guided.momentCopied":"Moment link copied","viewer.guided.momentCopyFailed":"Could not copy story moment link","viewer.guided.copied":"Copied","viewer.guided.copyFailed":"Copy failed","viewer.guided.showAll":"Show all","viewer.guided.showAll.aria":"Show entire diagram","viewer.guided.chapters":"Story chapters","viewer.guided.storyTrail":"Story trail for {label}: {count} beats","viewer.guided.chapter.open":"Open chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.current":"Current chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.selectedNodes":"{count} selected nodes","viewer.guided.chapter.stops":"{count} stops","viewer.guided.chapter.stop.one":"{count} stop","viewer.guided.chapter.stop.other":"{count} stops","viewer.guided.chapter.current.title":"{label} — current chapter, {count} stops","viewer.guided.chapter.delta.expanded":"{stay} stay, {enter} enter, {leave} leave","viewer.guided.chapter.delta.aria":"Open chapter {index} of {total}: {label}. Chapter focus delta: {delta}","viewer.guided.chapter.delta.title":"{label} — {delta} chapter focus","viewer.guided.handoff":"{from} → {to} · via {label}","viewer.guided.share.chapter":"Chapter {index} / {total}","viewer.guided.share.initial":"Chapter 01 / 01","viewer.guided.share.default":"Guided chapter","viewer.guided.state.ready":"Ready","viewer.guided.state.playing":"Playing","viewer.guided.state.settled":"Settled","viewer.guided.state.paused":"Paused","viewer.guided.state.pinned":"Pinned","viewer.guided.state.still":"Still","viewer.guided.share.step":"Step {index} / {total} · {label}","viewer.guided.share.staticMoment":"{step} · Static moment","viewer.guided.share.complete":"{count} steps complete · {note}","viewer.guided.share.settled":"Path settled for reading.","viewer.guided.share.staticPath":"{count} steps · Static path","viewer.guided.share.ready":"{count} steps · Ready","viewer.guided.share.aria":"{state} chapter {index} of {total}: {label}. {beat}. {route}","viewer.guided.beat.start":"Beat {index} / {total} · {label} · starting point","viewer.guided.beat.forward":"Beat {index} / {total} · {from} → {to}","viewer.guided.beat.reverse":"Beat {index} / {total} · {from} → {to} · reverse authored link","viewer.guided.beat.multiple":"Beat {index} / {total} · {from} ⇄ {to} · {count} authored links","viewer.guided.beat.group":"Beat {index} / {total} · {from} · {to} · grouped · no direct link","viewer.guided.beat.aria.prefix":"Story beat {index} of {total}: {label}. ","viewer.guided.beat.aria.start":"Starting point.","viewer.guided.beat.aria.forward":"From {from} through one authored forward relationship.","viewer.guided.beat.aria.reverse":"From {from}; the authored relationship points from {to} to {from}.","viewer.guided.beat.aria.multiple":"From {from} through {count} authored relationships; shown without arbitrary motion.","viewer.guided.beat.aria.group":"Grouped from {from} with no direct authored relationship.","viewer.guided.caption.start":"Starting point","viewer.guided.caption.grouped":"Grouped transition · no direct authored link","viewer.guided.caption.more":" +{count} more","viewer.guided.caption.reverse":"Reverse authored relationship","viewer.guided.caption.relationships":"{count} authored relationships","viewer.guided.caption.relationship":"Authored relationship","viewer.guided.caption.direction":"authored direction: {from} → {to}","viewer.guided.caption.starting":"Authored starting point","viewer.guided.beatLink":"Copy link to current story moment: Beat {index} of {total}: {label}","viewer.guided.noStory":"This diagram has no authored guided story.","viewer.guide.eyebrow":"Diagram guide","viewer.guide.close":"Close diagram guide","viewer.guide.inspecting":"Inspecting compiled semantics","viewer.guide.actions":"Diagram exploration actions","viewer.guide.find":"Find any node","viewer.guide.find.hint":"Search labels, responsibilities, kinds, and stable IDs.","viewer.guide.route":"Trace a route","viewer.guide.route.aria":"Trace a directed route","viewer.guide.route.hint":"Ask how two semantic nodes connect in authored direction.","viewer.guide.map":"See the whole system","viewer.guide.map.hint":"Open Semantic Radar with a live viewport and stable nodes.","viewer.guide.lens":"Compare semantic kinds","viewer.guide.lens.hint":"Count roles, reveal their traffic, and compare direct authored links.","viewer.guide.story":"Play the guided story","viewer.guide.story.hint":"Walk the authored chapters and real relationships.","viewer.guide.present":"Enter Presentation Stage","viewer.guide.present.hint":"Give the live diagram the viewport without changing export.","viewer.guide.shortcuts":"Additional keyboard shortcuts","viewer.guide.shortcut.export":"Export","viewer.guide.shortcut.theme":"Theme","viewer.guide.shortcut.style":"Style","viewer.guide.shortcut.reset":"Reset","viewer.guide.shortcut.zoomIn":"Zoom in","viewer.guide.shortcut.zoomOut":"Zoom out","viewer.guide.shortcut.close":"Close","viewer.guide.facts":"{nodes} · {relationships} · {views}","viewer.guide.fact.node.one":"{count} semantic node","viewer.guide.fact.node.other":"{count} semantic nodes","viewer.guide.fact.relationship.one":"{count} relationship","viewer.guide.fact.relationship.other":"{count} relationships","viewer.guide.fact.view.one":"{count} guided view","viewer.guide.fact.view.other":"{count} guided views","viewer.guide.story.available.one":"Walk {count} authored chapter and its real relationships.","viewer.guide.story.available.other":"Walk {count} authored chapters and their real relationships.","viewer.guide.story.unavailable":"No authored guided story in this diagram.","viewer.guide.open":"Open diagram guide","viewer.guide.noStory":"This diagram has no authored guided story.","viewer.finder.title":"Find a node","viewer.finder.close":"Close node finder","viewer.finder.placeholder":"Search labels or IDs","viewer.finder.search":"Search diagram nodes","viewer.finder.results":"Diagram nodes","viewer.finder.empty":"No matching nodes","viewer.finder.result.focus":"Focus {label}","viewer.finder.result.routeStart":"Choose {label} as route start","viewer.finder.result.routeTarget":"Choose {label} as route destination, {links}","viewer.finder.status.empty":"No matching nodes","viewer.finder.status.count.one":"{count} matching node","viewer.finder.status.count.other":"{count} matching nodes","viewer.finder.noun.nodes":"nodes","viewer.finder.link.one":"{count} link","viewer.finder.link.other":"{count} links","viewer.finder.result.focus.one":"Focus {label}, {count} related connection","viewer.finder.result.focus.other":"Focus {label}, {count} related connections","viewer.finder.status.filtered":"{visible} of {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Semantic passport","viewer.passport.metadata":"Node metadata","viewer.passport.evidence":"Verified source evidence","viewer.passport.verified":"Verified source","viewer.passport.reach":"Authored reach","viewer.passport.reach.trace":"Trace authored reachability","viewer.passport.upstream":"Upstream","viewer.passport.downstream":"Downstream","viewer.passport.upstream.trace":"Trace upstream authored reachability","viewer.passport.downstream.trace":"Trace downstream authored reachability","viewer.passport.close":"Close semantic passport","viewer.passport.copy":"Copy link","viewer.passport.copy.focus":"Copy link to focused node","viewer.passport.relations":"Relations","viewer.passport.relations.show":"Show connected relationships","viewer.passport.relations.hide":"Hide connected relationships","viewer.passport.relations.list":"Connected relationships","viewer.passport.copyRelation":"Copy relation","viewer.passport.copyNode":"Copy node","viewer.passport.copyPinned":"Copy link to pinned relationship","viewer.passport.copySource":"Copy link to source node","viewer.passport.copy.focused.success":"Focused node link copied","viewer.passport.copy.pinned.success":"Pinned relationship link copied","viewer.passport.copy.focused.failed":"Could not copy focused node link","viewer.passport.copy.pinned.failed":"Could not copy pinned relationship link","viewer.passport.relationship.none":"No connected relationships","viewer.passport.relationship.count.one":"{count} relation","viewer.passport.relationship.count.other":"{count} relations","viewer.passport.relationship.show.one":"Show {count} connected relationship","viewer.passport.relationship.show.other":"Show {count} connected relationships","viewer.passport.relationship.summary":"{out} outgoing · {in} incoming{loops}","viewer.passport.relationship.loops":" · {count} loop","viewer.passport.relationship.explorer":"Direct relationship explorer","viewer.passport.relationship.help":"Use arrow keys to explore relationships. Press Enter or Space to pin details; Escape clears.","viewer.passport.relationship.loopsBack":"loops back","viewer.passport.relationship.connectsTo":"connects to","viewer.passport.relationship.connectsFrom":"connects from","viewer.passport.relationship.pinned":"Pinned relationship · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspect relationship {index} of {total}: {from} to {to}, {label}. Press Enter for details.","viewer.passport.relationship.group.out":"Outgoing","viewer.passport.relationship.group.in":"Incoming","viewer.passport.relationship.group.loop":"Self loops","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"OUT →","viewer.passport.relationship.direction.in":"← IN","viewer.passport.relationship.direction.loop":"LOOP","viewer.passport.sourceCount.one":"{count} verified source reference","viewer.passport.sourceCount.other":"{count} verified source references","viewer.passport.sourceMarker":"SRC","viewer.passport.beacon.one":"{count} verified source; focus this node to inspect","viewer.passport.beacon.other":"{count} verified sources; focus this node to inspect","viewer.passport.repository.open":"Open verified repository revision {revision}","viewer.passport.source.open":"Open verified source {path} at revision {revision}","viewer.passport.source.openLink":"Open ↗","viewer.passport.reach.upstream.one":"Trace {count} upstream authored node","viewer.passport.reach.upstream.other":"Trace {count} upstream authored nodes","viewer.passport.reach.downstream.one":"Trace {count} downstream authored node","viewer.passport.reach.downstream.other":"Trace {count} downstream authored nodes","viewer.passport.reach.noUpstream":"No upstream authored nodes","viewer.passport.reach.noDownstream":"No downstream authored nodes","viewer.passport.reach.status":"{direction} · {nodes} nodes · {links} links · max {hops} hops","viewer.route.eyebrow":"Route probe","viewer.route.start":"Choose a start node","viewer.route.start.find":"Find start","viewer.route.start.find.aria":"Find a route start","viewer.route.copy":"Copy link","viewer.route.copy.aria":"Copy link to traced route","viewer.route.clear":"Clear","viewer.route.clear.aria":"Clear route probe","viewer.route.traced":"Traced route","viewer.route.pickTwo":"Pick two semantic nodes on the diagram","viewer.route.pickOne":"Pick a semantic node on the diagram","viewer.route.controls":"Route journey controls","viewer.route.previous":"Previous route position","viewer.route.play":"Play route journey","viewer.route.pause":"Pause route journey","viewer.route.replay":"Replay route journey","viewer.route.next":"Next route position","viewer.route.journey":"Journey","viewer.route.pause.label":"Pause","viewer.route.replay.label":"Replay","viewer.route.overview":"Overview","viewer.route.overview.aria":"Show complete route overview","viewer.route.instructions":"Choose the source, then the destination. Direction matters.","viewer.route.destination":"Choose a destination from {label}","viewer.route.destination.find":"Find target","viewer.route.destination.find.aria":"Find a reachable route destination","viewer.route.differentDestination":"Choose a different destination","viewer.route.distinct":"A route needs two distinct semantic nodes.","viewer.route.unreachable":"No directed route to {label}","viewer.route.unreachable.detail":"{target} is not reachable from {source}. Pick a highlighted destination.","viewer.route.start.instructions":"Select the source. The next step will reveal only directed destinations.","viewer.route.copy.success":"Traced route link copied","viewer.route.copy.failed":"Could not copy traced route link","viewer.route.position":"Route position {index} of {total}: {label}","viewer.route.step":"Step {index} of {total} · {phase} · {label}","viewer.route.motionRequired":"Automatic journey requires Live motion","viewer.route.trigger.clear":"Clear traced route","viewer.route.overview.status":"{nodes} · {hops} · shortest authored route","viewer.route.overview.node.one":"{count} node","viewer.route.overview.node.other":"{count} nodes","viewer.route.overview.hop.one":"{count} directed hop","viewer.route.overview.hop.other":"{count} directed hops","viewer.route.phase.playing":"Playing","viewer.route.phase.complete":"Complete","viewer.route.phase.inspecting":"Inspecting","viewer.route.destination.count.one":"{count} directed destination available. Pick a highlighted node.","viewer.route.destination.count.other":"{count} directed destinations available. Pick a highlighted node.","viewer.route.noOutgoing":"No outgoing route starts here. Clear and choose another source.","viewer.route.result.title":"{source} to {target}","viewer.route.finder.source.title":"Choose route start","viewer.route.finder.source.placeholder":"Search route sources","viewer.route.finder.source.empty":"No matching route sources","viewer.route.finder.source.results":"Nodes that can start a route","viewer.route.finder.source.noun":"route sources","viewer.route.finder.source.badge":"start","viewer.route.finder.target.title":"Destination from {label}","viewer.route.finder.target.placeholder":"Search reachable destinations","viewer.route.finder.target.empty":"No matching reachable destinations","viewer.route.finder.target.results":"Reachable route destinations","viewer.route.finder.target.noun":"reachable destinations","viewer.route.hop.one":"{count} hop","viewer.route.hop.other":"{count} hops","viewer.lens.eyebrow":"Semantic lens","viewer.lens.title":"Compare system roles","viewer.lens.close":"Close semantic lens","viewer.lens.instruction":"Choose up to two semantic kinds. One reveals its real traffic; two compare only direct authored relationships.","viewer.lens.kinds":"Semantic kinds","viewer.lens.choose":"Choose a kind to inspect its nodes and touching relationships.","viewer.lens.copy":"Copy link to semantic lens","viewer.lens.clear":"Clear semantic lens","viewer.lens.open":"Open semantic lens","viewer.lens.openActive":"Open active semantic lens","viewer.lens.legend":"Semantic legend","viewer.lens.legend.inspect.one":"Inspect {label}, {count} node","viewer.lens.legend.inspect.other":"Inspect {label}, {count} nodes","viewer.lens.kind.count.one":"{label}, {count} node","viewer.lens.kind.count.other":"{label}, {count} nodes","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationship","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationships","viewer.lens.single":"{nodes} · {relationships} · connected peers remain visible","viewer.lens.node.one":"{count} {label} node","viewer.lens.node.other":"{count} {label} nodes","viewer.lens.relationship.one":"{count} touching relationship","viewer.lens.relationship.other":"{count} touching relationships","viewer.radar.title":"Semantic radar","viewer.radar.building":"Building overview","viewer.radar.openFull":"Open full semantic radar","viewer.radar.open":"Open radar","viewer.radar.close":"Close semantic radar","viewer.radar.surface":"Diagram overview. Click a node to focus it, or use arrow keys to pan.","viewer.radar.click":"Click node","viewer.radar.drag":"Drag to pan","viewer.radar.space":"Semantic radar needs more MAP space.","viewer.radar.nodes":"Semantic diagram radar nodes","viewer.radar.focus":"Focus {label} from Semantic Radar","viewer.radar.status":"{count} nodes · {viewport}","viewer.radar.fullMap":"{count} nodes · full map","viewer.radar.compacted":"Radar compacted to avoid covering the Semantic Passport or MAP controls.","viewer.radar.cancelWaiting":"Cancel semantic radar waiting for more MAP space","viewer.radar.needsSpace":"Semantic radar needs more visible MAP space","viewer.radar.viewport.full":"full map","viewer.radar.viewport.width":"{percent}% width","viewer.radar.viewport.scale":"{percent}% viewport","viewer.nav.controls":"Diagram view controls","viewer.nav.route":"Trace a directed route","viewer.nav.route.title":"Trace route (R)","viewer.nav.route.short":"PATH","viewer.nav.radar":"Open semantic radar","viewer.nav.radar.title":"Semantic radar (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Open semantic lens","viewer.nav.lens.title":"Semantic lens (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Find a node","viewer.nav.find.title":"Find a node (/)","viewer.nav.guide":"Open diagram guide","viewer.nav.guide.title":"Diagram guide (?)","viewer.nav.zoomOut":"Zoom out","viewer.nav.zoomOut.title":"Zoom out (-)","viewer.nav.reset":"Reset diagram view","viewer.nav.reset.title":"Reset view (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Zoom in","viewer.nav.zoomIn.title":"Zoom in (+)","viewer.nav.camera":"{hint}. Reset diagram view","viewer.nav.camera.title":"{semantic}{hint} · reset view (0)","viewer.nav.camera.semantic":"Semantic camera active · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Zoom in to reveal relationship labels and node context","viewer.nav.detail.read":"Zoom in again to reveal tags and annotations","viewer.nav.detail.full":"Full diagram detail","viewer.intent.summary":"{label}. {out} outgoing, {in} incoming{loops}. {total} connections. Press Enter for details.","viewer.intent.loops":", {count} self loop","viewer.common.copied":"Copied","viewer.common.copyFailed":"Copy failed","viewer.common.copyLink":"Copy link","viewer.common.clear":"Clear","viewer.common.close":"Close"}}</script>
+    <script id="archify-i18n-data" type="application/json">{"locale":"en","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Database","viewer.kind.cloud":"Cloud","viewer.kind.security":"Security","viewer.kind.messagebus":"Message bus","viewer.kind.external":"External","viewer.kind.neutral":"Neutral","viewer.kind.node":"Node","viewer.kind.start":"Start","viewer.kind.active":"Active","viewer.kind.waiting":"Waiting","viewer.kind.decision":"Decision","viewer.kind.success":"Success","viewer.kind.failure":"Failure","viewer.toolbar.actions":"Diagram actions","viewer.theme.toggle.title":"Toggle theme (T)","viewer.theme.toggle":"Toggle color theme","viewer.theme.dark":"Dark","viewer.theme.light":"Light","viewer.preset.choose.title":"Choose visual style (S cycles)","viewer.preset.choose":"Choose visual style","viewer.preset.style":"Style","viewer.preset.menu":"Visual style","viewer.preset.identity":"Visual identity","viewer.preset.cycles":"S cycles","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Stable technical default","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Motion-forward presentation","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Engineering review","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Publication and launch notes","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / FIELD NOTE","viewer.preset.badge.editorialPlate":"ARCHIFY / PLATE 04","viewer.preset.current":"Visual style: {style}. Choose visual style","viewer.motion.live":"Live","viewer.motion.still":"Still","viewer.motion.pause":"Pause motion","viewer.motion.resume":"Resume motion","viewer.motion.reduced":"Motion paused by reduced-motion preference","viewer.motion.hidden":"Motion paused while this page is hidden","viewer.motion.yielding":"Pause motion; currently yielding to {owner}","viewer.motion.yielding.title":"Live preview enabled · yielding to {owner}","viewer.owner.story":"the guided story","viewer.owner.chapter":"the active chapter","viewer.owner.chapterPreview":"the chapter delta preview","viewer.owner.handoff":"the chapter handoff","viewer.owner.route":"Route Probe","viewer.owner.lens":"Semantic Lens","viewer.owner.relationship":"Relationship Preview","viewer.owner.intent":"Intent Trace","viewer.owner.focus":"semantic focus","viewer.owner.legend":"legend preview","viewer.owner.reader":"reader interaction","viewer.present.enter":"Enter presentation stage","viewer.present.enter.title":"Presentation stage (F)","viewer.present.exit":"Exit presentation stage","viewer.present.exit.title":"Exit presentation stage (F or Escape)","viewer.present.present":"Present","viewer.present.exit.label":"Exit","viewer.export.button":"Export","viewer.export.button.title":"Export diagram (E)","viewer.export.diagram":"Export diagram","viewer.export.menu":"Export","viewer.export.subtitle":"Portable, clean outputs","viewer.export.share":"Share","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Route Share Card","viewer.export.reachShareCard":"Reach Share Card","viewer.export.copyShareCard":"Copy Share Card","viewer.export.copyDiagram":"Copy diagram","viewer.export.clipboardPng":"PNG to clipboard","viewer.export.raster":"Raster images","viewer.export.image":"Image","viewer.export.lossless":"Lossless image","viewer.export.compact":"Compact image","viewer.export.modern":"Modern image","viewer.export.vectorMotion":"Vector and motion","viewer.export.vectorMotion.heading":"Vector \u0026 motion","viewer.export.editable":"Editable vector","viewer.export.motion6s":"6s motion","viewer.export.unsupported":"Not supported by this browser","viewer.export.clipboardUnsupported":"Clipboard image write not supported by this browser","viewer.export.clipboardUnsupported.period":"Clipboard image write not supported by this browser.","viewer.export.clipboardUnsupported.short":"Clipboard image write not supported in this browser.","viewer.export.motionUnavailable":"Motion capture unavailable in this browser","viewer.export.webmUnavailable":"WebM unavailable in this browser","viewer.export.failed":"Export failed: {message}","viewer.export.unknownVariant":"Unknown Share Card variant: {variant}","viewer.export.routeRequired":"Trace a route before exporting a Route Share Card","viewer.export.reachRequired":"Trace authored reach before exporting a Reach Share Card","viewer.export.unknown":"unknown","viewer.export.routeFailed":"Route Share Card export failed: {message}","viewer.export.reachFailed":"Reach Share Card export failed: {message}","viewer.export.copyFailed":"Copy failed: {message}","viewer.export.copiedPng":"Copied PNG to clipboard","viewer.export.copiedShare":"Copied Share Card","viewer.export.downloadedShare":"Downloaded Share Card","viewer.export.downloadedRoute":"Downloaded Route Share Card","viewer.export.downloadedReach":"Downloaded Reach Share Card","viewer.export.downloadedWebm":"Downloaded WebM","viewer.export.recording":"Recording 6 seconds of motion…","viewer.export.card.routeSummary.one":"Route: {source} → {target} · {count} directed hop","viewer.export.card.routeSummary.other":"Route: {source} → {target} · {count} directed hops","viewer.export.card.reachSummary":"Authored {direction} from {origin} · {nodes} · {links} · max {hops}","viewer.export.card.node.one":"{count} node","viewer.export.card.node.other":"{count} nodes","viewer.export.card.link.one":"{count} link","viewer.export.card.link.other":"{count} links","viewer.export.card.hop.one":"{count} hop","viewer.export.card.hop.other":"{count} hops","viewer.export.card.routeBadge":"ARCHIFY · ROUTE · {hops}","viewer.export.card.reachBadge":"ARCHIFY · {direction} REACH","viewer.export.card.defaultBadge":"ARCHIFY · {preset} · {theme}","viewer.export.direction.upstream":"Upstream","viewer.export.direction.downstream":"Downstream","viewer.export.error.canvasUnavailable":"Canvas unavailable for {label}","viewer.export.error.contextUnavailable":"2D canvas context unavailable for {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob unavailable for {label}","viewer.export.error.toBlobNull":"canvas.toBlob returned no data for {label}","viewer.export.error.variantsCombined":"Share Card variants cannot be combined","viewer.export.error.viewerState":"Share Card export could not remove temporary viewer state","viewer.export.error.routeState":"Route Card export could not preserve the resolved route safely","viewer.export.error.reachState":"Reach Card export could not preserve authored reach safely","viewer.export.error.webmRequirements":"WebM motion export requires a trace animation and browser MediaRecorder support","viewer.export.error.mediaRecorder":"MediaRecorder failed","viewer.export.error.emptyWebm":"MediaRecorder produced an empty WebM","viewer.export.error.webmBackground":"SVG background could not be loaded for WebM export","viewer.guided.region":"Guided diagram views","viewer.guided.previous":"Previous guided view","viewer.guided.previous.title":"Previous guided view ([)","viewer.guided.next":"Next guided view","viewer.guided.next.title":"Next guided view (])","viewer.guided.views":"Guided views","viewer.guided.explore":"Explore this system","viewer.guided.intro":"Step through curated paths without changing the source diagram.","viewer.guided.trail":"Story trail","viewer.guided.beat":"Beat","viewer.guided.nextBeat":"Next","viewer.guided.play":"Play guided story","viewer.guided.play.title":"Play guided story (P)","viewer.guided.pause":"Pause guided story","viewer.guided.pause.title":"Pause guided story (P)","viewer.guided.replay":"Replay guided story","viewer.guided.replay.title":"Replay guided story (P)","viewer.guided.playStory":"Play story","viewer.guided.pauseStory":"Pause","viewer.guided.replayStory":"Replay story","viewer.guided.motionUnavailable":"Story playback unavailable while motion is Still","viewer.guided.enableMotion":"Switch motion to Live to play the guided story","viewer.guided.selectBeatLink":"Select a Story Beat to copy its exact link","viewer.guided.copyMoment":"Copy moment","viewer.guided.momentCopied":"Moment link copied","viewer.guided.momentCopyFailed":"Could not copy story moment link","viewer.guided.copied":"Copied","viewer.guided.copyFailed":"Copy failed","viewer.guided.showAll":"Show all","viewer.guided.showAll.aria":"Show entire diagram","viewer.guided.chapters":"Story chapters","viewer.guided.storyTrail":"Story trail for {label}: {count} beats","viewer.guided.chapter.open":"Open chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.current":"Current chapter {index} of {total}: {label}, {count} stops","viewer.guided.chapter.selectedNodes":"{count} selected nodes","viewer.guided.chapter.stops":"{count} stops","viewer.guided.chapter.stop.one":"{count} stop","viewer.guided.chapter.stop.other":"{count} stops","viewer.guided.chapter.current.title":"{label} — current chapter, {count} stops","viewer.guided.chapter.delta.expanded":"{stay} stay, {enter} enter, {leave} leave","viewer.guided.chapter.delta.aria":"Open chapter {index} of {total}: {label}. Chapter focus delta: {delta}","viewer.guided.chapter.delta.title":"{label} — {delta} chapter focus","viewer.guided.handoff":"{from} → {to} · via {label}","viewer.guided.share.chapter":"Chapter {index} / {total}","viewer.guided.share.initial":"Chapter 01 / 01","viewer.guided.share.default":"Guided chapter","viewer.guided.state.ready":"Ready","viewer.guided.state.playing":"Playing","viewer.guided.state.settled":"Settled","viewer.guided.state.paused":"Paused","viewer.guided.state.pinned":"Pinned","viewer.guided.state.still":"Still","viewer.guided.share.step":"Step {index} / {total} · {label}","viewer.guided.share.staticMoment":"{step} · Static moment","viewer.guided.share.complete":"{count} steps complete · {note}","viewer.guided.share.settled":"Path settled for reading.","viewer.guided.share.staticPath":"{count} steps · Static path","viewer.guided.share.ready":"{count} steps · Ready","viewer.guided.share.aria":"{state} chapter {index} of {total}: {label}. {beat}. {route}","viewer.guided.beat.start":"Beat {index} / {total} · {label} · starting point","viewer.guided.beat.forward":"Beat {index} / {total} · {from} → {to}","viewer.guided.beat.reverse":"Beat {index} / {total} · {from} → {to} · reverse authored link","viewer.guided.beat.multiple":"Beat {index} / {total} · {from} ⇄ {to} · {count} authored links","viewer.guided.beat.group":"Beat {index} / {total} · {from} · {to} · grouped · no direct link","viewer.guided.beat.aria.prefix":"Story beat {index} of {total}: {label}. ","viewer.guided.beat.aria.start":"Starting point.","viewer.guided.beat.aria.forward":"From {from} through one authored forward relationship.","viewer.guided.beat.aria.reverse":"From {from}; the authored relationship points from {to} to {from}.","viewer.guided.beat.aria.multiple":"From {from} through {count} authored relationships; shown without arbitrary motion.","viewer.guided.beat.aria.group":"Grouped from {from} with no direct authored relationship.","viewer.guided.caption.start":"Starting point","viewer.guided.caption.grouped":"Grouped transition · no direct authored link","viewer.guided.caption.more":" +{count} more","viewer.guided.caption.reverse":"Reverse authored relationship","viewer.guided.caption.relationships":"{count} authored relationships","viewer.guided.caption.relationship":"Authored relationship","viewer.guided.caption.direction":"authored direction: {from} → {to}","viewer.guided.caption.starting":"Authored starting point","viewer.guided.beatLink":"Copy link to current story moment: Beat {index} of {total}: {label}","viewer.guided.noStory":"This diagram has no authored guided story.","viewer.guide.eyebrow":"Diagram guide","viewer.guide.close":"Close diagram guide","viewer.guide.inspecting":"Inspecting compiled semantics","viewer.guide.actions":"Diagram exploration actions","viewer.guide.find":"Find any node","viewer.guide.find.hint":"Search labels, responsibilities, kinds, and stable IDs.","viewer.guide.route":"Trace a route","viewer.guide.route.aria":"Trace a directed route","viewer.guide.route.hint":"Ask how two semantic nodes connect in authored direction.","viewer.guide.map":"See the whole system","viewer.guide.map.hint":"Open Semantic Radar with a live viewport and stable nodes.","viewer.guide.lens":"Compare semantic kinds","viewer.guide.lens.hint":"Count roles, reveal their traffic, and compare direct authored links.","viewer.guide.story":"Play the guided story","viewer.guide.story.hint":"Walk the authored chapters and real relationships.","viewer.guide.present":"Enter Presentation Stage","viewer.guide.present.hint":"Give the live diagram the viewport without changing export.","viewer.guide.shortcuts":"Additional keyboard shortcuts","viewer.guide.shortcut.export":"Export","viewer.guide.shortcut.theme":"Theme","viewer.guide.shortcut.style":"Style","viewer.guide.shortcut.reset":"Reset","viewer.guide.shortcut.zoomIn":"Zoom in","viewer.guide.shortcut.zoomOut":"Zoom out","viewer.guide.shortcut.close":"Close","viewer.guide.facts":"{nodes} · {relationships} · {views}","viewer.guide.fact.node.one":"{count} semantic node","viewer.guide.fact.node.other":"{count} semantic nodes","viewer.guide.fact.relationship.one":"{count} relationship","viewer.guide.fact.relationship.other":"{count} relationships","viewer.guide.fact.view.one":"{count} guided view","viewer.guide.fact.view.other":"{count} guided views","viewer.guide.story.available.one":"Walk {count} authored chapter and its real relationships.","viewer.guide.story.available.other":"Walk {count} authored chapters and their real relationships.","viewer.guide.story.unavailable":"No authored guided story in this diagram.","viewer.guide.open":"Open diagram guide","viewer.guide.noStory":"This diagram has no authored guided story.","viewer.finder.title":"Find a node","viewer.finder.close":"Close node finder","viewer.finder.placeholder":"Search labels or IDs","viewer.finder.search":"Search diagram nodes","viewer.finder.results":"Diagram nodes","viewer.finder.empty":"No matching nodes","viewer.finder.result.focus":"Focus {label}","viewer.finder.result.routeStart":"Choose {label} as route start","viewer.finder.result.routeTarget":"Choose {label} as route destination, {links}","viewer.finder.status.empty":"No matching nodes","viewer.finder.status.count.one":"{count} matching node","viewer.finder.status.count.other":"{count} matching nodes","viewer.finder.noun.nodes":"nodes","viewer.finder.link.one":"{count} link","viewer.finder.link.other":"{count} links","viewer.finder.result.focus.one":"Focus {label}, {count} related connection","viewer.finder.result.focus.other":"Focus {label}, {count} related connections","viewer.finder.status.filtered":"{visible} of {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Semantic passport","viewer.passport.metadata":"Node metadata","viewer.passport.evidence":"Verified source evidence","viewer.passport.verified":"Verified source","viewer.passport.reach":"Authored reach","viewer.passport.reach.trace":"Trace authored reachability","viewer.passport.upstream":"Upstream","viewer.passport.downstream":"Downstream","viewer.passport.upstream.trace":"Trace upstream authored reachability","viewer.passport.downstream.trace":"Trace downstream authored reachability","viewer.passport.close":"Close semantic passport","viewer.passport.copy":"Copy link","viewer.passport.copy.focus":"Copy link to focused node","viewer.passport.relations":"Relations","viewer.passport.relations.show":"Show connected relationships","viewer.passport.relations.hide":"Hide connected relationships","viewer.passport.relations.list":"Connected relationships","viewer.passport.copyRelation":"Copy relation","viewer.passport.copyNode":"Copy node","viewer.passport.copyPinned":"Copy link to pinned relationship","viewer.passport.copySource":"Copy link to source node","viewer.passport.copy.focused.success":"Focused node link copied","viewer.passport.copy.pinned.success":"Pinned relationship link copied","viewer.passport.copy.focused.failed":"Could not copy focused node link","viewer.passport.copy.pinned.failed":"Could not copy pinned relationship link","viewer.passport.relationship.none":"No connected relationships","viewer.passport.relationship.count.one":"{count} relation","viewer.passport.relationship.count.other":"{count} relations","viewer.passport.relationship.show.one":"Show {count} connected relationship","viewer.passport.relationship.show.other":"Show {count} connected relationships","viewer.passport.relationship.summary":"{out} outgoing · {in} incoming{loops}","viewer.passport.relationship.loops":" · {count} loop","viewer.passport.relationship.explorer":"Direct relationship explorer","viewer.passport.relationship.help":"Use arrow keys to explore relationships. Press Enter or Space to pin details; Escape clears.","viewer.passport.relationship.loopsBack":"loops back","viewer.passport.relationship.connectsTo":"connects to","viewer.passport.relationship.connectsFrom":"connects from","viewer.passport.relationship.pinned":"Pinned relationship · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspect relationship {index} of {total}: {from} to {to}, {label}. Press Enter for details.","viewer.passport.relationship.group.out":"Outgoing","viewer.passport.relationship.group.in":"Incoming","viewer.passport.relationship.group.loop":"Self loops","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"OUT →","viewer.passport.relationship.direction.in":"← IN","viewer.passport.relationship.direction.loop":"LOOP","viewer.passport.sourceCount.one":"{count} verified source reference","viewer.passport.sourceCount.other":"{count} verified source references","viewer.passport.sourceMarker":"SRC","viewer.passport.beacon.one":"{count} verified source; focus this node to inspect","viewer.passport.beacon.other":"{count} verified sources; focus this node to inspect","viewer.passport.repository.open":"Open verified repository revision {revision}","viewer.passport.source.open":"Open verified source {path} at revision {revision}","viewer.passport.source.openLink":"Open ↗","viewer.passport.reach.upstream.one":"Trace {count} upstream authored node","viewer.passport.reach.upstream.other":"Trace {count} upstream authored nodes","viewer.passport.reach.downstream.one":"Trace {count} downstream authored node","viewer.passport.reach.downstream.other":"Trace {count} downstream authored nodes","viewer.passport.reach.noUpstream":"No upstream authored nodes","viewer.passport.reach.noDownstream":"No downstream authored nodes","viewer.passport.reach.status":"{direction} · {nodes} nodes · {links} links · max {hops} hops","viewer.route.eyebrow":"Route probe","viewer.route.start":"Choose a start node","viewer.route.start.find":"Find start","viewer.route.start.find.aria":"Find a route start","viewer.route.copy":"Copy link","viewer.route.copy.aria":"Copy link to traced route","viewer.route.clear":"Clear","viewer.route.clear.aria":"Clear route probe","viewer.route.traced":"Traced route","viewer.route.pickTwo":"Pick two semantic nodes on the diagram","viewer.route.pickOne":"Pick a semantic node on the diagram","viewer.route.controls":"Route journey controls","viewer.route.previous":"Previous route position","viewer.route.play":"Play route journey","viewer.route.pause":"Pause route journey","viewer.route.replay":"Replay route journey","viewer.route.next":"Next route position","viewer.route.journey":"Journey","viewer.route.pause.label":"Pause","viewer.route.replay.label":"Replay","viewer.route.overview":"Overview","viewer.route.overview.aria":"Show complete route overview","viewer.route.instructions":"Choose the source, then the destination. Direction matters.","viewer.route.destination":"Choose a destination from {label}","viewer.route.destination.find":"Find target","viewer.route.destination.find.aria":"Find a reachable route destination","viewer.route.differentDestination":"Choose a different destination","viewer.route.distinct":"A route needs two distinct semantic nodes.","viewer.route.unreachable":"No directed route to {label}","viewer.route.unreachable.detail":"{target} is not reachable from {source}. Pick a highlighted destination.","viewer.route.start.instructions":"Select the source. The next step will reveal only directed destinations.","viewer.route.copy.success":"Traced route link copied","viewer.route.copy.failed":"Could not copy traced route link","viewer.route.position":"Route position {index} of {total}: {label}","viewer.route.step":"Step {index} of {total} · {phase} · {label}","viewer.route.motionRequired":"Automatic journey requires Live motion","viewer.route.trigger.clear":"Clear traced route","viewer.route.overview.status":"{nodes} · {hops} · shortest authored route","viewer.route.overview.node.one":"{count} node","viewer.route.overview.node.other":"{count} nodes","viewer.route.overview.hop.one":"{count} directed hop","viewer.route.overview.hop.other":"{count} directed hops","viewer.route.phase.playing":"Playing","viewer.route.phase.complete":"Complete","viewer.route.phase.inspecting":"Inspecting","viewer.route.destination.count.one":"{count} directed destination available. Pick a highlighted node.","viewer.route.destination.count.other":"{count} directed destinations available. Pick a highlighted node.","viewer.route.noOutgoing":"No outgoing route starts here. Clear and choose another source.","viewer.route.result.title":"{source} to {target}","viewer.route.finder.source.title":"Choose route start","viewer.route.finder.source.placeholder":"Search route sources","viewer.route.finder.source.empty":"No matching route sources","viewer.route.finder.source.results":"Nodes that can start a route","viewer.route.finder.source.noun":"route sources","viewer.route.finder.source.badge":"start","viewer.route.finder.target.title":"Destination from {label}","viewer.route.finder.target.placeholder":"Search reachable destinations","viewer.route.finder.target.empty":"No matching reachable destinations","viewer.route.finder.target.results":"Reachable route destinations","viewer.route.finder.target.noun":"reachable destinations","viewer.route.hop.one":"{count} hop","viewer.route.hop.other":"{count} hops","viewer.lens.eyebrow":"Semantic lens","viewer.lens.title":"Compare system roles","viewer.lens.close":"Close semantic lens","viewer.lens.instruction":"Choose up to two semantic kinds. One reveals its real traffic; two compare only direct authored relationships.","viewer.lens.kinds":"Semantic kinds","viewer.lens.choose":"Choose a kind to inspect its nodes and touching relationships.","viewer.lens.copy":"Copy link to semantic lens","viewer.lens.clear":"Clear semantic lens","viewer.lens.open":"Open semantic lens","viewer.lens.openActive":"Open active semantic lens","viewer.lens.legend":"Semantic legend","viewer.lens.legend.inspect.one":"Inspect {label}, {count} node","viewer.lens.legend.inspect.other":"Inspect {label}, {count} nodes","viewer.lens.kind.count.one":"{label}, {count} node","viewer.lens.kind.count.other":"{label}, {count} nodes","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationship","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationships","viewer.lens.single":"{nodes} · {relationships} · connected peers remain visible","viewer.lens.node.one":"{count} {label} node","viewer.lens.node.other":"{count} {label} nodes","viewer.lens.relationship.one":"{count} touching relationship","viewer.lens.relationship.other":"{count} touching relationships","viewer.radar.title":"Semantic radar","viewer.radar.building":"Building overview","viewer.radar.openFull":"Open full semantic radar","viewer.radar.open":"Open radar","viewer.radar.close":"Close semantic radar","viewer.radar.surface":"Diagram overview. Click a node to focus it, or use arrow keys to pan.","viewer.radar.click":"Click node","viewer.radar.drag":"Drag to pan","viewer.radar.space":"Semantic radar needs more MAP space.","viewer.radar.nodes":"Semantic diagram radar nodes","viewer.radar.focus":"Focus {label} from Semantic Radar","viewer.radar.status":"{count} nodes · {viewport}","viewer.radar.fullMap":"{count} nodes · full map","viewer.radar.compacted":"Radar compacted to avoid covering the Semantic Passport or MAP controls.","viewer.radar.cancelWaiting":"Cancel semantic radar waiting for more MAP space","viewer.radar.needsSpace":"Semantic radar needs more visible MAP space","viewer.radar.viewport.full":"full map","viewer.radar.viewport.width":"{percent}% width","viewer.radar.viewport.scale":"{percent}% viewport","viewer.nav.controls":"Diagram view controls","viewer.nav.route":"Trace a directed route","viewer.nav.route.title":"Trace route (R)","viewer.nav.route.short":"PATH","viewer.nav.radar":"Open semantic radar","viewer.nav.radar.title":"Semantic radar (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Open semantic lens","viewer.nav.lens.title":"Semantic lens (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Find a node","viewer.nav.find.title":"Find a node (/)","viewer.nav.guide":"Open diagram guide","viewer.nav.guide.title":"Diagram guide (?)","viewer.nav.zoomOut":"Zoom out","viewer.nav.zoomOut.title":"Zoom out (-)","viewer.nav.reset":"Reset diagram view","viewer.nav.reset.title":"Reset view (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Zoom in","viewer.nav.zoomIn.title":"Zoom in (+)","viewer.nav.camera":"{hint}. Reset diagram view","viewer.nav.camera.title":"{semantic}{hint} · reset view (0)","viewer.nav.camera.semantic":"Semantic camera active · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Zoom in to reveal relationship labels and node context","viewer.nav.detail.read":"Zoom in again to reveal tags and annotations","viewer.nav.detail.full":"Full diagram detail","viewer.intent.summary":"{label}. {out} outgoing, {in} incoming{loops}. {total} connections. Press Enter for details.","viewer.intent.loops":", {count} self loop","viewer.common.copied":"Copied","viewer.common.copyFailed":"Copy failed","viewer.common.copyLink":"Copy link","viewer.common.clear":"Clear","viewer.common.close":"Close"}}</script>
     <div class="guided-views no-print" id="guided-views" hidden aria-label="Guided diagram views">
-      <button id="guided-view-prev" type="button" aria-label="Kịch bản trước" title="Kịch bản trước ([)">&#8592;</button>
+      <button id="guided-view-prev" type="button" aria-label="Previous guided view" title="Previous guided view ([)">&#8592;</button>
       <div class="guided-view-copy">
         <div class="guided-view-meta">
-          <span>Kịch bản trải nghiệm</span>
+          <span>Guided views</span>
           <span id="guided-view-count"></span>
           <span class="guided-view-progress" aria-hidden="true"><span id="guided-view-progress-bar"></span></span>
           <span class="guided-view-handoff" id="guided-view-handoff" hidden aria-hidden="true"></span>
@@ -4984,17 +4985,17 @@
           </span>
         </div>
       </div>
-      <button id="guided-view-next" type="button" aria-label="Kịch bản sau" title="Kịch bản sau (])">&#8594;</button>
+      <button id="guided-view-next" type="button" aria-label="Next guided view" title="Next guided view (])">&#8594;</button>
       <div class="guided-view-actions">
         <button class="guided-view-play" id="guided-view-play" type="button" aria-label="Play guided story" aria-pressed="false" title="Play guided story (P)">
           <span id="guided-view-play-icon" aria-hidden="true">&#9654;</span>
-          <span id="guided-view-play-label">Phát tự động</span>
+          <span id="guided-view-play-label">Play story</span>
         </button>
         <button class="guided-view-beat-link" id="guided-view-beat-link" type="button" aria-label="Select a Story Beat to copy its exact link" title="Select a Story Beat to copy its exact link" disabled>
           <span aria-hidden="true">&#35;</span>
-          <span id="guided-view-beat-link-label">Sao chép liên kết</span>
+          <span id="guided-view-beat-link-label">Copy moment</span>
         </button>
-        <button class="guided-view-all" id="guided-view-all" type="button" aria-label="Show entire diagram">Xem toàn bộ</button>
+        <button class="guided-view-all" id="guided-view-all" type="button" aria-label="Show entire diagram">Show all</button>
       </div>
       <nav class="guided-view-index" id="guided-view-index" aria-label="Story chapters">
         <ol class="guided-view-chapters" id="guided-view-chapters"></ol>
@@ -5004,9 +5005,9 @@
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLATE 04">
-      <svg viewBox="0 0 1230 682" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="signal-flow" data-quality-profile="standard">
-        <title id="archify-diagram-title">VLearn AI Tutor — Quy Trình Xác Thực Nguồn 2 Tầng &amp; Human-in-the-Loop</title>
-        <desc id="archify-diagram-description">A workflow diagram generated by Archify.</desc>
+      <svg viewBox="0 0 1286 556" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="signal-flow" data-quality-profile="standard">
+        <title id="archify-diagram-title">VLearn AI Tutor — Luồng Trải Nghiệm Xác Thực Nguồn &amp; 4 Đường Đi (CP2/CP4)</title>
+        <desc id="archify-diagram-description">Định tuyến 3 route: ANSWER_GROUNDED, ASK_CLARIFY, ABSTAIN_ROUTE · Phân nhánh log theo rủi ro</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5030,265 +5031,275 @@
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Swimlanes -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1062" height="106" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1099" height="114" rx="10" class="c-lane" stroke-width="1"/>
         <text x="54" y="74" class="t-dim" font-size="10" font-weight="600">01 / Học viên (Giao diện VLearn Reader)</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="178" width="1062" height="114" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="200" class="t-dim" font-size="10" font-weight="600">02 / AI Tutor (Bộ Điều Phối &amp; RAG)</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="186" width="1099" height="114" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="208" class="t-dim" font-size="10" font-weight="600">02 / AI Tutor (Bộ Định Tuyến &amp; RAG Engine)</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="312" width="1062" height="114" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="334" class="t-dim" font-size="10" font-weight="600">03 / Agent Tra Cứu (Nguồn Whitelist)</text>
-
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="446" width="1062" height="112" rx="10" class="c-lane" stroke-width="1"/>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-3-exception" x="46" y="452" width="1050" height="100" rx="8" class="c-security-group" stroke-width="1"/>
-        <text x="54" y="468" class="t-security" font-size="10" font-weight="600">EX / Giảng viên / Trợ giảng (Thẩm Định)</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="320" width="1099" height="112" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-2-exception" x="46" y="326" width="1087" height="100" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="54" y="342" class="t-security" font-size="10" font-weight="600">EX / Hệ Thống Phản Hồi &amp; Ghi Log (Dev Team)</text>
 
         <!-- Phase headers -->
-        <line x1="72" y1="35" x2="284" y2="35" class="a-default" stroke-width="1.1"/>
-        <rect x="72" y="27" width="212" height="16" rx="4" class="c-mask"/>
-        <text x="178" y="39" class="t-muted" font-size="8" font-weight="600" text-anchor="middle">1. Khởi tạo &amp; Đặt câu hỏi</text>
-        <line x1="421.99999999999994" y1="35" x2="729.5999999999999" y2="35" class="a-emphasis" stroke-width="1.1"/>
-        <rect x="421.99999999999994" y="27" width="307.6" height="16" rx="4" class="c-mask"/>
-        <text x="575.8" y="39" class="t-backend" font-size="8" font-weight="600" text-anchor="middle">2. Định tuyến CRAG 3 dải</text>
-        <line x1="805.5999999999999" y1="35" x2="1065.6" y2="35" class="a-dashed" stroke-width="1.1"/>
-        <rect x="805.5999999999999" y="27" width="259.9999999999999" height="16" rx="4" class="c-mask"/>
-        <text x="935.5999999999999" y="39" class="t-messagebus" font-size="8" font-weight="600" text-anchor="middle">3. Phản hồi &amp; Kiểm soát</text>
+        <line x1="72" y1="35" x2="312" y2="35" class="a-default" stroke-width="1.1"/>
+        <rect x="72" y="27" width="240" height="16" rx="4" class="c-mask"/>
+        <text x="192" y="39" class="t-muted" font-size="8" font-weight="600" text-anchor="middle">1. Tiếp nhận &amp; Kiểm soát phạm vi</text>
+        <line x1="406.79999999999995" y1="35" x2="680.8" y2="35" class="a-emphasis" stroke-width="1.1"/>
+        <rect x="406.79999999999995" y="27" width="273.99999999999994" height="16" rx="4" class="c-mask"/>
+        <text x="543.8" y="39" class="t-backend" font-size="8" font-weight="600" text-anchor="middle">2. Làm rõ &amp; Định tuyến RAG</text>
+        <line x1="790" y1="35" x2="1102.4" y2="35" class="a-dashed" stroke-width="1.1"/>
+        <rect x="790" y="27" width="312.4000000000001" height="16" rx="4" class="c-mask"/>
+        <text x="946.2" y="39" class="t-messagebus" font-size="8" font-weight="600" text-anchor="middle">3. Phản hồi &amp; Kiểm soát học viên</text>
 
         <!-- Workflow groups -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-0" x="44" y="90" width="713.6" height="64" rx="9" class="c-lane" stroke-width="1"/>
-        <text x="54" y="88" class="t-muted" font-size="7" font-weight="600">Tương tác trên Slide 65</text>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-1" x="164" y="216" width="378" height="72" rx="9" class="c-lane" stroke-width="1"/>
-        <text x="174" y="214" class="t-backend" font-size="7" font-weight="600">Bộ Định Tuyến 3 Dải Tự Tin</text>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-2" x="609.6" y="350" width="316" height="72" rx="9" class="c-lane" stroke-width="1"/>
-        <text x="619.6" y="348" class="t-messagebus" font-size="7" font-weight="600">Tra Cứu Mở Rộng Ngoài Bài</text>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-3" x="777.6" y="484" width="315.9999999999999" height="70" rx="9" class="c-security-group" stroke-width="1"/>
-        <text x="787.6" y="482" class="t-security" font-size="7" font-weight="600">Cơ Chế Phê Duyệt Tri Thức</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-0" x="44" y="90" width="1086.4" height="72" rx="9" class="c-lane" stroke-width="1"/>
+        <text x="54" y="88" class="t-muted" font-size="7" font-weight="600">Tương tác học viên trên VLearn</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-1" x="192" y="224" width="938.4000000000001" height="72" rx="9" class="c-lane" stroke-width="1"/>
+        <text x="202" y="222" class="t-backend" font-size="7" font-weight="600">Bộ Định Tuyến &amp; Căn Cứ Tri Thức</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="group" data-composition-frame-id="group-2" x="786" y="358" width="344.4000000000001" height="70" rx="9" class="c-security-group" stroke-width="1"/>
+        <text x="796" y="356" class="t-security" font-size="7" font-weight="600">Ghi Nhận Phản Hồi Phân Nhánh Nền</text>
 
         <!-- Edge paths -->
-        <path data-edge-from="student_ask" data-edge-to="rag_guard" data-edge-label="gửi câu hỏi" data-edge-key="0" data-edge-id="e_ask_rag" data-composition-points="118,146;118,168;324,168;324,253;308,253" d="M 118 146 L 118 168 L 324 168 L 324 253 L 308 253" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="triband_eval" data-edge-to="clarify_g10" data-edge-label="mơ hồ [β, α)" data-edge-key="1" data-edge-id="e_eval_clarify" data-composition-points="468,287;468,303;683.6,303;683.6,287" d="M 468 287 L 468 303 L 683.6 303 L 683.6 287" class="a-dashed" data-animate="edge" style="--step:5" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label=">= α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal" data-composition-points="468,219;468,203;851.6,203;851.6,219" d="M 468 219 L 468 203 L 851.6 203 L 851.6 219" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="triband_eval" data-edge-to="tool_search" data-edge-label="&lt; β (Ngoài bài)" data-edge-key="3" data-edge-id="e_eval_search" data-composition-points="468,287;468,387;613.6,387" d="M 468 287 L 468 387 L 613.6 387" class="a-dashed" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="external_ans" data-edge-to="review_queue" data-edge-label="tự động chuyển" data-edge-key="4" data-edge-id="e_external_queue" data-composition-points="921.6,387;937.6,387;937.6,574;851.6,574;851.6,545" d="M 921.6 387 L 937.6 387 L 937.6 574 L 851.6 574 L 851.6 545" class="a-security" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="clarify_g10" data-edge-to="student_clarify" data-edge-label="hỏi làm rõ" data-edge-key="5" data-edge-id="e_g10_student" data-composition-points="683.6,287;683.6,303;1213.601,303;1213.601,78;683.6,78;683.6,94" d="M 683.6 287 L 683.6 303 L 1213.601 303 L 1213.601 78 L 683.6 78 L 683.6 94" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="review_queue" data-edge-to="ta_review" data-edge-key="6" data-edge-id="e_queue_ta" data-composition-points="921.6,519;949.6,519" d="M 921.6 519 L 949.6 519" class="a-security" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="rag_guard" data-edge-to="triband_eval" data-edge-label="đối chiếu nguồn" data-edge-key="7" data-edge-id="e_rag_eval" data-composition-points="238,287;238,303;468,303;468,287" d="M 238 287 L 238 303 L 468 303 L 468 287" class="a-emphasis" data-animate="edge" style="--step:1" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="tool_search" data-edge-to="external_ans" data-edge-key="8" data-edge-id="e_search_reply" data-composition-points="753.6,387;781.6,387" d="M 753.6 387 L 781.6 387" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="student_clarify" data-edge-to="internal_ans" data-edge-label="chốt ý định" data-edge-key="9" data-edge-id="e_student_reanswer" data-composition-points="753.6,120;851.6,120;851.6,219" d="M 753.6 120 L 851.6 120 L 851.6 219" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="ta_review" data-edge-to="ingest_vectordb" data-edge-label="phê duyệt" data-edge-key="10" data-edge-id="e_ta_ingest" data-composition-points="1019.6,485;1019.6,279" d="M 1019.6 485 L 1019.6 279" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="abstain_ans" data-edge-to="feedback_log" data-edge-label="tự động log (no_grounding)" data-edge-key="0" data-edge-id="e_abstain_log" data-composition-points="1126.4,261;1257.2,261;1257.2,393;1126.4,393" d="M 1126.4 261 L 1257.2 261 L 1257.2 393 L 1126.4 393" class="a-security" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="student_ask" data-edge-to="scope_guard" data-edge-label="gửi câu hỏi" data-edge-key="1" data-edge-id="e_ask_scope" data-composition-points="48,127;32,127;32,316;266,316;266,295" d="M 48 127 L 32 127 L 32 316 L 266 316 L 266 295" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="clarify_eval" data-edge-to="student_clarify" data-edge-label="hỏi lại 1 câu (G10)" data-edge-key="2" data-edge-id="e_eval_clarify" data-composition-points="452.8,227;452.8,161" d="M 452.8 227 L 452.8 161" class="a-dashed" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="clarify_eval" data-edge-to="rag_retrieve" data-edge-label="đã rõ" data-edge-key="3" data-edge-id="e_eval_rag" data-composition-points="522.8,261;564.8,261" d="M 522.8 261 L 564.8 261" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="grounded_ans" data-edge-to="student_verify" data-edge-label="trả lời có nguồn" data-edge-key="4" data-edge-id="e_grounded_verify" data-composition-points="836,227;836,161" d="M 836 227 L 836 161" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="rag_retrieve" data-edge-to="abstain_ans" data-edge-label="thiếu căn cứ / vượt quyền" data-edge-key="5" data-edge-id="e_rag_abstain" data-composition-points="634.8,295;634.8,316;1056.4,316;1056.4,295" d="M 634.8 295 L 634.8 316 L 1056.4 316 L 1056.4 295" class="a-dashed" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="rag_retrieve" data-edge-to="grounded_ans" data-edge-label="đủ căn cứ" data-edge-key="6" data-edge-id="e_rag_grounded" data-composition-points="634.8,227;634.8,170;750,170;750,261;766,261" d="M 634.8 227 L 634.8 170 L 750 170 L 750 261 L 766 261" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="scope_guard" data-edge-to="clarify_eval" data-edge-label="hợp lệ" data-edge-key="7" data-edge-id="e_scope_clear" data-composition-points="336,261;382.8,261" d="M 336 261 L 382.8 261" class="a-emphasis" data-animate="edge" style="--step:1" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="scope_guard" data-edge-to="refuse_scope" data-edge-label="gian lận / ngoài lề" data-edge-key="8" data-edge-id="e_scope_refuse" data-composition-points="196,268;20,268;20,177;266,177;266,161" d="M 196 268 L 20 268 L 20 177 L 266 177 L 266 161" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="student_clarify" data-edge-to="rag_retrieve" data-edge-label="bổ sung ngữ cảnh" data-edge-key="9" data-edge-id="e_student_reask" data-composition-points="522.8,127;634.8,127;634.8,227" d="M 522.8 127 L 634.8 127 L 634.8 227" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="student_suggest" data-edge-to="feedback_log" data-edge-label="log (grounded)" data-edge-key="10" data-edge-id="e_suggest_log" data-composition-points="1126.4,127;1269.6,127;1269.6,443;1056.4,443;1056.4,427" d="M 1126.4 127 L 1269.6 127 L 1269.6 443 L 1056.4 443 L 1056.4 427" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="student_verify" data-edge-to="student_suggest" data-edge-label="phát hiện sai" data-edge-key="11" data-edge-id="e_verify_suggest" data-composition-points="906,127;986.4000000000001,127" d="M 906 127 L 986.4000000000001 127" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Nodes -->
-        <g id="node-student_ask" data-node-id="student_ask" data-node-label="Đọc Slide bài học" tabindex="0" role="button" aria-label="Focus Đọc Slide bài học, Bôi đen từ khóa khó, Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Bôi đen từ khóa khó" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi">
-          <title>Đọc Slide bài học · Bôi đen từ khóa khó · Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 1. Khởi tạo &amp; Đặt câu hỏi</title>
-          <rect x="48" y="94" width="140" height="52" rx="6" class="c-mask"/>
-          <rect x="48" y="94" width="140" height="52" rx="6" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(54 100) scale(0.6875)">
+        <g id="node-student_ask" data-node-id="student_ask" data-node-label="Đọc Slide Bài Học" tabindex="0" role="button" aria-label="Focus Đọc Slide Bài Học, Bôi đen hoặc nhập câu hỏi, Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Bôi đen hoặc nhập câu hỏi" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi">
+          <title>Đọc Slide Bài Học · Bôi đen hoặc nhập câu hỏi · Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi</title>
+          <rect x="48" y="101" width="140" height="52" rx="6" class="c-mask"/>
+          <rect x="48" y="101" width="140" height="52" rx="6" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(54 107) scale(0.6875)">
             <rect x="2" y="3" width="12" height="10" rx="2"/>
             <path d="M2 6.5h12"/>
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="118" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Đọc Slide bài học</text>
-          <text data-detail="context" x="118" y="132" class="t-muted" font-size="8" text-anchor="middle">Bôi đen từ khóa khó</text>
+          <text data-node-label="" data-detail-anchor="" x="118" y="122" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Đọc Slide Bài Học</text>
+          <text data-detail="context" x="118" y="139" class="t-muted" font-size="8" text-anchor="middle">Bôi đen hoặc nhập câu hỏi</text>
         </g>
 
-        <g id="node-student_clarify" data-node-id="student_clarify" data-node-label="Chọn phạm vi" tabindex="0" role="button" aria-label="Focus Chọn phạm vi, Phản hồi câu hỏi G10, Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Phản hồi câu hỏi G10" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 2. Định tuyến CRAG 3 dải">
-          <title>Chọn phạm vi · Phản hồi câu hỏi G10 · Học viên (Giao diện VLearn Reader) › Tương tác trên Slide 65 › 2. Định tuyến CRAG 3 dải</title>
-          <rect x="613.6" y="94" width="140" height="52" rx="6" class="c-mask"/>
-          <rect x="613.6" y="94" width="140" height="52" rx="6" class="c-frontend" data-animate="node" style="--step:5" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(619.6 100) scale(0.6875)">
-            <rect x="2" y="3" width="12" height="10" rx="2"/>
-            <path d="M2 6.5h12"/>
-            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
-            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="683.6" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Chọn phạm vi</text>
-          <text data-detail="context" x="683.6" y="132" class="t-muted" font-size="8" text-anchor="middle">Phản hồi câu hỏi G10</text>
-        </g>
-
-        <g id="node-rag_guard" data-node-id="rag_guard" data-node-label="Kiểm Soát &amp; RAG" tabindex="0" role="button" aria-label="Focus Kiểm Soát &amp; RAG, Cục bộ &amp; Toàn khóa, AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Cục bộ &amp; Toàn khóa" data-node-tag="Day 1 - Day 15" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi">
-          <title>Kiểm Soát &amp; RAG · Cục bộ &amp; Toàn khóa · AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 1. Khởi tạo &amp; Đặt câu hỏi · Day 1 - Day 15</title>
-          <rect x="168" y="219" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="168" y="219" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(174 225) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="238" y="240" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Kiểm Soát &amp; RAG</text>
-          <text data-detail="context" x="238" y="257" class="t-muted" font-size="8" text-anchor="middle">Cục bộ &amp; Toàn khóa</text>
-        <text data-detail="fine" x="238" y="275" class="t-backend" font-size="7" text-anchor="middle">Day 1 - Day 15</text>
-        </g>
-
-        <g id="node-triband_eval" data-node-id="triband_eval" data-node-label="Định Tuyến CRAG" tabindex="0" role="button" aria-label="Focus Định Tuyến CRAG, Phân 3 dải tự tin, AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Phân 3 dải tự tin" data-node-tag="Ngưỡng α &amp; β" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 2. Định tuyến CRAG 3 dải">
-          <title>Định Tuyến CRAG · Phân 3 dải tự tin · AI Tutor (Bộ Điều Phối &amp; RAG) › Bộ Định Tuyến 3 Dải Tự Tin › 2. Định tuyến CRAG 3 dải · Ngưỡng α &amp; β</title>
-          <rect x="398" y="219" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="398" y="219" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(404 225) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="468" y="240" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Định Tuyến CRAG</text>
-          <text data-detail="context" x="468" y="257" class="t-muted" font-size="8" text-anchor="middle">Phân 3 dải tự tin</text>
-        <text data-detail="fine" x="468" y="275" class="t-backend" font-size="7" text-anchor="middle">Ngưỡng α &amp; β</text>
-        </g>
-
-        <g id="node-clarify_g10" data-node-id="clarify_g10" data-node-label="Hỏi Lại G10" tabindex="0" role="button" aria-label="Focus Hỏi Lại G10, Thu hẹp vùng mơ hồ, AI Tutor (Bộ Điều Phối &amp; RAG) › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="Thu hẹp vùng mơ hồ" data-node-tag="HAX G10" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › 2. Định tuyến CRAG 3 dải">
-          <title>Hỏi Lại G10 · Thu hẹp vùng mơ hồ · AI Tutor (Bộ Điều Phối &amp; RAG) › 2. Định tuyến CRAG 3 dải · HAX G10</title>
-          <rect x="613.6" y="219" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="613.6" y="219" width="140" height="68" rx="6" class="c-messagebus" data-animate="node" style="--step:8" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(619.6 225) scale(0.6875)">
+        <g id="node-refuse_scope" data-node-id="refuse_scope" data-node-label="Từ Chối Sư Phạm" tabindex="0" role="button" aria-label="Focus Từ Chối Sư Phạm, Nêu giới hạn, gợi ý tự học, Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="Nêu giới hạn, gợi ý tự học" data-node-tag="Safe Exit" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi">
+          <title>Từ Chối Sư Phạm · Nêu giới hạn, gợi ý tự học · Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 1. Tiếp nhận &amp; Kiểm soát phạm vi · Safe Exit</title>
+          <rect x="196" y="93" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="196" y="93" width="140" height="68" rx="6" class="c-messagebus" data-animate="node" style="--step:7" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(202 99) scale(0.6875)">
             <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
             <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
             <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
             <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="683.6" y="240" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Hỏi Lại G10</text>
-          <text data-detail="context" x="683.6" y="257" class="t-muted" font-size="8" text-anchor="middle">Thu hẹp vùng mơ hồ</text>
-        <text data-detail="fine" x="683.6" y="275" class="t-messagebus" font-size="7" text-anchor="middle">HAX G10</text>
+          <text data-node-label="" data-detail-anchor="" x="266" y="114" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Từ Chối Sư Phạm</text>
+          <text data-detail="context" x="266" y="131" class="t-muted" font-size="8" text-anchor="middle">Nêu giới hạn, gợi ý tự học</text>
+        <text data-detail="fine" x="266" y="149" class="t-messagebus" font-size="7" text-anchor="middle">Safe Exit</text>
         </g>
 
-        <g id="node-internal_ans" data-node-id="internal_ans" data-node-label="Trả Lời Bám Slide" tabindex="0" role="button" aria-label="Focus Trả Lời Bám Slide, Badge Xanh + Trang 65, AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Badge Xanh + Trang 65" data-node-tag="Đã xác thực" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát">
-          <title>Trả Lời Bám Slide · Badge Xanh + Trang 65 · AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát · Đã xác thực</title>
-          <rect x="781.6" y="219" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="781.6" y="219" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(787.6 225) scale(0.6875)">
+        <g id="node-student_clarify" data-node-id="student_clarify" data-node-label="Làm Rõ Ngữ Cảnh" tabindex="0" role="button" aria-label="Focus Làm Rõ Ngữ Cảnh, Bổ sung khái niệm / đoạn, Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 2. Làm rõ &amp; Định tuyến RAG" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Bổ sung khái niệm / đoạn" data-node-tag="HAX G10" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 2. Làm rõ &amp; Định tuyến RAG">
+          <title>Làm Rõ Ngữ Cảnh · Bổ sung khái niệm / đoạn · Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 2. Làm rõ &amp; Định tuyến RAG · HAX G10</title>
+          <rect x="382.8" y="93" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="382.8" y="93" width="140" height="68" rx="6" class="c-frontend" data-animate="node" style="--step:8" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(388.8 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="452.8" y="114" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Làm Rõ Ngữ Cảnh</text>
+          <text data-detail="context" x="452.8" y="131" class="t-muted" font-size="8" text-anchor="middle">Bổ sung khái niệm / đoạn</text>
+        <text data-detail="fine" x="452.8" y="149" class="t-frontend" font-size="7" text-anchor="middle">HAX G10</text>
+        </g>
+
+        <g id="node-student_verify" data-node-id="student_verify" data-node-label="Đối Chiếu Nguồn" tabindex="0" role="button" aria-label="Focus Đối Chiếu Nguồn, Mở slide kiểm chứng, Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Mở slide kiểm chứng" data-node-tag="HAX G11" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên">
+          <title>Đối Chiếu Nguồn · Mở slide kiểm chứng · Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên · HAX G11</title>
+          <rect x="766" y="93" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="766" y="93" width="140" height="68" rx="6" class="c-frontend" data-animate="node" style="--step:5" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(772 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="836" y="114" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Đối Chiếu Nguồn</text>
+          <text data-detail="context" x="836" y="131" class="t-muted" font-size="8" text-anchor="middle">Mở slide kiểm chứng</text>
+        <text data-detail="fine" x="836" y="149" class="t-frontend" font-size="7" text-anchor="middle">HAX G11</text>
+        </g>
+
+        <g id="node-student_suggest" data-node-id="student_suggest" data-node-label="Đề Xuất Sửa" tabindex="0" role="button" aria-label="Focus Đề Xuất Sửa, Báo citation/nội dung sai, Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Báo citation/nội dung sai" data-node-tag="HAX G9" data-node-context="Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên">
+          <title>Đề Xuất Sửa · Báo citation/nội dung sai · Học viên (Giao diện VLearn Reader) › Tương tác học viên trên VLearn › 3. Phản hồi &amp; Kiểm soát học viên · HAX G9</title>
+          <rect x="986.4000000000001" y="93" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="986.4000000000001" y="93" width="140" height="68" rx="6" class="c-frontend" data-animate="node" style="--step:10" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(992.4000000000001 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1056.4" y="114" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Đề Xuất Sửa</text>
+          <text data-detail="context" x="1056.4" y="131" class="t-muted" font-size="8" text-anchor="middle">Báo citation/nội dung sai</text>
+        <text data-detail="fine" x="1056.4" y="149" class="t-frontend" font-size="7" text-anchor="middle">HAX G9</text>
+        </g>
+
+        <g id="node-scope_guard" data-node-id="scope_guard" data-node-label="Kiểm Soát Phạm Vi" tabindex="0" role="button" aria-label="Focus Kiểm Soát Phạm Vi, Chống gian lận học thuật, AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 1. Tiếp nhận &amp; Kiểm soát phạm vi" aria-pressed="false" data-node-kind="security" data-node-sublabel="Chống gian lận học thuật" data-node-tag="Guardrail" data-node-context="AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 1. Tiếp nhận &amp; Kiểm soát phạm vi">
+          <title>Kiểm Soát Phạm Vi · Chống gian lận học thuật · AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 1. Tiếp nhận &amp; Kiểm soát phạm vi · Guardrail</title>
+          <rect x="196" y="227" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="196" y="227" width="140" height="68" rx="6" class="c-security" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(202 233) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="266" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Kiểm Soát Phạm Vi</text>
+          <text data-detail="context" x="266" y="265" class="t-muted" font-size="8" text-anchor="middle">Chống gian lận học thuật</text>
+        <text data-detail="fine" x="266" y="283" class="t-security" font-size="7" text-anchor="middle">Guardrail</text>
+        </g>
+
+        <g id="node-clarify_eval" data-node-id="clarify_eval" data-node-label="Kiểm Tra Độ Rõ" tabindex="0" role="button" aria-label="Focus Kiểm Tra Độ Rõ, Phát hiện câu hỏi mơ hồ, AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Phát hiện câu hỏi mơ hồ" data-node-tag="ASK_CLARIFY" data-node-context="AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG">
+          <title>Kiểm Tra Độ Rõ · Phát hiện câu hỏi mơ hồ · AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG · ASK_CLARIFY</title>
+          <rect x="382.8" y="227" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="382.8" y="227" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(388.8 233) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="851.6" y="240" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Trả Lời Bám Slide</text>
-          <text data-detail="context" x="851.6" y="257" class="t-muted" font-size="8" text-anchor="middle">Badge Xanh + Trang 65</text>
-        <text data-detail="fine" x="851.6" y="275" class="t-backend" font-size="7" text-anchor="middle">Đã xác thực</text>
+          <text data-node-label="" data-detail-anchor="" x="452.8" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Kiểm Tra Độ Rõ</text>
+          <text data-detail="context" x="452.8" y="265" class="t-muted" font-size="8" text-anchor="middle">Phát hiện câu hỏi mơ hồ</text>
+        <text data-detail="fine" x="452.8" y="283" class="t-backend" font-size="7" text-anchor="middle">ASK_CLARIFY</text>
         </g>
 
-        <g id="node-ingest_vectordb" data-node-id="ingest_vectordb" data-node-label="Nạp Vector DB" tabindex="0" role="button" aria-label="Focus Nạp Vector DB, Thành nguồn chính thức, AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát" aria-pressed="false" data-node-kind="database" data-node-sublabel="Thành nguồn chính thức" data-node-context="AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát">
-          <title>Nạp Vector DB · Thành nguồn chính thức · AI Tutor (Bộ Điều Phối &amp; RAG) › 3. Phản hồi &amp; Kiểm soát</title>
-          <rect x="949.6" y="227" width="140" height="52" rx="6" class="c-mask"/>
-          <rect x="949.6" y="227" width="140" height="52" rx="6" class="c-database" data-animate="node" style="--step:10" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(955.6 233) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+        <g id="node-rag_retrieve" data-node-id="rag_retrieve" data-node-label="Tra Cứu Corpus" tabindex="0" role="button" aria-label="Focus Tra Cứu Corpus, Bài hiện tại &amp; Toàn khóa, AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Bài hiện tại &amp; Toàn khóa" data-node-tag="Local &amp; Cross" data-node-context="AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG">
+          <title>Tra Cứu Corpus · Bài hiện tại &amp; Toàn khóa · AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 2. Làm rõ &amp; Định tuyến RAG · Local &amp; Cross</title>
+          <rect x="564.8" y="227" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="564.8" y="227" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(570.8 233) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1019.6" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Nạp Vector DB</text>
-          <text data-detail="context" x="1019.6" y="265" class="t-muted" font-size="8" text-anchor="middle">Thành nguồn chính thức</text>
+          <text data-node-label="" data-detail-anchor="" x="634.8" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Tra Cứu Corpus</text>
+          <text data-detail="context" x="634.8" y="265" class="t-muted" font-size="8" text-anchor="middle">Bài hiện tại &amp; Toàn khóa</text>
+        <text data-detail="fine" x="634.8" y="283" class="t-backend" font-size="7" text-anchor="middle">Local &amp; Cross</text>
         </g>
 
-        <g id="node-tool_search" data-node-id="tool_search" data-node-label="Tra Cứu Web Ngoài" tabindex="0" role="button" aria-label="Focus Tra Cứu Web Ngoài, Chỉ tìm trên Whitelist, Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 2. Định tuyến CRAG 3 dải" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="Chỉ tìm trên Whitelist" data-node-tag="Tài liệu &amp; arXiv" data-node-context="Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 2. Định tuyến CRAG 3 dải">
-          <title>Tra Cứu Web Ngoài · Chỉ tìm trên Whitelist · Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 2. Định tuyến CRAG 3 dải · Tài liệu &amp; arXiv</title>
-          <rect x="613.6" y="353" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="613.6" y="353" width="140" height="68" rx="6" class="c-cloud" data-animate="node" style="--step:11" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(619.6 359) scale(0.6875)">
-            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
+        <g id="node-grounded_ans" data-node-id="grounded_ans" data-node-label="Trả Lời Bám Nguồn" tabindex="0" role="button" aria-label="Focus Trả Lời Bám Nguồn, Badge Xanh + Mã slide, AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Badge Xanh + Mã slide" data-node-tag="ANSWER_GROUNDED" data-node-context="AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên">
+          <title>Trả Lời Bám Nguồn · Badge Xanh + Mã slide · AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên · ANSWER_GROUNDED</title>
+          <rect x="766" y="227" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="766" y="227" width="140" height="68" rx="6" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(772 233) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="683.6" y="374" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Tra Cứu Web Ngoài</text>
-          <text data-detail="context" x="683.6" y="391" class="t-muted" font-size="8" text-anchor="middle">Chỉ tìm trên Whitelist</text>
-        <text data-detail="fine" x="683.6" y="409" class="t-cloud" font-size="7" text-anchor="middle">Tài liệu &amp; arXiv</text>
+          <text data-node-label="" data-detail-anchor="" x="836" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Trả Lời Bám Nguồn</text>
+          <text data-detail="context" x="836" y="265" class="t-muted" font-size="8" text-anchor="middle">Badge Xanh + Mã slide</text>
+        <text data-detail="fine" x="836" y="283" class="t-backend" font-size="7" text-anchor="middle">ANSWER_GROUNDED</text>
         </g>
 
-        <g id="node-external_ans" data-node-id="external_ans" data-node-label="Trả Lời Cảnh Báo" tabindex="0" role="button" aria-label="Focus Trả Lời Cảnh Báo, Nhãn Vàng Disclaimer, Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 3. Phản hồi &amp; Kiểm soát" aria-pressed="false" data-node-kind="external" data-node-sublabel="Nhãn Vàng Disclaimer" data-node-tag="Chưa kiểm chứng" data-node-context="Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 3. Phản hồi &amp; Kiểm soát">
-          <title>Trả Lời Cảnh Báo · Nhãn Vàng Disclaimer · Agent Tra Cứu (Nguồn Whitelist) › Tra Cứu Mở Rộng Ngoài Bài › 3. Phản hồi &amp; Kiểm soát · Chưa kiểm chứng</title>
-          <rect x="781.6" y="353" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="781.6" y="353" width="140" height="68" rx="6" class="c-external" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(787.6 359) scale(0.6875)">
+        <g id="node-abstain_ans" data-node-id="abstain_ans" data-node-label="Báo Thiếu Căn Cứ" tabindex="0" role="button" aria-label="Focus Báo Thiếu Căn Cứ, Nguồn ngoài + Nhãn cảnh báo, AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên" aria-pressed="false" data-node-kind="external" data-node-sublabel="Nguồn ngoài + Nhãn cảnh báo" data-node-tag="ABSTAIN_ROUTE" data-node-context="AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên">
+          <title>Báo Thiếu Căn Cứ · Nguồn ngoài + Nhãn cảnh báo · AI Tutor (Bộ Định Tuyến &amp; RAG Engine) › Bộ Định Tuyến &amp; Căn Cứ Tri Thức › 3. Phản hồi &amp; Kiểm soát học viên · ABSTAIN_ROUTE</title>
+          <rect x="986.4000000000001" y="227" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="986.4000000000001" y="227" width="140" height="68" rx="6" class="c-external" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(992.4000000000001 233) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="851.6" y="374" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Trả Lời Cảnh Báo</text>
-          <text data-detail="context" x="851.6" y="391" class="t-muted" font-size="8" text-anchor="middle">Nhãn Vàng Disclaimer</text>
-        <text data-detail="fine" x="851.6" y="409" class="t-external" font-size="7" text-anchor="middle">Chưa kiểm chứng</text>
+          <text data-node-label="" data-detail-anchor="" x="1056.4" y="248" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Báo Thiếu Căn Cứ</text>
+          <text data-detail="context" x="1056.4" y="265" class="t-muted" font-size="8" text-anchor="middle">Nguồn ngoài + Nhãn cảnh báo</text>
+        <text data-detail="fine" x="1056.4" y="283" class="t-external" font-size="7" text-anchor="middle">ABSTAIN_ROUTE</text>
         </g>
 
-        <g id="node-review_queue" data-node-id="review_queue" data-node-label="Hàng Đợi Duyệt" tabindex="0" role="button" aria-label="Focus Hàng Đợi Duyệt, Tự động đẩy case ngoài, Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát" aria-pressed="false" data-node-kind="security" data-node-sublabel="Tự động đẩy case ngoài" data-node-context="Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát">
-          <title>Hàng Đợi Duyệt · Tự động đẩy case ngoài · Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát</title>
-          <rect x="781.6" y="493" width="140" height="52" rx="6" class="c-mask"/>
-          <rect x="781.6" y="493" width="140" height="52" rx="6" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(787.6 499) scale(0.6875)">
-            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
-            <path d="m5.8 8 1.5 1.5 3-3"/>
+        <g id="node-feedback_log" data-node-id="feedback_log" data-node-label="Lưu Log Phân Nhánh" tabindex="0" role="button" aria-label="Focus Lưu Log Phân Nhánh, grounded / no_grounding, Hệ Thống Phản Hồi &amp; Ghi Log (Dev Team) › Ghi Nhận Phản Hồi Phân Nhánh Nền › 3. Phản hồi &amp; Kiểm soát học viên" aria-pressed="false" data-node-kind="database" data-node-sublabel="grounded / no_grounding" data-node-tag="PAIR Feedback" data-node-context="Hệ Thống Phản Hồi &amp; Ghi Log (Dev Team) › Ghi Nhận Phản Hồi Phân Nhánh Nền › 3. Phản hồi &amp; Kiểm soát học viên">
+          <title>Lưu Log Phân Nhánh · grounded / no_grounding · Hệ Thống Phản Hồi &amp; Ghi Log (Dev Team) › Ghi Nhận Phản Hồi Phân Nhánh Nền › 3. Phản hồi &amp; Kiểm soát học viên · PAIR Feedback</title>
+          <rect x="986.4000000000001" y="359" width="140" height="68" rx="6" class="c-mask"/>
+          <rect x="986.4000000000001" y="359" width="140" height="68" rx="6" class="c-database" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(992.4000000000001 365) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="851.6" y="514" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Hàng Đợi Duyệt</text>
-          <text data-detail="context" x="851.6" y="531" class="t-muted" font-size="8" text-anchor="middle">Tự động đẩy case ngoài</text>
-        </g>
-
-        <g id="node-ta_review" data-node-id="ta_review" data-node-label="Giảng Viên Duyệt" tabindex="0" role="button" aria-label="Focus Giảng Viên Duyệt, Phê duyệt hoặc chỉnh sửa, Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát" aria-pressed="false" data-node-kind="security" data-node-sublabel="Phê duyệt hoặc chỉnh sửa" data-node-tag="Cổng kiểm soát" data-node-context="Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát">
-          <title>Giảng Viên Duyệt · Phê duyệt hoặc chỉnh sửa · Giảng viên / Trợ giảng (Thẩm Định) › Cơ Chế Phê Duyệt Tri Thức › 3. Phản hồi &amp; Kiểm soát · Cổng kiểm soát</title>
-          <rect x="949.6" y="485" width="140" height="68" rx="6" class="c-mask"/>
-          <rect x="949.6" y="485" width="140" height="68" rx="6" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(955.6 491) scale(0.6875)">
-            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
-            <path d="m5.8 8 1.5 1.5 3-3"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="1019.6" y="506" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Giảng Viên Duyệt</text>
-          <text data-detail="context" x="1019.6" y="523" class="t-muted" font-size="8" text-anchor="middle">Phê duyệt hoặc chỉnh sửa</text>
-        <text data-detail="fine" x="1019.6" y="541" class="t-security" font-size="7" text-anchor="middle">Cổng kiểm soát</text>
+          <text data-node-label="" data-detail-anchor="" x="1056.4" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Lưu Log Phân Nhánh</text>
+          <text data-detail="context" x="1056.4" y="397" class="t-muted" font-size="8" text-anchor="middle">grounded / no_grounding</text>
+        <text data-detail="fine" x="1056.4" y="415" class="t-database" font-size="7" text-anchor="middle">PAIR Feedback</text>
         </g>
 
         <!-- Edge labels -->
-        <g data-detail="context" data-edge-from="student_ask" data-edge-to="rag_guard" data-edge-label="gửi câu hỏi" data-edge-key="0" data-edge-id="e_ask_rag">
-          <rect x="189.6" y="148" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="221" y="158" class="t-muted" font-size="8" text-anchor="middle">gửi câu hỏi</text>
+        <g data-detail="context" data-edge-from="abstain_ans" data-edge-to="feedback_log" data-edge-label="tự động log (no_grounding)" data-edge-key="0" data-edge-id="e_abstain_log">
+          <rect x="1124.4" y="241" width="134.8" height="14" rx="3" class="c-mask"/>
+          <text x="1191.8000000000002" y="251" class="t-security" font-size="8" text-anchor="middle">tự động log (no_grounding)</text>
         </g>
-        <g data-detail="context" data-edge-from="triband_eval" data-edge-to="clarify_g10" data-edge-label="mơ hồ [β, α)" data-edge-key="1" data-edge-id="e_eval_clarify">
-          <rect x="542" y="283" width="67.6" height="14" rx="3" class="c-mask"/>
-          <text x="575.8" y="293" class="t-database" font-size="8" text-anchor="middle">mơ hồ [β, α)</text>
+        <g data-detail="context" data-edge-from="student_ask" data-edge-to="scope_guard" data-edge-label="gửi câu hỏi" data-edge-key="1" data-edge-id="e_ask_scope">
+          <rect x="117.6" y="296" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="149" y="306" class="t-muted" font-size="8" text-anchor="middle">gửi câu hỏi</text>
         </g>
-        <g data-detail="context" data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label=">= α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal">
-          <rect x="618.8" y="183" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="659.8" y="193" class="t-backend" font-size="8" text-anchor="middle">>= α (Trong bài)</text>
+        <g data-detail="context" data-edge-from="clarify_eval" data-edge-to="student_clarify" data-edge-label="hỏi lại 1 câu (G10)" data-edge-key="2" data-edge-id="e_eval_clarify">
+          <rect x="402.2" y="207" width="101.2" height="14" rx="3" class="c-mask"/>
+          <text x="452.8" y="217" class="t-database" font-size="8" text-anchor="middle">hỏi lại 1 câu (G10)</text>
         </g>
-        <g data-detail="context" data-edge-from="triband_eval" data-edge-to="tool_search" data-edge-label="&lt; β (Ngoài bài)" data-edge-key="3" data-edge-id="e_eval_search">
-          <rect x="499.79999999999995" y="367" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="540.8" y="377" class="t-database" font-size="8" text-anchor="middle">&lt; β (Ngoài bài)</text>
+        <g data-detail="context" data-edge-from="clarify_eval" data-edge-to="rag_retrieve" data-edge-label="đã rõ" data-edge-key="3" data-edge-id="e_eval_rag">
+          <rect x="526.8" y="241" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="543.8" y="251" class="t-backend" font-size="8" text-anchor="middle">đã rõ</text>
         </g>
-        <g data-detail="context" data-edge-from="external_ans" data-edge-to="review_queue" data-edge-label="tự động chuyển" data-edge-key="4" data-edge-id="e_external_queue">
-          <rect x="856" y="554" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="894.6" y="564" class="t-security" font-size="8" text-anchor="middle">tự động chuyển</text>
+        <g data-detail="context" data-edge-from="grounded_ans" data-edge-to="student_verify" data-edge-label="trả lời có nguồn" data-edge-key="4" data-edge-id="e_grounded_verify">
+          <rect x="792.6" y="207" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="836" y="217" class="t-backend" font-size="8" text-anchor="middle">trả lời có nguồn</text>
         </g>
-        <g data-detail="context" data-edge-from="clarify_g10" data-edge-to="student_clarify" data-edge-label="hỏi làm rõ" data-edge-key="5" data-edge-id="e_g10_student">
-          <rect x="919.6005" y="283" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="948.6005" y="293" class="t-muted" font-size="8" text-anchor="middle">hỏi làm rõ</text>
+        <g data-detail="context" data-edge-from="rag_retrieve" data-edge-to="abstain_ans" data-edge-label="thiếu căn cứ / vượt quyền" data-edge-key="5" data-edge-id="e_rag_abstain">
+          <rect x="780.6" y="296" width="130" height="14" rx="3" class="c-mask"/>
+          <text x="845.6" y="306" class="t-database" font-size="8" text-anchor="middle">thiếu căn cứ / vượt quyền</text>
         </g>
-
-        <g data-detail="context" data-edge-from="rag_guard" data-edge-to="triband_eval" data-edge-label="đối chiếu nguồn" data-edge-key="7" data-edge-id="e_rag_eval">
-          <rect x="312" y="283" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="353" y="293" class="t-backend" font-size="8" text-anchor="middle">đối chiếu nguồn</text>
+        <g data-detail="context" data-edge-from="rag_retrieve" data-edge-to="grounded_ans" data-edge-label="đủ căn cứ" data-edge-key="6" data-edge-id="e_rag_grounded">
+          <rect x="665.8" y="150" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
+          <text x="692.4" y="160" class="t-backend" font-size="8" text-anchor="middle">đủ căn cứ</text>
         </g>
-
-        <g data-detail="context" data-edge-from="student_clarify" data-edge-to="internal_ans" data-edge-label="chốt ý định" data-edge-key="9" data-edge-id="e_student_reanswer">
-          <rect x="771.2" y="100" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="802.6" y="110" class="t-backend" font-size="8" text-anchor="middle">chốt ý định</text>
+        <g data-detail="context" data-edge-from="scope_guard" data-edge-to="clarify_eval" data-edge-label="hợp lệ" data-edge-key="7" data-edge-id="e_scope_clear">
+          <rect x="340" y="241" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="359.4" y="251" class="t-backend" font-size="8" text-anchor="middle">hợp lệ</text>
         </g>
-        <g data-detail="context" data-edge-from="ta_review" data-edge-to="ingest_vectordb" data-edge-label="phê duyệt" data-edge-key="10" data-edge-id="e_ta_ingest">
-          <rect x="993" y="465" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
-          <text x="1019.6" y="475" class="t-backend" font-size="8" text-anchor="middle">phê duyệt</text>
+        <g data-detail="context" data-edge-from="scope_guard" data-edge-to="refuse_scope" data-edge-label="gian lận / ngoài lề" data-edge-key="8" data-edge-id="e_scope_refuse">
+          <rect x="92.4" y="157" width="101.2" height="14" rx="3" class="c-mask"/>
+          <text x="143" y="167" class="t-security" font-size="8" text-anchor="middle">gian lận / ngoài lề</text>
+        </g>
+        <g data-detail="context" data-edge-from="student_clarify" data-edge-to="rag_retrieve" data-edge-label="bổ sung ngữ cảnh" data-edge-key="9" data-edge-id="e_student_reask">
+          <rect x="535.4" y="107" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="578.8" y="117" class="t-muted" font-size="8" text-anchor="middle">bổ sung ngữ cảnh</text>
+        </g>
+        <g data-detail="context" data-edge-from="student_suggest" data-edge-to="feedback_log" data-edge-label="log (grounded)" data-edge-key="10" data-edge-id="e_suggest_log">
+          <rect x="1124.4" y="423" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="1163" y="433" class="t-security" font-size="8" text-anchor="middle">log (grounded)</text>
+        </g>
+        <g data-detail="context" data-edge-from="student_verify" data-edge-to="student_suggest" data-edge-label="phát hiện sai" data-edge-key="11" data-edge-id="e_verify_suggest">
+          <rect x="910" y="107" width="72.4" height="14" rx="3" class="c-mask"/>
+          <text x="946.2" y="117" class="t-database" font-size="8" text-anchor="middle">phát hiện sai</text>
         </g>
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="20" y="582" class="t-primary" font-size="12" font-weight="650">Chú giải ký hiệu</text>
-          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="User UI" data-legend-x="20" data-legend-baseline="602" data-legend-width="74">
-            <rect x="20" y="594" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
-            <text x="42" y="602" class="t-muted" font-size="7.5" font-weight="500">Giao diện Học viên</text>
+          <text x="20" y="456" class="t-primary" font-size="12" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="User UI" data-legend-x="20" data-legend-baseline="476" data-legend-width="74">
+            <rect x="20" y="468" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="476" class="t-muted" font-size="7.5" font-weight="500">User UI</text>
           </g>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="101" data-legend-baseline="602" data-legend-width="91">
-            <rect x="101" y="594" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="123" y="602" class="t-muted" font-size="7.5" font-weight="500">Xử lý AI / Logic RAG</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="101" data-legend-baseline="476" data-legend-width="91">
+            <rect x="101" y="468" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="123" y="476" class="t-muted" font-size="7.5" font-weight="500">Agent logic</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="199" data-legend-baseline="602" data-legend-width="70">
-            <rect x="199" y="594" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
-            <text x="221" y="602" class="t-muted" font-size="7.5" font-weight="500">Kiểm soát & Thẩm định</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="199" data-legend-baseline="476" data-legend-width="70">
+            <rect x="199" y="468" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="221" y="476" class="t-muted" font-size="7.5" font-weight="500">Policy</text>
           </g>
-          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Tool action" data-legend-x="276" data-legend-baseline="602" data-legend-width="91">
-            <rect x="276" y="594" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
-            <text x="298" y="602" class="t-muted" font-size="7.5" font-weight="500">Hành động Công cụ</text>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Tool action" data-legend-x="276" data-legend-baseline="476" data-legend-width="91">
+            <rect x="276" y="468" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
+            <text x="298" y="476" class="t-muted" font-size="7.5" font-weight="500">Tool action</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Context / trace" data-legend-x="374" data-legend-baseline="602" data-legend-width="109">
-            <rect x="374" y="594" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="396" y="602" class="t-muted" font-size="7.5" font-weight="500">Ngữ cảnh & Dữ liệu</text>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Context / trace" data-legend-x="374" data-legend-baseline="476" data-legend-width="109">
+            <rect x="374" y="468" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="396" y="476" class="t-muted" font-size="7.5" font-weight="500">Context / trace</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Cloud service" data-legend-x="490" data-legend-baseline="602" data-legend-width="100">
-            <rect x="490" y="594" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
-            <text x="512" y="602" class="t-muted" font-size="7.5" font-weight="500">Tra cứu Web ngoài</text>
-          </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External system" data-legend-x="597" data-legend-baseline="602" data-legend-width="109">
-            <rect x="597" y="594" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="619" y="602" class="t-muted" font-size="7.5" font-weight="500">Hệ thống bên ngoài</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External system" data-legend-x="490" data-legend-baseline="476" data-legend-width="109">
+            <rect x="490" y="468" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="512" y="476" class="t-muted" font-size="7.5" font-weight="500">External system</text>
           </g>
         </g>
       </svg>
@@ -5480,37 +5491,36 @@
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Định tuyến 3 dải tự tin (CRAG)</h3>
+          <h3>Định tuyến 3 route theo độ tự tin</h3>
         </div>
         <ul>
-          <li>&bull; >= α (Cục bộ): Trích xuất trực tiếp Slide hiện tại</li>
-          <li>&bull; >= α (Toàn khóa): RAG mở rộng 15 buổi học, điều hướng sang bài tương ứng</li>
-          <li>&bull; [β, α): Kích hoạt HAX G10 hỏi lại 1 câu làm rõ ý định</li>
-          <li>&bull; &lt; β: Tra cứu ngoài có kiểm soát khi cả 15 buổi đều chưa dạy</li>
+          <li>&bull; ANSWER_GROUNDED: Căn cứ trực tiếp trong bài hoặc toàn khóa, trích dẫn rõ mã đoạn/trang</li>
+          <li>&bull; ASK_CLARIFY: Input mơ hồ hoặc thiếu đối tượng, kích hoạt HAX G10 hỏi lại đúng 1 câu</li>
+          <li>&bull; ABSTAIN_ROUTE: Thiếu nguồn hoặc vượt thẩm quyền, dừng an toàn và không tự bịa kiến thức</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot amber"></div>
-          <h3>Kiểm soát rủi ro &amp; Nhãn cảnh báo</h3>
+          <h3>Khối nguồn ngoài &amp; Phân lập cảnh báo</h3>
         </div>
         <ul>
-          <li>&bull; Câu trả lời ngoài bắt buộc gắn Badge Vàng Disclaimer</li>
-          <li>&bull; Cảnh báo nguy cơ lệch barem chấm bài thi quiz</li>
-          <li>&bull; Tự động đẩy vào Review Queue để Giảng viên/TA thẩm định</li>
+          <li>&bull; Khi thiếu căn cứ, tự động tìm kiếm nguồn ngoài có dẫn chứng</li>
+          <li>&bull; Hiển thị tách biệt với nhãn nổi bật: NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC</li>
+          <li>&bull; Học viên dễ dàng gạt bỏ (HAX G8) mà không làm gián đoạn phiên học</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot rose"></div>
-          <h3>Vòng lặp phê duyệt tri thức (Human-in-the-loop)</h3>
+          <h3>Ghi nhận phản hồi phân nhánh nền (PAIR)</h3>
         </div>
         <ul>
-          <li>&bull; Giảng viên/TA phê duyệt nội dung trên Dashboard quản trị</li>
-          <li>&bull; Tri thức mới được nạp ngược vào Vector DB bài giảng</li>
-          <li>&bull; Các thế hệ học viên sau được trả lời trực tiếp bằng nguồn chuẩn</li>
+          <li>&bull; Nhánh no-grounding tự động lưu log route_origin=no_grounding trong nền</li>
+          <li>&bull; Học viên bấm [Đề xuất sửa] để gửi feedback có route_origin=grounded (HAX G9)</li>
+          <li>&bull; Dev team nhận log có cấu trúc để cải thiện prompt và golden set, không chặn học viên</li>
         </ul>
       </div>
     </div>

@@ -2,64 +2,54 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "VLearn AI Tutor — Quy Trình Xác Thực Nguồn 2 Tầng & Human-in-the-Loop",
+    "title": "VLearn AI Tutor — Luồng Trải Nghiệm Xác Thực Nguồn & 4 Đường Đi (CP2/CP4)",
+    "subtitle": "Định tuyến 3 route: ANSWER_GROUNDED, ASK_CLARIFY, ABSTAIN_ROUTE · Phân nhánh log theo rủi ro",
     "animation": "trace",
     "visual_preset": "signal-flow",
     "quality_profile": "standard",
     "views": [
       {
         "id": "happy-path",
-        "label": "1. Trong bài giảng (Happy Path)",
+        "label": "1. Có căn cứ (Happy Path)",
         "focus": [
           "student_ask",
-          "rag_guard",
-          "triband_eval",
-          "internal_ans"
+          "scope_guard",
+          "clarify_eval",
+          "rag_retrieve",
+          "grounded_ans",
+          "student_verify"
         ],
-        "note": "RAG trúng tài liệu Slide 65, sinh câu trả lời kèm số trang và Badge Xanh xác thực."
+        "note": "Input rõ ràng, có căn cứ trong tài liệu: Tutor trả lời trích dẫn số trang slide và Badge Xanh xác thực."
       },
       {
         "id": "clarify-path",
         "label": "2. Mơ hồ (HAX G10 Clarification)",
         "focus": [
-          "triband_eval",
-          "clarify_g10",
+          "clarify_eval",
           "student_clarify",
-          "internal_ans"
+          "rag_retrieve"
         ],
-        "note": "Câu hỏi trong dải mơ hồ [β, α), AI hỏi lại 1 câu để thu hẹp phạm vi."
+        "note": "Input thiếu đối tượng hoặc mơ hồ: Tutor hỏi đúng 1 câu để thu hẹp phạm vi trước khi giải thích."
       },
       {
-        "id": "external-path",
-        "label": "3. Ngoài giáo trình (Tool Search + Cảnh báo)",
+        "id": "no-grounding-path",
+        "label": "3. Không căn cứ (Abstain & Nguồn ngoài)",
         "focus": [
-          "triband_eval",
-          "tool_search",
-          "external_ans",
-          "review_queue"
+          "rag_retrieve",
+          "abstain_ans",
+          "feedback_log"
         ],
-        "note": "Thiếu căn cứ trong bài, AI tra cứu web whitelist và gắn nhãn Vàng cảnh báo chưa duyệt."
+        "note": "Thiếu căn cứ trong khóa học: Tutor từ chối kết luận, hiển thị nguồn ngoài có cảnh báo và tự động ghi log nền no_grounding."
       },
       {
-        "id": "review-loop",
-        "label": "4. Vòng lặp thẩm định (TA Phê duyệt)",
+        "id": "correction-path",
+        "label": "4. Đề xuất sửa (Correction)",
         "focus": [
-          "review_queue",
-          "ta_review",
-          "ingest_vectordb"
+          "student_verify",
+          "student_suggest",
+          "feedback_log"
         ],
-        "note": "Giảng viên/TA phê duyệt kiến thức ngoài, tự động nạp vào Vector DB làm giàu kho tri thức."
-      },
-      {
-        "id": "cross-path",
-        "label": "5. Bài khác trong khóa (Cross-Lecture)",
-        "focus": [
-          "student_ask",
-          "rag_guard",
-          "triband_eval",
-          "internal_ans"
-        ],
-        "note": "RAG mở rộng ra toàn bộ 15 buổi của khóa học (Global Course Corpus), tránh báo động giả ra ngoài mạng."
+        "note": "Học viên phát hiện câu trả lời hoặc citation chưa chuẩn: bấm Đề xuất sửa để gửi feedback có route_origin=grounded."
       }
     ],
     "output": "codebase/vlearn-workflow.html"
@@ -71,35 +61,31 @@
     },
     {
       "id": "tutor_engine",
-      "label": "AI Tutor (Bộ Điều Phối & RAG)"
+      "label": "AI Tutor (Bộ Định Tuyến & RAG Engine)"
     },
     {
-      "id": "search_agent",
-      "label": "Agent Tra Cứu (Nguồn Whitelist)"
-    },
-    {
-      "id": "teacher_ta",
-      "label": "Giảng viên / Trợ giảng (Thẩm Định)",
+      "id": "dev_team",
+      "label": "Hệ Thống Phản Hồi & Ghi Log (Dev Team)",
       "variant": "exception"
     }
   ],
   "phases": [
     {
       "id": "phase_intake",
-      "label": "1. Khởi tạo & Đặt câu hỏi",
+      "label": "1. Tiếp nhận & Kiểm soát phạm vi",
       "fromCol": 0,
       "toCol": 1
     },
     {
-      "id": "phase_eval",
-      "label": "2. Định tuyến CRAG 3 dải",
+      "id": "phase_routing",
+      "label": "2. Làm rõ & Định tuyến RAG",
       "fromCol": 2,
       "toCol": 3,
       "variant": "emphasis"
     },
     {
-      "id": "phase_deliver",
-      "label": "3. Phản hồi & Kiểm soát",
+      "id": "phase_response",
+      "label": "3. Phản hồi & Kiểm soát học viên",
       "fromCol": 4,
       "toCol": 5,
       "variant": "dashed"
@@ -108,31 +94,23 @@
   "groups": [
     {
       "id": "grp_student",
-      "label": "Tương tác trên Slide 65",
+      "label": "Tương tác học viên trên VLearn",
       "lane": "student",
       "fromCol": 0,
-      "toCol": 3
+      "toCol": 5
     },
     {
       "id": "grp_routing",
-      "label": "Bộ Định Tuyến 3 Dải Tự Tin",
+      "label": "Bộ Định Tuyến & Căn Cứ Tri Thức",
       "lane": "tutor_engine",
       "fromCol": 1,
-      "toCol": 2,
+      "toCol": 5,
       "variant": "emphasis"
     },
     {
-      "id": "grp_search",
-      "label": "Tra Cứu Mở Rộng Ngoài Bài",
-      "lane": "search_agent",
-      "fromCol": 3,
-      "toCol": 4,
-      "variant": "dashed"
-    },
-    {
-      "id": "grp_review",
-      "label": "Cơ Chế Phê Duyệt Tri Thức",
-      "lane": "teacher_ta",
+      "id": "grp_feedback",
+      "label": "Ghi Nhận Phản Hồi Phân Nhánh Nền",
+      "lane": "dev_team",
       "fromCol": 4,
       "toCol": 5,
       "variant": "security"
@@ -140,9 +118,11 @@
   ],
   "mainPath": [
     "student_ask",
-    "rag_guard",
-    "triband_eval",
-    "internal_ans"
+    "scope_guard",
+    "clarify_eval",
+    "rag_retrieve",
+    "grounded_ans",
+    "student_verify"
   ],
   "nodes": [
     {
@@ -150,215 +130,230 @@
       "lane": "student",
       "col": 0,
       "type": "frontend",
-      "label": "Đọc Slide bài học",
-      "sublabel": "Bôi đen từ khóa khó",
+      "label": "Đọc Slide Bài Học",
+      "sublabel": "Bôi đen hoặc nhập câu hỏi",
+      "width": 140
+    },
+    {
+      "id": "refuse_scope",
+      "lane": "student",
+      "col": 1,
+      "type": "messagebus",
+      "label": "Từ Chối Sư Phạm",
+      "sublabel": "Nêu giới hạn, gợi ý tự học",
+      "tag": "Safe Exit",
+      "width": 140
+    },
+    {
+      "id": "scope_guard",
+      "lane": "tutor_engine",
+      "col": 1,
+      "type": "security",
+      "label": "Kiểm Soát Phạm Vi",
+      "sublabel": "Chống gian lận học thuật",
+      "tag": "Guardrail",
       "width": 140
     },
     {
       "id": "student_clarify",
       "lane": "student",
-      "col": 3,
-      "type": "frontend",
-      "label": "Chọn phạm vi",
-      "sublabel": "Phản hồi câu hỏi G10",
-      "width": 140
-    },
-    {
-      "id": "rag_guard",
-      "lane": "tutor_engine",
-      "col": 1,
-      "type": "backend",
-      "label": "Kiểm Soát & RAG",
-      "sublabel": "Cục bộ & Toàn khóa",
-      "tag": "Day 1 - Day 15",
-      "width": 140
-    },
-    {
-      "id": "triband_eval",
-      "lane": "tutor_engine",
       "col": 2,
-      "type": "backend",
-      "label": "Định Tuyến CRAG",
-      "sublabel": "Phân 3 dải tự tin",
-      "tag": "Ngưỡng α & β",
-      "width": 140
-    },
-    {
-      "id": "clarify_g10",
-      "lane": "tutor_engine",
-      "col": 3,
-      "type": "messagebus",
-      "label": "Hỏi Lại G10",
-      "sublabel": "Thu hẹp vùng mơ hồ",
+      "type": "frontend",
+      "label": "Làm Rõ Ngữ Cảnh",
+      "sublabel": "Bổ sung khái niệm / đoạn",
       "tag": "HAX G10",
       "width": 140
     },
     {
-      "id": "internal_ans",
+      "id": "clarify_eval",
+      "lane": "tutor_engine",
+      "col": 2,
+      "type": "backend",
+      "label": "Kiểm Tra Độ Rõ",
+      "sublabel": "Phát hiện câu hỏi mơ hồ",
+      "tag": "ASK_CLARIFY",
+      "width": 140
+    },
+    {
+      "id": "rag_retrieve",
+      "lane": "tutor_engine",
+      "col": 3,
+      "type": "backend",
+      "label": "Tra Cứu Corpus",
+      "sublabel": "Bài hiện tại & Toàn khóa",
+      "tag": "Local & Cross",
+      "width": 140
+    },
+    {
+      "id": "grounded_ans",
       "lane": "tutor_engine",
       "col": 4,
       "type": "backend",
-      "label": "Trả Lời Bám Slide",
-      "sublabel": "Badge Xanh + Trang 65",
-      "tag": "Đã xác thực",
+      "label": "Trả Lời Bám Nguồn",
+      "sublabel": "Badge Xanh + Mã slide",
+      "tag": "ANSWER_GROUNDED",
       "width": 140
     },
     {
-      "id": "tool_search",
-      "lane": "search_agent",
-      "col": 3,
-      "type": "cloud",
-      "label": "Tra Cứu Web Ngoài",
-      "sublabel": "Chỉ tìm trên Whitelist",
-      "tag": "Tài liệu & arXiv",
-      "width": 140
-    },
-    {
-      "id": "external_ans",
-      "lane": "search_agent",
+      "id": "student_verify",
+      "lane": "student",
       "col": 4,
-      "type": "external",
-      "label": "Trả Lời Cảnh Báo",
-      "sublabel": "Nhãn Vàng Disclaimer",
-      "tag": "Chưa kiểm chứng",
+      "type": "frontend",
+      "label": "Đối Chiếu Nguồn",
+      "sublabel": "Mở slide kiểm chứng",
+      "tag": "HAX G11",
       "width": 140
     },
     {
-      "id": "review_queue",
-      "lane": "teacher_ta",
-      "col": 4,
-      "type": "security",
-      "label": "Hàng Đợi Duyệt",
-      "sublabel": "Tự động đẩy case ngoài",
-      "width": 140
-    },
-    {
-      "id": "ta_review",
-      "lane": "teacher_ta",
+      "id": "student_suggest",
+      "lane": "student",
       "col": 5,
-      "type": "security",
-      "label": "Giảng Viên Duyệt",
-      "sublabel": "Phê duyệt hoặc chỉnh sửa",
-      "tag": "Cổng kiểm soát",
+      "type": "frontend",
+      "label": "Đề Xuất Sửa",
+      "sublabel": "Báo citation/nội dung sai",
+      "tag": "HAX G9",
       "width": 140
     },
     {
-      "id": "ingest_vectordb",
+      "id": "abstain_ans",
       "lane": "tutor_engine",
       "col": 5,
+      "type": "external",
+      "label": "Báo Thiếu Căn Cứ",
+      "sublabel": "Nguồn ngoài + Nhãn cảnh báo",
+      "tag": "ABSTAIN_ROUTE",
+      "width": 140
+    },
+    {
+      "id": "feedback_log",
+      "lane": "dev_team",
+      "col": 5,
       "type": "database",
-      "label": "Nạp Vector DB",
-      "sublabel": "Thành nguồn chính thức",
+      "label": "Lưu Log Phân Nhánh",
+      "sublabel": "grounded / no_grounding",
+      "tag": "PAIR Feedback",
       "width": 140
     }
   ],
   "edges": [
     {
-      "id": "e_ask_rag",
+      "id": "e_ask_scope",
       "from": "student_ask",
-      "to": "rag_guard",
+      "to": "scope_guard",
       "label": "gửi câu hỏi",
       "variant": "default"
     },
     {
-      "id": "e_rag_eval",
-      "from": "rag_guard",
-      "to": "triband_eval",
-      "label": "đối chiếu nguồn",
-      "variant": "emphasis"
+      "id": "e_scope_refuse",
+      "from": "scope_guard",
+      "to": "refuse_scope",
+      "label": "gian lận / ngoài lề",
+      "variant": "security",
+      "role": "branch"
     },
     {
-      "id": "e_eval_internal",
-      "from": "triband_eval",
-      "to": "internal_ans",
-      "label": "≥ α (Trong bài)",
+      "id": "e_scope_clear",
+      "from": "scope_guard",
+      "to": "clarify_eval",
+      "label": "hợp lệ",
       "variant": "emphasis",
       "role": "main"
     },
     {
       "id": "e_eval_clarify",
-      "from": "triband_eval",
-      "to": "clarify_g10",
-      "label": "mơ hồ [β, α)",
-      "variant": "dashed",
-      "role": "branch"
-    },
-    {
-      "id": "e_g10_student",
-      "from": "clarify_g10",
+      "from": "clarify_eval",
       "to": "student_clarify",
-      "label": "hỏi làm rõ",
-      "variant": "default"
-    },
-    {
-      "id": "e_student_reanswer",
-      "from": "student_clarify",
-      "to": "internal_ans",
-      "label": "chốt ý định",
-      "variant": "emphasis"
-    },
-    {
-      "id": "e_eval_search",
-      "from": "triband_eval",
-      "to": "tool_search",
-      "label": "< β (Ngoài bài)",
+      "label": "hỏi lại 1 câu (G10)",
       "variant": "dashed",
       "role": "branch"
     },
     {
-      "id": "e_search_reply",
-      "from": "tool_search",
-      "to": "external_ans",
+      "id": "e_student_reask",
+      "from": "student_clarify",
+      "to": "rag_retrieve",
+      "label": "bổ sung ngữ cảnh",
       "variant": "default"
     },
     {
-      "id": "e_external_queue",
-      "from": "external_ans",
-      "to": "review_queue",
-      "label": "tự động chuyển",
+      "id": "e_eval_rag",
+      "from": "clarify_eval",
+      "to": "rag_retrieve",
+      "label": "đã rõ",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e_rag_grounded",
+      "from": "rag_retrieve",
+      "to": "grounded_ans",
+      "label": "đủ căn cứ",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e_grounded_verify",
+      "from": "grounded_ans",
+      "to": "student_verify",
+      "label": "trả lời có nguồn",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e_verify_suggest",
+      "from": "student_verify",
+      "to": "student_suggest",
+      "label": "phát hiện sai",
+      "variant": "dashed"
+    },
+    {
+      "id": "e_suggest_log",
+      "from": "student_suggest",
+      "to": "feedback_log",
+      "label": "log (grounded)",
       "variant": "security"
     },
     {
-      "id": "e_queue_ta",
-      "from": "review_queue",
-      "to": "ta_review",
-      "variant": "security"
+      "id": "e_rag_abstain",
+      "from": "rag_retrieve",
+      "to": "abstain_ans",
+      "label": "thiếu căn cứ / vượt quyền",
+      "variant": "dashed",
+      "role": "branch"
     },
     {
-      "id": "e_ta_ingest",
-      "from": "ta_review",
-      "to": "ingest_vectordb",
-      "label": "phê duyệt",
-      "variant": "emphasis"
+      "id": "e_abstain_log",
+      "from": "abstain_ans",
+      "to": "feedback_log",
+      "label": "tự động log (no_grounding)",
+      "variant": "security"
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Định tuyến 3 dải tự tin (CRAG)",
+      "title": "Định tuyến 3 route theo độ tự tin",
       "items": [
-        "≥ α (Cục bộ): Trích xuất trực tiếp Slide hiện tại",
-        "≥ α (Toàn khóa): RAG mở rộng 15 buổi học, điều hướng sang bài tương ứng",
-        "[β, α): Kích hoạt HAX G10 hỏi lại 1 câu làm rõ ý định",
-        "< β: Tra cứu ngoài có kiểm soát khi cả 15 buổi đều chưa dạy"
+        "ANSWER_GROUNDED: Căn cứ trực tiếp trong bài hoặc toàn khóa, trích dẫn rõ mã đoạn/trang",
+        "ASK_CLARIFY: Input mơ hồ hoặc thiếu đối tượng, kích hoạt HAX G10 hỏi lại đúng 1 câu",
+        "ABSTAIN_ROUTE: Thiếu nguồn hoặc vượt thẩm quyền, dừng an toàn và không tự bịa kiến thức"
       ]
     },
     {
       "dot": "amber",
-      "title": "Kiểm soát rủi ro & Nhãn cảnh báo",
+      "title": "Khối nguồn ngoài & Phân lập cảnh báo",
       "items": [
-        "Câu trả lời ngoài bắt buộc gắn Badge Vàng Disclaimer",
-        "Cảnh báo nguy cơ lệch barem chấm bài thi quiz",
-        "Tự động đẩy vào Review Queue để Giảng viên/TA thẩm định"
+        "Khi thiếu căn cứ, tự động tìm kiếm nguồn ngoài có dẫn chứng",
+        "Hiển thị tách biệt với nhãn nổi bật: NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
+        "Học viên dễ dàng gạt bỏ (HAX G8) mà không làm gián đoạn phiên học"
       ]
     },
     {
       "dot": "rose",
-      "title": "Vòng lặp phê duyệt tri thức (Human-in-the-loop)",
+      "title": "Ghi nhận phản hồi phân nhánh nền (PAIR)",
       "items": [
-        "Giảng viên/TA phê duyệt nội dung trên Dashboard quản trị",
-        "Tri thức mới được nạp ngược vào Vector DB bài giảng",
-        "Các thế hệ học viên sau được trả lời trực tiếp bằng nguồn chuẩn"
+        "Nhánh no-grounding tự động lưu log route_origin=no_grounding trong nền",
+        "Học viên bấm [Đề xuất sửa] để gửi feedback có route_origin=grounded (HAX G9)",
+        "Dev team nhận log có cấu trúc để cải thiện prompt và golden set, không chặn học viên"
       ]
     }
   ]
