@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Source Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-800">
+    <main class="max-w-4xl mx-auto px-4 py-10">
+      <div class="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+        <div class="mb-4 flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">Citation</p>
+            <h1 id="source-title" class="text-2xl font-bold mt-1">Đang tải…</h1>
+          </div>
+          <a id="back-link" href="/" class="inline-flex items-center text-sm font-medium text-blue-700 hover:underline">← Quay lại tutor</a>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl bg-slate-50 p-4 mb-6">
+          <div class="text-[11px] uppercase tracking-[0.16em] text-slate-500 mb-2">Source ID</div>
+          <div id="source-id" class="font-mono text-base text-slate-800">—</div>
+        </div>
+
+        <div class="mb-6">
+          <div class="text-[11px] uppercase tracking-[0.16em] text-slate-500 mb-2">Nội dung gốc</div>
+          <div id="source-text" class="leading-7 text-slate-700 whitespace-pre-wrap bg-slate-50 border border-slate-200 rounded-xl p-4">
+            Đang tải dữ liệu…
+          </div>
+        </div>
+
+        <div id="source-file" class="hidden text-[12px] text-slate-600 break-all"></div>
+      </div>
+    </main>
+
+    <script>
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function parseSourceId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('source_id') || '';
+      }
+
+      async function loadSource() {
+        const sourceId = parseSourceId();
+        if (!sourceId) {
+          document.getElementById('source-title').textContent = 'Thiếu source_id';
+          document.getElementById('source-id').textContent = '—';
+          document.getElementById('source-text').textContent = 'Không có citation nào được truyền vào.';
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/source?source_id=${encodeURIComponent(sourceId)}`);
+          if (!response.ok) {
+            throw new Error('Không tìm thấy nguồn');
+          }
+          const data = await response.json();
+          document.getElementById('source-title').textContent = escapeHtml(data.title || data.source_id || 'Nguồn');
+          document.getElementById('source-id').textContent = data.source_id || '—';
+          document.getElementById('source-text').textContent = data.text || 'Không có nội dung mô tả.';
+
+          if (data.file_path) {
+            const info = document.getElementById('source-file');
+            info.classList.remove('hidden');
+            info.innerHTML = `<strong>File gốc:</strong> ${escapeHtml(data.file_path)}`;
+          }
+        } catch (error) {
+          document.getElementById('source-title').textContent = 'Không thể mở nguồn';
+          document.getElementById('source-id').textContent = sourceId;
+          document.getElementById('source-text').textContent = 'Không thể tải chi tiết citation này. Vui lòng thử lại từ tin nhắn gần nhất.';
+        }
+      }
+
+      loadSource();
+    </script>
+  </body>
+</html>

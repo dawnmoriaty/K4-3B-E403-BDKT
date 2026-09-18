@@ -433,15 +433,21 @@
         try { return new URL(source.url).protocol === "https:" || new URL(source.url).protocol === "http:"; }
         catch { return false; }
       });
+      const primaryUrl = externalReference.source_url || sources[0]?.url || "";
+      const primaryTitle = externalReference.source_title || sources[0]?.title || primaryUrl;
       const links = sources.map(source => `
         <li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all">${escapeHtml(source.title || source.url)}</a></li>`).join("");
       const answer = externalReference.answer
         ? `<p class="text-slate-700 leading-relaxed whitespace-pre-wrap">${escapeHtml(externalReference.answer)}</p>`
         : "";
+      const primaryLink = primaryUrl
+        ? `<p class="text-[11px] text-slate-700"><b>Nguồn tham khảo chính:</b> <a href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline break-all">${escapeHtml(primaryTitle)}</a></p>`
+        : "";
       return `
         <section class="pt-2 border-t border-slate-100 space-y-2">
           <div class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border bg-violet-100 text-violet-900 border-violet-300">${escapeHtml(externalReference.label || "NGUỒN NGOÀI")}</div>
           ${answer}
+          ${primaryLink}
           <p class="text-[10px] text-slate-500">${escapeHtml(externalReference.message || "")}</p>
           ${links ? `<div class="text-[11px] text-slate-600"><b>Nguồn tham khảo:</b><ul class="list-disc ml-4 mt-1 space-y-1">${links}</ul></div>` : ""}
         </section>`;
@@ -461,9 +467,10 @@
       const messageId = `message-${crypto.randomUUID()}`;
       const [badgeClass, badgeText] = routeBadge(result);
       const isGrounded = result.route === "ANSWER_GROUNDED" && (result.route_origin === "grounded" || !result.route_origin);
-      const citations = (result.source_ids || []).map(sourceId =>
-        `<span class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono">${escapeHtml(sourceId)}</span>`
-      ).join(" ");
+      const citations = (result.source_ids || []).map(sourceId => {
+        const href = `/source-viewer.html?source_id=${encodeURIComponent(sourceId)}`;
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono text-slate-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors">${escapeHtml(sourceId)} <span class="ml-1 text-[9px]">↗</span></a>`;
+      }).join(" ");
       updateRetrievalScope(result.retrieved_context || []);
       chatThread.insertAdjacentHTML("beforeend", `
         <div class="flex items-start space-x-2">

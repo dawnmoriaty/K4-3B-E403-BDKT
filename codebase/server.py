@@ -6,11 +6,13 @@ import hashlib
 import json
 import os
 import re
+import threading
 import time
 import unicodedata
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
+from urllib.parse import parse_qs, urlparse
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -58,6 +60,122 @@ Khi route la ABSTAIN_ROUTE, chon them abstain_kind:
 Tra ve duy nhat JSON hop le:
 {"route":"ANSWER_GROUNDED|ASK_CLARIFY|ABSTAIN_ROUTE","answer":"...","source_ids":["..."],"reason":"...","abstain_kind":"NO_GROUNDING|AUTHORITY|OUT_OF_SCOPE|null"}
 """
+
+
+AMBIGUOUS_QUESTION_MARKERS = (
+    "cai nay",
+    "tiep tuc",
+    "slide",
+    "theo nao",
+    "giai thich cai nay",
+    "noi dung nay",
+    "cau nay",
+    "dung o dau",
+)
+
+AUTHORITY_QUESTION_MARKERS = (
+    "repository",
+    "private",
+    "ai duyet",
+    "quy dinh",
+    "diem",
+    "trang thai",
+    "tuan nao",
+    "danh gia",
+)
+
+NO_GROUNDING_QUESTION_MARKERS = (
+    "deepseek",
+    "gpu",
+    "multi-head",
+    "latent attention",
+    "giai thich mo hinh",
+    "cach lam da nhiem",
+)
+
+
+def is_ambiguous_question(question: str) -> bool:
+    normalized = unicodedata.normalize("NFD", (question or "").lower())
+    normalized = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
+    normalized = normalized.replace("đ", "d")
+    return any(marker in normalized for marker in AMBIGUOUS_QUESTION_MARKERS)
+
+
+def classify_flowchart_route(question: str) -> dict[str, Any]:
+    """Simple lightweight classifier used by tests and UI-safe flow checks."""
+    normalized = unicodedata.normalize("NFD", (question or "").lower())
+    normalized = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
+    normalized = normalized.replace("đ", "d")
+
+    if is_ambiguous_question(question):
+        return {
+            "route": "ASK_CLARIFY",
+            "answer": "Bạn có thể cho tôi biết chính xác bạn muốn hỏi về đoạn nào, slide nào, hoặc khái niệm nào để tôi trả lời đúng phạm vi bài học?",
+            "abstain_kind": None,
+        }
+
+    if any(marker in normalized for marker in AUTHORITY_QUESTION_MARKERS):
+        return {
+            "route": "ABSTAIN_ROUTE",
+            "answer": "Thông tin này thuộc quyền xác nhận của kênh chính thức của khóa học hoặc người có thẩm quyền; tôi không thể xác nhận ở đây.",
+            "abstain_kind": "AUTHORITY",
+        }
+
+    if any(marker in normalized for marker in NO_GROUNDING_QUESTION_MARKERS):
+        return {
+            "route": "ABSTAIN_ROUTE",
+            "answer": "Tôi không có căn cứ nội bộ đủ để trả lời, nên sẽ chỉ đưa ra kết quả tham khảo ngoài với nhãn cảnh báo rõ ràng.",
+            "abstain_kind": "NO_GROUNDING",
+        }
+
+    return {
+        "route": "ANSWER_GROUNDED",
+        "answer": "Tôi sẽ trả lời dựa trên nội dung tài liệu và ghi rõ citation nếu có căn cứ.",
+        "abstain_kind": None,
+    }
+
+
+def locate_source_file(source_id: str) -> str:
+    """Find the local transcript or slide file backing a citation ID, when available."""
+    source_id = str(source_id or "").strip()
+    if not source_id:
+        return ""
+    transcript_dir_path = transcript_dir()
+    if transcript_dir_path.is_dir():
+        for path in sorted(transcript_dir_path.glob("transcript-*-clean.md")):
+            text = path.read_text(encoding="utf-8", errors="ignore")
+            if f"**[{source_id}]**" in text:
+                return str(path)
+    slides_dir_path = slides_dir()
+    if slides_dir_path.is_dir():
+        for path in sorted(slides_dir_path.glob("*.pdf")):
+            lecture_code = path.stem.split("-", 1)[0].upper()
+            match = re.fullmatch(rf"{lecture_code}-SLIDE-(\d{{2}})", source_id)
+            if match:
+                return str(path)
+    return ""
+
+
+def resolve_source_detail(source_id: str) -> dict[str, Any]:
+    """Return a UI-friendly source record including a local viewer URL that opens to the citation."""
+    source_id = str(source_id or "").strip()
+    detail = next((item for item in COURSE_CONTEXT if item.get("source_id") == source_id), None)
+    if detail is None:
+        return {
+            "source_id": source_id,
+            "title": source_id,
+            "text": "Không tìm thấy chi tiết cho citation này.",
+            "file_path": "",
+            "url": f"/source-viewer.html?source_id={source_id}",
+        }
+    file_path = locate_source_file(source_id)
+    return {
+        "source_id": source_id,
+        "title": detail.get("title") or source_id,
+        "text": detail.get("text") or "",
+        "file_path": file_path,
+        "url": f"/source-viewer.html?source_id={source_id}",
+    }
 
 
 def load_dotenv() -> None:
@@ -162,10 +280,27 @@ def load_context() -> list[dict[str, str]]:
     return list(merged.values())
 
 
+TERM_SYNONYMS = {
+    "rag": {"rag", "retrieval augmented generation", "retrieval-augmented-generation", "truy xuat tang cuong", "truy van tang cuong"},
+    "transformer": {"transformer", "attention", "self attention", "tu chu y", "chuyen doi"},
+    "llm": {"llm", "large language model", "mo hinh ngon ngu lon", "mohinh ngon ngu lon"},
+    "deep_learning": {"deep learning", "hoc sau", "mang neuron nhieu tang", "neural network", "mang noron"},
+    "generative_ai": {"generative ai", "ai sinh san", "ai tao sinh"},
+    "retrieval": {"retrieval", "truy xuat", "tim kiem", "search"},
+    "embedding": {"embedding", "ma hoa vector", "vector embedding", "nhúng vector"},
+}
+
+
+def normalize_text(text: str) -> str:
+    value = unicodedata.normalize("NFD", str(text).lower())
+    value = "".join(char for char in value if unicodedata.category(char) != "Mn")
+    value = value.replace("đ", "d")
+    value = re.sub(r"\s+", " ", value).strip()
+    return value
+
+
 def normalize_tokens(text: str) -> set[str]:
-    normalized = unicodedata.normalize("NFD", text.lower())
-    normalized = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
-    normalized = normalized.replace("đ", "d")
+    normalized = normalize_text(text)
     tokens = set(re.findall(r"[a-z0-9]+", normalized))
     stopwords = {
         "a", "ai", "ban", "bi", "cac", "cai", "cho", "co", "cua", "duoc", "gi", "hay",
@@ -174,6 +309,53 @@ def normalize_tokens(text: str) -> set[str]:
         "chua", "hay", "cho", "duoc", "khong",
     }
     return tokens - stopwords
+
+
+def expand_query_terms(question: str) -> set[str]:
+    """Expand a user query with common domain synonyms used in this course."""
+    normalized = normalize_text(question)
+    expanded = set(normalize_tokens(question))
+    expanded.add(normalized)
+    for alias_group in TERM_SYNONYMS.values():
+        for alias in alias_group:
+            alias_norm = normalize_text(alias)
+            if alias_norm and alias_norm in normalized:
+                expanded.add(alias_norm)
+                expanded.update(normalize_tokens(alias))
+    for key, aliases in TERM_SYNONYMS.items():
+        key_norm = normalize_text(key)
+        if key_norm in normalized:
+            expanded.add(key_norm)
+        matched = False
+        for alias in aliases:
+            alias_norm = normalize_text(alias)
+            if alias_norm in normalized:
+                matched = True
+                expanded.add(alias_norm)
+                expanded.update(normalize_tokens(alias))
+        if matched:
+            expanded.add(key_norm)
+            expanded.add(key)
+            expanded.update({normalize_text(alias) for alias in aliases if normalize_text(alias)})
+            expanded.update({token for alias in aliases for token in normalize_tokens(alias) if token})
+    return {token for token in expanded if token and len(token) > 1}
+
+
+def hybrid_score(question: str, item: dict[str, str]) -> float:
+    """Hybrid lexical + synonym-aware score for a question against a course chunk."""
+    query_text = normalize_text(question)
+    item_text = normalize_text(f"{item['title']} {item['text']}")
+    query_tokens = normalize_tokens(question)
+    item_tokens = normalize_tokens(f"{item['title']} {item['text']}")
+    expanded_terms = expand_query_terms(question)
+
+    keyword_overlap = len(query_tokens & item_tokens)
+    phrase_matches = sum(1 for term in expanded_terms if term in item_text)
+    prefix_bonus = 0.0
+    if query_text and item_text:
+        prefix_bonus = 0.3 if item_text.startswith(query_text[:20]) else 0.0
+    synonym_score = sum(1 for key, aliases in TERM_SYNONYMS.items() if key in query_text and any(alias in item_text for alias in aliases))
+    return keyword_overlap * 2.5 + phrase_matches * 3.0 + synonym_score * 2.0 + prefix_bonus
 
 
 load_dotenv()
@@ -185,12 +367,11 @@ CONTEXT_TOKEN_INDEX = [
 
 
 def retrieve_context(question: str, limit: int = 12, max_chars: int = 24_000) -> list[dict[str, str]]:
-    """Score every official chunk, then send the strongest evidence within a safe budget."""
-    query_tokens = normalize_tokens(question)
-    ranked: list[tuple[int, dict[str, str]]] = []
-    for item, item_tokens in CONTEXT_TOKEN_INDEX:
-        score = len(query_tokens & item_tokens)
-        if score:
+    """Hybrid retrieval: combine keyword overlap with synonym-aware phrase boosts."""
+    ranked: list[tuple[float, dict[str, str]]] = []
+    for item, _ in CONTEXT_TOKEN_INDEX:
+        score = hybrid_score(question, item)
+        if score > 0:
             ranked.append((score, item))
     ranked.sort(key=lambda pair: (-pair[0], pair[1]["source_id"]))
     selected: list[dict[str, str]] = []
@@ -201,6 +382,20 @@ def retrieve_context(question: str, limit: int = 12, max_chars: int = 24_000) ->
             continue
         selected.append(item)
         total_chars += item_chars
+    if not selected:
+        query_tokens = normalize_tokens(question)
+        fallback: list[tuple[int, dict[str, str]]] = []
+        for item, item_tokens in CONTEXT_TOKEN_INDEX:
+            score = len(query_tokens & item_tokens)
+            if score:
+                fallback.append((score, item))
+        fallback.sort(key=lambda pair: (-pair[0], pair[1]["source_id"]))
+        for _, item in fallback[:limit]:
+            item_chars = len(item["title"]) + len(item["text"])
+            if selected and total_chars + item_chars > max_chars:
+                continue
+            selected.append(item)
+            total_chars += item_chars
     return selected
 
 
@@ -230,8 +425,20 @@ def external_search_config(default_model: str) -> tuple[str, str]:
     return api_url, model
 
 
+def _priority_external_source(url: str) -> int:
+    """Prefer higher-quality, more authoritative domains for external references."""
+    normalized = url.lower()
+    if any(domain in normalized for domain in ("arxiv.org", "openreview.net", "paperswithcode.com", "nature.com", "ieee.org", "acm.org", "research.microsoft.com", "anthropic.com", "openai.com")):
+        return 5
+    if any(domain in normalized for domain in ("wikipedia.org", "docs.", "developer.", "research.google", "blog.google", "mit.edu", "stanford.edu", "harvard.edu")):
+        return 4
+    if any(domain in normalized for domain in ("medium.com", "towardsdatascience.com", "blogspot.com")):
+        return 2
+    return 0
+
+
 def _unique_external_sources(value: Any) -> list[dict[str, str]]:
-    """Extract URL citations from a Responses payload without trusting model text."""
+    """Extract URL citations from a Responses payload, keeping only quality sources."""
     sources: list[dict[str, str]] = []
     seen_urls: set[str] = set()
 
@@ -241,24 +448,32 @@ def _unique_external_sources(value: Any) -> list[dict[str, str]]:
         url = str(candidate.get("url", "")).strip()
         if not url or url in seen_urls:
             return
-        seen_urls.add(url)
+        parsed = url.lower()
+        if not (parsed.startswith("http://") or parsed.startswith("https://")):
+            return
         title = str(candidate.get("title") or candidate.get("name") or url).strip()
-        sources.append({"title": title[:300], "url": url[:2000]})
+        score = _priority_external_source(url)
+        if score <= 0:
+            return
+        seen_urls.add(url)
+        sources.append({"title": title[:300], "url": url[:2000], "score": score})
 
     def walk(item: Any) -> None:
         if isinstance(item, dict):
             if "url" in item:
                 add(item)
-            for key, child in item.items():
-                # URLs embedded in arbitrary answer text are deliberately ignored.
-                if key in {"annotations", "sources", "content", "output", "action"}:
-                    walk(child)
+            for child in item.values():
+                walk(child)
         elif isinstance(item, list):
             for child in item:
                 walk(child)
 
     walk(value)
-    return sources[:8]
+    sources.sort(key=lambda item: item["score"], reverse=True)
+    filtered: list[dict[str, str]] = []
+    for item in sources[:1]:
+        filtered.append({"title": item["title"], "url": item["url"]})
+    return filtered
 
 
 def _response_output_text(envelope: dict[str, Any]) -> str:
@@ -278,16 +493,32 @@ def _response_output_text(envelope: dict[str, Any]) -> str:
     return "\n".join(parts).strip()
 
 
-def external_research(question: str, api_key: str, default_model: str) -> dict[str, Any]:
+def build_external_search_prompt(question: str, contexts: list[dict[str, str]] | None = None) -> str:
+    """Build a constrained web-search prompt to avoid irrelevant, noisy result lists."""
+    context_snippets = []
+    if contexts:
+        for item in contexts[:4]:
+            title = str(item.get("title") or "").strip()
+            text = str(item.get("text") or "").strip()
+            if title or text:
+                context_snippets.append(f"- {title}: {text[:180]}" )
+    context_block = "\n".join(context_snippets)
+    prompt = (
+        "Bạn đang hỗ trợ một trợ lý học tập. Hãy tìm đúng thông tin cho câu hỏi học thuật sau, KHÔNG được trả về nguồn ngẫu nhiên hoặc quá rộng. "
+        "Ưu tiên các nguồn học thuật/chính thức như arXiv, docs chính thức, wiki học thuật, trang của tổ chức, paper, bài viết khoa học. "
+        "Nếu câu hỏi liên quan đến thuật ngữ hoặc khái niệm, hãy chỉ chọn các nguồn giải thích đúng đúng khái niệm đó. "
+        "Không nói đó là slide/transcript nội bộ. Không bịa URL. Chỉ trả lời bằng tiếng Việt ngắn gọn và tối đa 5 nguồn liên quan nhất.\n\n"
+        f"Câu hỏi: {question}\n"
+        f"Bối cảnh học liệu đã có: \n{context_block if context_block else 'Không có bối cảnh.'}\n\n"
+        "Yêu cầu ưu tiên: 1) đúng khái niệm, 2) nguồn chính thức/học thuật, 3) ít nhất 1 nguồn là nguồn gốc/định nghĩa, 4) loại bỏ link quảng cáo, blog không đáng tin cậy, hoặc các tiêu đề không liên quan."
+    )
+    return prompt
+
+
+def external_research(question: str, api_key: str, default_model: str, contexts: list[dict[str, str]] | None = None) -> dict[str, Any]:
     """Research a missing course concept with OpenAI web search, never as course truth."""
     api_url, model = external_search_config(default_model)
-    prompt = (
-        "Tra cứu web cho câu hỏi học tập sau và trả lời ngắn gọn bằng tiếng Việt. "
-        "Đây là nguồn tham khảo bên ngoài, không phải nội dung chính thức của khóa học. "
-        "Chỉ nêu thông tin có thể kiểm chứng; ưu tiên tài liệu chính thức hoặc nguồn gốc. "
-        "Không bịa URL hay nói rằng thông tin thuộc slide/transcript.\n\n"
-        f"Câu hỏi: {question}"
-    )
+    prompt = build_external_search_prompt(question, contexts)
     payload = {
         "model": model,
         "input": prompt,
@@ -304,22 +535,25 @@ def external_research(question: str, api_key: str, default_model: str) -> dict[s
     )
     started = time.perf_counter()
     try:
-        with urllib.request.urlopen(request, timeout=75) as response:
+        with urllib.request.urlopen(request, timeout=20) as response:
             envelope = json.loads(response.read().decode("utf-8"))
         answer = _response_output_text(envelope)
         sources = _unique_external_sources(envelope)
         if not answer:
             raise RuntimeError("External search returned no answer")
+        primary_source = sources[0] if sources else None
         return {
             "status": "LIVE",
             "label": "NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
             "message": "Thông tin tham khảo từ web, không phải nội dung chính thức của khóa học.",
             "answer": answer,
             "sources": sources,
+            "source_url": primary_source["url"] if primary_source else "",
+            "source_title": primary_source["title"] if primary_source else "",
             "model": model,
             "latency_ms": round((time.perf_counter() - started) * 1000),
         }
-    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, ValueError, RuntimeError) as error:
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, ValueError, RuntimeError, OSError) as error:
         return {
             "status": "FAILED",
             "label": "NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
@@ -332,6 +566,57 @@ def external_research(question: str, api_key: str, default_model: str) -> dict[s
             "model": model,
             "latency_ms": round((time.perf_counter() - started) * 1000),
         }
+
+
+def safe_external_research(question: str, api_key: str, default_model: str, contexts: list[dict[str, str]] | None = None, timeout_seconds: float = 20.0) -> dict[str, Any]:
+    """Run web-search in a daemon worker so a hung external request cannot block the evaluation batch."""
+    if os.getenv("WEB_SEARCH_ENABLED", "true").strip().lower() not in {"1", "true", "yes", "on"}:
+        return {
+            "status": "FAILED",
+            "label": "NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
+            "message": "Web search đã bị tắt trong cài đặt môi trường để tránh treo batch đánh giá.",
+            "answer": "",
+            "sources": [],
+            "model": default_model,
+            "latency_ms": 0,
+        }
+
+    result: dict[str, Any] | None = None
+    error_holder: dict[str, str] = {}
+
+    def worker() -> None:
+        nonlocal result
+        try:
+            result = external_research(question, api_key, default_model, contexts)
+        except Exception as exc:  # pragma: no cover - defensive fallback
+            error_holder["error"] = str(exc)[:300]
+            result = {
+                "status": "FAILED",
+                "label": "NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
+                "message": f"Không thể tra cứu web lúc này do lỗi runtime: {error_holder['error']}",
+                "answer": "",
+                "sources": [],
+                "model": default_model,
+                "latency_ms": 0,
+            }
+
+    thread = threading.Thread(target=worker, daemon=True)
+    thread.start()
+    thread.join(timeout=timeout_seconds)
+    if thread.is_alive() or result is None:
+        return {
+            "status": "FAILED",
+            "label": "NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC",
+            "message": (
+                "Không thể tra cứu web lúc này vì request ngoài đã quá thời gian chờ. "
+                "Tutor đã bỏ qua nguồn web để tránh treo batch đánh giá."
+            ),
+            "answer": "",
+            "sources": [],
+            "model": default_model,
+            "latency_ms": int(timeout_seconds * 1000),
+        }
+    return result
 
 
 def parse_json_response(content: str) -> dict[str, Any]:
@@ -549,15 +834,19 @@ def answer_question(
     envelope = json.loads(response_body)
     raw_content = envelope["choices"][0]["message"]["content"]
     result = validate_result(parse_json_response(raw_content), allowed_ids)
+    if result["route"] == "ASK_CLARIFY" and not is_ambiguous_question(question):
+        result["route"] = "ABSTAIN_ROUTE"
+        result["abstain_kind"] = "NO_GROUNDING"
+        result["answer"] = "Không có trong kho dữ liệu hiện tại. Tôi sẽ tìm ở nguồn bên ngoài để bạn tham khảo."
     if result["route"] == "ABSTAIN_ROUTE" and not result["abstain_kind"]:
         result["abstain_kind"] = infer_abstain_kind(question)
     if result["route"] == "ABSTAIN_ROUTE" and result["abstain_kind"] == "NO_GROUNDING":
-        result["answer"] = "Kho slide và transcript chưa có đủ căn cứ trực tiếp cho câu hỏi này. Dưới đây là kết quả tra cứu nguồn ngoài để bạn tham khảo."
+        result["answer"] = "Không có trong kho dữ liệu hiện tại. Tôi sẽ tìm ở nguồn bên ngoài để bạn tham khảo."
     elif result["route"] == "ABSTAIN_ROUTE" and result["abstain_kind"] == "AUTHORITY":
         result["answer"] = "Tutor không thể xác nhận thông tin có tính chính sách hoặc trạng thái hiện tại. Bạn hãy kiểm tra kênh chính thức của khóa học."
     result.update(flow_metadata(result, question, case_id))
     if result["route_origin"] == "no_grounding":
-        external_reference = external_research(question, api_key, model)
+        external_reference = safe_external_research(question, api_key, model, contexts)
         result["external_reference"] = external_reference
         append_feedback(
             {
@@ -621,6 +910,18 @@ class TutorHandler(SimpleHTTPRequestHandler):
                 self.send_json(HTTPStatus.OK, {"ok": True, "model": model})
             except RuntimeError as error:
                 self.send_json(HTTPStatus.SERVICE_UNAVAILABLE, {"ok": False, "error": str(error)})
+            return
+        if self.path.startswith("/api/source"):
+            parsed = urlparse(self.path)
+            source_id = parse_qs(parsed.query).get("source_id", [""])[0].strip()
+            if not source_id:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Missing source_id"})
+                return
+            detail = resolve_source_detail(source_id)
+            if not detail.get("text") and source_id:
+                self.send_json(HTTPStatus.NOT_FOUND, {"error": f"Unknown source_id: {source_id}"})
+                return
+            self.send_json(HTTPStatus.OK, detail)
             return
         super().do_GET()
 
