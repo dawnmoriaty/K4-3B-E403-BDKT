@@ -135,7 +135,7 @@ _Ghi chú quan trọng:_
 
 - Cross-lecture là chi tiết truy xuất nội bộ bên trong happy path, không tạo thành đường trải nghiệm thứ năm riêng biệt.
 - Nhánh từ chối gian lận là hàng rào liêm chính học thuật bổ trợ, không thay thế 4 đường đi trên.
-- Hai trường hợp lỗi còn lại trong domain-specific không làm hỏng core logic; chúng là ranh giới route cần cải thiện ở CP4, chứ không phá vỡ tiêu chí qualité bar `≥85%` và `0 citation nội bộ bịa`.
+- Hai trường hợp lỗi còn lại trong domain-specific không làm hỏng core logic; chúng là ranh giới route cần cải thiện ở CP4, chứ không phá vỡ tiêu chí quality bar `≥85%` và `0 citation nội bộ bịa`.
 
 ---
 
