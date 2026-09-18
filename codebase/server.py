@@ -193,7 +193,11 @@ def answer_question(
     request = urllib.request.Request(
         api_url,
         data=json.dumps(request_payload).encode("utf-8"),
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "VLearn-Tutor-CP3/1.0",
+        },
         method="POST",
     )
 

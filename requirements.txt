@@ -1,0 +1,2 @@
+# VLearn Tutor CP3 has no third-party Python dependencies.
+# Requires Python 3.11 or newer (see README for setup and run commands).
