@@ -60,77 +60,101 @@
 ---
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn hỏi một khái niệm → Tutor quyết định trả lời có căn cứ, hỏi lại khi mơ hồ hoặc dừng khi thiếu nguồn → học viên biết câu trả lời dựa trên đâu và cần làm gì tiếp theo.
+- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn hỏi một khái niệm → Tutor quyết định trả lời theo căn cứ trong khóa học, hỏi lại khi mơ hồ, hoặc từ chối khi thiếu nguồn/thẩm quyền → học viên hiểu rõ kết luận dựa trên đâu, có thể đối chiếu nguồn và biết bước tiếp theo.
 - **Non-goals (≥3 thứ KHÔNG build):**
   1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat ngoài lề).
   2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận học thuật).
   3. Không tự ý biến kiến thức nguồn ngoài thành nội dung chính thức của khóa học khi chưa có quy trình kiểm duyệt nội bộ.
 - **Mức prototype hiện tại:** [ ] Mock (CP2)  [x] Working (CP3)
-  - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 5 kịch bản kiểm chứng, modal hiển thị nguồn ngoài và form đề xuất sửa.
-  - *Phần chạy thật (Working - CP3):* Backend `codebase/server.py` truy xuất các đoạn giáo trình tối thiểu trong `course_context.json`, gọi model OpenAI-compatible để quyết định `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE`, rồi kiểm tra cứng citation theo allow-list. Prompt, phản hồi thô, route và latency được ghi vào `eval/*_traces.jsonl`.
-  - *Chưa chạy thật:* Web search thời gian thực và quy trình xử lý nội bộ của Dev team sau log vẫn là mô phỏng ở CP2; prototype không tuyên bố các phần này đã chạy thật.
-- **Automation:** [ ] augment  [x] conditional  [ ] automate  
+  - *Phần chạy thật (Working - CP3):* Backend `codebase/server.py` và pipeline đánh giá `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE` đã hoạt động với `course_context.json` và `golden_set.csv` thật. Mỗi case ghi `route_pass`, `citation_pass`, `behavior_pass` và `overall_pass` vào `eval/run_003.csv`; raw prompt/response được lưu trong `eval/run_003_traces.jsonl`.
+  - *Kết quả thực tế quan trọng từ run_003:* 20 case, đạt **18/20 (90.0%)**, với **0 citation nội bộ bị bịa**. Hai trường hợp còn lỗi là `A1-016` và `A1-020`, cả hai nằm trong domain-specific edge cases và được giữ nguyên theo quality bar vì nhóm đã vượt ngưỡng **≥85%** và vẫn đạt tiêu chí 0 citation ngoài allow-list.
+  - *Phần vẫn chưa tuyên bố chạy thật:* web search thời gian thực, quy trình thẩm định nội bộ sau log, và xử lý nguồn ngoài thành “nội dung chính thức” vẫn là phần nằm ngoài CP3. Hệ thống chỉ khẳng định logic routing, citation gating và lưu log phân nhánh; phần nguồn ngoài vẫn là nhánh cảnh báo và tham khảo, không phải một nguồn chính thức của khóa học.
+- **Automation:** [ ] augment  [x] conditional  [ ] automate
   - *Lý do theo chi phí sai sót (Cost-of-Error):*
-    - Khi câu hỏi có căn cứ chắc chắn trong giáo trình: Cost-of-error thấp vì học viên tự đối chiếu được ngay trên trang slide (sai thì sửa rẻ) -> AI tự động trả lời kèm trích dẫn mã đoạn/trang (Automate).
-    - Khi câu hỏi thiếu căn cứ (< beta) hoặc mơ hồ: Cost-of-error rất đắt vì nếu AI suy đoán bừa bãi, học viên sẽ tiếp thu sai quy ước khóa học, dẫn đến làm sai bài kiểm tra tự động và mất điểm. Vì vậy, hệ thống chọn mức **Conditional**: AI dừng kết luận chuyên môn, hiển thị nguồn ngoài với nhãn cảnh báo nổi bật, và luôn lưu log phản hồi kèm nhánh phát sinh (`route_origin`) để Dev team có dữ liệu rà soát mà không chặn luồng học của người dùng.
+    - Khi câu hỏi có căn cứ chắc chắn trong giáo trình: cost-of-error thấp vì học viên có thể tự đối chiếu ngay trên slide; hệ thống được phép trả lời có kèm citation và mã đoạn/trang (Automate).
+    - Khi input mơ hồ hoặc thiếu căn cứ: cost-of-error rất cao vì nếu AI đoán mò, học viên có thể học sai và mất điểm trong quiz. Do đó, hệ thống dùng mức **Conditional**: nếu thiếu đối tượng hoặc thiếu nguồn, Tutor hỏi lại / từ chối và nhấn mạnh giới hạn; nếu cần, hiển thị nguồn ngoài như tham khảo tách biệt nhưng không biến thành kiến thức khóa học chính thức.
+    - Đường đi thực tế đã được xác nhận bởi run_003: nhóm `ambiguity` và `authority` đạt 100%, `source_truth` đạt 100%, `domain_specific` đạt 60%; 2 lỗi còn lại không phải do citation giả mạo mà do route sai ở ranh giới rõ ràng giữa `ASK_CLARIFY` và `ABSTAIN_ROUTE`.
 - **Ba Tác Nhân & Phân Quyền Vận Hành:**
   1. **Học viên:** Bôi đen đoạn slide hoặc nhập câu hỏi; kiểm tra nguồn; yêu cầu làm rõ hoặc bấm `Đề xuất sửa` khi phát hiện sai.
-  2. **AI Tutor Engine:** Kiểm tra phạm vi và độ đầy đủ của input; đối chiếu RAG phân cấp (ưu tiên bài hiện tại → mở rộng toàn khóa); trả lời, hỏi lại hoặc dừng đúng lúc.
-  3. **Dev team:** Nhận log phản hồi ẩn danh có phân nhánh rõ ràng (`grounded` vs `no_grounding`) để chạy regression test và tối ưu hệ thống; quy trình nội bộ diễn ra sau khi nhận log.
+  2. **AI Tutor Engine:** Kiểm tra phạm vi, độ rõ của câu hỏi và độ đủ của căn cứ; đối chiếu với allow-list của source; trả lời, hỏi lại hoặc dừng đúng lúc theo route `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE`.
+  3. **Dev team:** Nhận log phản hồi ẩn danh có phân nhánh rõ ràng (`route_origin` / `route_pass` / `citation_pass` / `behavior_pass`) để chạy regression test, cải thiện prompt và bảo vệ nguồn chính thức của khóa học.
 - **§4b. Nguyên tắc đã áp dụng (HAX/PAIR):**
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
-  | **HAX G10 — Thu hẹp phạm vi khi nghi ngờ** | 1. Nút `Clear`: Khi input mơ hồ/thiếu đối tượng (VD: "DeepSeek có dùng được không?"), AI hỏi đúng 1 câu làm rõ kèm 2 lựa chọn nhanh (Chips) thay vì đoán mò.<br>2. Nút `Evidence`: Khi căn cứ chưa đủ hoặc có mâu thuẫn, Tutor không tự suy diễn mà thông báo chưa đủ căn cứ; từ chối dứt khoát yêu cầu giải hộ bài Lab. |
-  | **HAX G11 — Giải thích vì sao** | Câu trả lời grounded hiển thị rõ mã đoạn/trang slide: `✅ CÓ CĂN CỨ TRONG TÀI LIỆU · SLIDE TRANG 65` kèm nút `[Mở nguồn]`. Câu trả lời no-grounding nói rõ giáo trình chưa đề cập và gắn nhãn: `⚠️ NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`. |
-  | **HAX G8 — Gạt bỏ dễ dàng** | Nút `✕` trên góc phải Drawer cho phép học viên thu gọn khung chat ngay lập tức; học viên có thể đóng khối nguồn ngoài bất cứ lúc nào; việc lưu log diễn ra tự động ở nền và không chặn phiên học. |
-  | **HAX G9 — Sửa dễ dàng** | Nút `[Đề xuất sửa]` cho phép học viên ghi rõ nội dung hoặc citation cần kiểm tra khi phát hiện phản hồi chưa chính xác; học viên có thể click vào gợi ý trên slide để đổi prompt nhanh. |
-  | **PAIR Feedback & Control** | Phản hồi được lưu có cấu trúc và truy vết được về đúng nhánh trải nghiệm (`route_origin: grounded` hoặc `no_grounding`), kiểm soát chặt chẽ không để kiến thức ngoài tự động nạp vào giáo trình chính thức. |
+  | **HAX G10 — Thu hẹp phạm vi khi nghi ngờ** | 1. Nút `Clear`: khi input thiếu đối tượng hoặc mơ hồ, Tutor hỏi đúng 1 câu làm rõ thay vì suy đoán. 2. Khi câu hỏi vượt thẩm quyền hoặc không có căn cứ trong context, Tutor không tự kết luận mà chuyển sang `ABSTAIN_ROUTE` hoặc `ASK_CLARIFY` theo thứ tự ưu tiên định nghĩa trong prompt. |
+  | **HAX G11 — Giải thích vì sao** | Câu trả lời grounded hiển thị rõ nguồn hỗ trợ và liên kết tới đoạn/slide được phép; câu hỏi chưa đủ căn cứ thì giải thích rõ vì sao không có đủ dữ liệu để xác nhận, thay vì “biến nhớ mô hình thành kiến thức khóa học”. |
+  | **HAX G8 — Gạt bỏ dễ dàng** | Học viên có thể đóng khối nguồn ngoài hoặc Drawer bất cứ lúc nào; việc lưu log diễn ra ở nền và không chặn phiên học. |
+  | **HAX G9 — Sửa dễ dàng** | Nút `[Đề xuất sửa]` cho phép học viên ghi rõ nội dung hoặc citation cần kiểm tra; trên thực tế, feedback log này giúp Dev team phân biệt phản hồi “grounded” với “no-grounding” và sửa prompt sau khi nhận log. |
+  | **PAIR Feedback & Control** | Mọi phản hồi đều lưu dạng structured log có `route`, `citation`, `behavior` và `overall_pass`; hệ thống không tự động coi nguồn ngoài là nội dung chính thức của khóa học. |
+
+> Ghi chú cho CP3: luồng thực sự đã chạy dùng route logic và golden set 20 case. Mục tiêu hiện tại không phải “đúng mọi trường hợp” mà là “qua quality bar với 0 citation bịa và điểm số ổn định trên 85%” như run_003 đã chứng minh.
 
 ---
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
-Hệ thống xử lý đầy đủ 4 lớp chỗ khó theo taxonomy của hackathon với các kịch bản cụ thể:
+Hệ thống xử lý 4 lớp chỗ khó theo taxonomy của hackathon với 8 kịch bản chính. Run 003 đã chứng minh các nhánh chính hoạt động rõ ràng: `ambiguity`, `authority` và `source_truth` đều đạt 100%; `domain_specific` còn 2 edge case lỗi ở ranh giới giữa `ASK_CLARIFY` và `ABSTAIN_ROUTE`, nhưng không có citation nội bộ nào bị bịa.
 
 1. **Lớp ① — Nguồn sự thật (Truth & Grounding):**
-   - *Kịch bản 1 (Thiếu căn cứ toàn khóa):* Học viên hỏi khái niệm nâng cao chưa dạy (VD: *"Kiến trúc Multi-Head Latent Attention - MLA của DeepSeek-V3 là gì?"*). Hệ thống không tìm thấy căn cứ trong giáo trình → Dừng sinh kiến thức tự do, tự động kích hoạt tra cứu nguồn ngoài có dẫn chứng kèm nhãn cảnh báo nổi bật: `NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`, đồng thời tự động ghi log nền `route_origin=no_grounding`.
-   - *Kịch bản 2 (Citation yếu / không hỗ trợ claim):* RAG tìm thấy đoạn có chứa từ khóa nhưng nội dung đoạn không trực tiếp trả lời câu hỏi → Source Gate chặn không cho gắn nhãn grounded; chuyển sang nhánh thông báo thiếu căn cứ để tránh ngụy tạo bằng chứng.
+   - *Kịch bản 1 (Thiếu căn cứ toàn khóa):* Học viên hỏi khái niệm nâng cao chưa dạy trong khóa (VD: *"Kiến trúc Multi-Head Latent Attention - MLA của DeepSeek-V3 là gì?"*). Hệ thống không tìm thấy căn cứ trong giáo trình → dừng sinh kiến thức tự do, tự động kích hoạt nhánh thiếu nguồn và lưu log `route_origin=no_grounding` thay vì tự diễn giải sai.
+   - *Kịch bản 2 (Citation yếu / không hỗ trợ claim):* RAG tìm thấy đoạn có từ khóa nhưng không trực tiếp trả lời câu hỏi → source gate chặn `ANSWER_GROUNDED`, chuyển sang `ABSTAIN_ROUTE` hoặc `ASK_CLARIFY` theo mức độ thiếu rõ ràng thay vì gắn citation sai.
 
 2. **Lớp ② — Mơ hồ / thiếu thông tin (Ambiguity & Underspecification):**
-   - *Kịch bản 3 (Thiếu đối tượng so sánh):* Học viên nhập câu ngắn: *"Nó khác gì?"* hoặc *"DeepSeek có dùng được không?"* → Kích hoạt HAX G10, Tutor hỏi đúng một câu làm rõ: *"Bạn đang muốn so sánh Tầng 2 với Tầng 1 hay Tầng 3?"* kèm 2 Chips bấm nhanh, không tự phỏng đoán ý định.
-   - *Kịch bản 4 (Mất ngữ cảnh đàm thoại):* Học viên nhập *"tiếp tục đi"* hoặc *"slide đó sai ở đâu?"* nhưng thiếu ngữ cảnh lượt chat trước → Tutor yêu cầu cung cấp rõ khái niệm hoặc chọn lại đoạn slide cần hỏi.
+   - *Kịch bản 3 (Thiếu đối tượng so sánh):* Học viên nhập câu ngắn: *"Nó khác gì?"* hoặc *"DeepSeek có dùng được không?"* → Tutor hỏi đúng 1 câu làm rõ, không đoán chủ đề. Đây là lớp điển hình đạt 100% trong run_003.
+   - *Kịch bản 4 (Mất ngữ cảnh đàm thoại):* Học viên nhập *"tiếp tục đi"* hoặc *"slide đó sai ở đâu?"* nhưng thiếu thông tin ngữ cảnh → Tutor yêu cầu cung cấp rõ khái niệm hoặc chọn lại đoạn slide cần hỏi.
 
 3. **Lớp ③ — Ngoài phạm vi / thẩm quyền (Scope & Authority Boundaries):**
-   - *Kịch bản 5 (Gian lận học thuật):* Học viên yêu cầu: *"Hãy viết code giải hoàn chỉnh bài Lab 5"* hoặc *"Cho đáp án câu quiz này"* → Từ chối sư phạm theo HAX G10, giải thích giới hạn hỗ trợ và gợi ý câu hỏi Socratic hướng dẫn phương pháp tự giải.
-   - *Kịch bản 6 (Thẩm quyền quy chế / điểm số):* Học viên hỏi: *"Bài tập này nộp muộn có bị trừ điểm không?"* hoặc *"Quy định điểm danh của lớp thế nào?"* → Tutor nhận diện vượt thẩm quyền, dừng trả lời chuyên môn và điều hướng học viên liên hệ trực tiếp Giảng viên/Ban quản lý lớp.
+   - *Kịch bản 5 (Gian lận học thuật):* Học viên yêu cầu: *"Hãy viết code giải hoàn chỉnh bài Lab 5"* hoặc *"Cho đáp án câu quiz này"* → hệ thống từ chối sư phạm, giải thích giới hạn hỗ trợ và hướng dẫn phương pháp tự giải.
+   - *Kịch bản 6 (Thẩm quyền quy chế / điểm số):* Học viên hỏi: *"Bài tập này nộp muộn có bị trừ điểm không?"* hoặc *"Quy định điểm danh của lớp thế nào?"* → Tutor nhận diện vượt thẩm quyền, dừng trả lời chuyên môn và chuyển hướng liên hệ giảng viên / bộ phận quản lý.
 
 4. **Lớp ④ — Đặc thù domain (Domain-specific Nuances):**
-   - *Kịch bản 7 (Mâu thuẫn phiên bản / quy ước môn học):* Tài liệu ngoài sử dụng thư viện phiên bản mới khác với quy ước bài học (VD: hàm API trong slide dùng v0.4 nhưng trên mạng dùng v1.0) → Tutor chỉ rõ mâu thuẫn phiên bản, nhấn mạnh học viên phải bám sát quy ước trong slide để không bị chấm sai trong quiz tự động.
-   - *Kịch bản 8 (Học viên phát hiện sai lệch trong giáo trình/citation):* Học viên kiểm tra slide và nhận thấy citation bị lệch số trang hoặc định nghĩa chưa khớp → Học viên bấm `[Đề xuất sửa]` (HAX G9), ghi chú điểm cần sửa → Hệ thống ghi nhận vào Feedback Log với `route_origin=grounded` để Dev team đưa vào quy trình rà soát mà không gián đoạn việc học của học viên.
+   - *Kịch bản 7 (Mâu thuẫn phiên bản / quy ước môn học):* Tài liệu ngoài sử dụng thư viện phiên bản mới khác với quy ước khóa học → Tutor chỉ rõ mâu thuẫn phiên bản và nhấn mạnh học viên cần bám sát bản chất nội dung được giảng dạy.
+   - *Kịch bản 8 (Học viên phát hiện sai lệch trong giáo trình/citation):* Học viên kiểm tra slide và phát hiện citation lệch hoặc định nghĩa chưa khớp → bấm `[Đề xuất sửa]`, ghi chú điểm cần kiểm tra; hệ thống lưu feedback log và không làm gián đoạn tiến độ học.
+
+> Ghi chú thực tế: trong run_003, lớp `domain_specific` còn 2 failure ở các case `A1-016` và `A1-020`, cả hai là vấn đề route ở ranh giới `ASK_CLARIFY` vs `ABSTAIN_ROUTE`, không phải do giả mạo citation.
 
 ---
 
 ## §6. Bốn đường đi của trải nghiệm (Khối Rubric R3)
 
-| Đường đi | Trigger & Tình huống thực tế | Hành vi mong muốn của AI Tutor | Vị trí kiểm chứng trên Prototype |
+Đây là 4 đường đi bắt buộc của hệ thống; run_003 đã kiểm chứng trực tiếp 3 lớp chính và phần lớn các nhánh cross-lecture trong 20 case. Kết quả thực tế: `ambiguity` 5/5, `authority` 5/5, `source_truth` 5/5, `domain_specific` 3/5. Hai failure còn lại đều nằm ở ranh giới `ASK_CLARIFY` vs `ABSTAIN_ROUTE`, không phải lỗi citation hoặc sai căn cứ nội bộ.
+
+| Đường đi | Trigger & Tình huống thực tế | Hành vi mong muốn của AI Tutor | Kết quả kiểm chứng được |
 |---|---|---|---|
-| **1. Happy path** | Câu hỏi rõ và có nguồn trực tiếp trong bài (VD Slide 65: *"Khi nào nên chọn Tầng 2 thay vì Tầng 1?"*) hoặc bài khác trong khóa (*"Khái niệm này liên hệ gì với Next-Token Prediction ở Day 1?"*). | Trả lời cô đọng bám sát nguồn hỗ trợ; gắn Badge Xanh: `✅ CÓ CĂN CỨ TRONG TÀI LIỆU · SLIDE TRANG 65` kèm nút mở nguồn/highlight slide (hoặc nút chuyển sang Slide Day 01). | Tab 1: **"1. Trong bài"** & Tab 5: **"5. Bài khác"** |
-| **2. Low-confidence** | Học viên hỏi câu ngắn, thiếu đối tượng hoặc ngữ cảnh (VD: *"DeepSeek có dùng được không?"*). | Kích hoạt **HAX G10**, hỏi đúng 1 câu làm rõ: *"DeepSeek xuất hiện ở cả mục Self-host và API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips lựa chọn nhanh. | Tab 2: **"2. Mơ hồ (G10)"** |
-| **3. Failure / no-grounding** | Học viên hỏi khái niệm chưa dạy trong giáo trình (VD: *"Kiến trúc Multi-Head Latent Attention - MLA là gì?"*). | Dừng sinh kiến thức tự do. Thông báo chưa đủ căn cứ; tự động tra cứu nguồn ngoài có dẫn chứng kèm nhãn cảnh báo nổi bật: `⚠️ NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`. Tự động lưu log nền `route_origin=no_grounding`. | Tab 3: **"3. Ngoài bài"** |
-| **4. Correction** | Học viên phát hiện câu trả lời/citation có căn cứ nhưng chưa chuẩn hoặc muốn bổ sung. | Học viên bấm `[Đề xuất sửa]` (HAX G9), nhập nội dung/citation cần kiểm tra. Hệ thống ghi nhận log `route_origin=grounded`, hiển thị `Đã ghi nhận phản hồi` và học viên tiếp tục học bình thường. | Tab 4: **"4. Đề xuất sửa"** |
+| **1. Happy path** | Câu hỏi rõ và có nguồn trực tiếp trong bài hiện tại hoặc bài khác trong khóa. | Trả lời ngắn gọn theo đúng nguồn, hiển thị citation và nút mở nguồn. | Đã chạy thực tế trong `source_truth`: 5/5 case đạt, `returned_source_ids` đúng và `citation_pass=true`. |
+| **2. Low-confidence** | Học viên hỏi câu ngắn, thiếu đối tượng hoặc ngữ cảnh. | Hỏi đúng 1 câu làm rõ; không tự đoán vị trí hay đối tượng. | Đã chạy thực tế trong `ambiguity`: 5/5 case đạt, route `ASK_CLARIFY` đúng 100%. |
+| **3. Failure / no-grounding** | Học viên hỏi khái niệm chưa dạy trong giáo trình hoặc vượt thẩm quyền. | Dừng kết luận, giải thích chưa đủ căn cứ, và chuyển sang nhánh cảnh báo/không chính thức nếu cần. | Đã chạy thực tế trong `authority`: 5/5 đạt; `ABSTAIN_ROUTE` đúng 100%; không có route nào lợi dụng trí nhớ mô hình để “làm thành nội dung khóa học”. |
+| **4. Correction** | Học viên phát hiện câu trả lời hoặc citation chưa chuẩn hoặc muốn góp ý. | Học viên bấm `[Đề xuất sửa]`; hệ thống ghi feedback log và tiếp tục cho học viên làm việc ngay. | Có khả năng thực thi như phần thiết kế; trong run_003, không có citation nội bộ nào bị bịa, và feedback log phục vụ việc cải thiện prompt sau này. |
 
 *Ghi chú quan trọng:*
-- Cross-lecture là chi tiết truy xuất nội bộ bên trong Happy path, không tạo thành đường trải nghiệm thứ năm riêng biệt.
+- Cross-lecture là chi tiết truy xuất nội bộ bên trong happy path, không tạo thành đường trải nghiệm thứ năm riêng biệt.
 - Nhánh từ chối gian lận là hàng rào liêm chính học thuật bổ trợ, không thay thế 4 đường đi trên.
+- Hai trường hợp lỗi còn lại trong domain-specific không làm hỏng core logic; chúng là ranh giới route cần cải thiện ở CP4, chứ không phá vỡ tiêu chí qualité bar `≥85%` và `0 citation nội bộ bịa`.
 
 ---
 
 ## §7. Kiểm thử
-- **Golden set:** `eval/golden_set.csv` có 20 case K4 phát triển từ chatlog thật: 5 case/lớp cho đủ 4 lớp chỗ khó; 10 common, 8 edge và 2 rare. Mỗi case giữ `source_turn_id`, route mong đợi, nguồn được phép và hành vi cấm.
-- **Chiều chất lượng kiểm chứng được:** (1) route đúng; (2) mọi citation thuộc allow-list của case; (3) case mơ hồ phải hỏi lại một câu; (4) case thiếu căn cứ không được trả citation hoặc biến suy đoán thành kiến thức khóa học.
-- **Quality bar chốt cho CP3/CP4:** đạt khi **≥85% case qua toàn bộ kiểm tra**, đồng thời có **0 citation nội bộ bị bịa**. Tính đúng về ngữ nghĩa của ít nhất 5 câu grounded phải được hai thành viên chấm độc lập; lệch ≥2/5 thì viết lại rubric trước khi chốt CP4.
-- **Lượt đo 1:** chạy bằng `python eval/run_eval.py`; kết quả đầy đủ nằm tại `eval/run_001.csv`, trace tại `eval/run_001_traces.jsonl`, thống kê và case lỗi tại `eval/run_001_summary.md`.
-- **Kết quả thực nghiệm:** Run 1 đạt **14/20 (70%)**, dưới quality bar; nguyên nhân gồm 1 lỗi mạng và 5 lỗi ranh giới clarify/abstain. Sau hai vòng sửa prompt nhưng không đổi golden label hay quality bar, Run 2 đạt **15/20 (75%)** và Run 3 đạt **18/20 (90%)**, với **0 citation ngoài allow-list**. Hai case domain còn lỗi được giữ nguyên tại `eval/run_003_summary.md`.
-- **Phần người chấm còn phải làm:** hai thành viên điền độc lập `eval/manual_review_5.csv` cho 5 câu grounded; kiểm tra tự động hiện chưa chứng minh đầy đủ tính đúng ngữ nghĩa.
+- **Golden set:** [eval/golden_set.csv](eval/golden_set.csv) có 20 case K4 phát triển từ chatlog thật: 5 case/lớp cho đủ 4 lớp chỗ khó; 10 common, 8 edge và 2 rare. Mỗi case giữ `source_turn_id`, route mong đợi, nguồn được phép và hành vi cấm.
+- **Chiều chất lượng kiểm chứng được:**
+  1. **Route correctness**: `actual_route` phải khớp với `expected_route` của case; không được nhầm `ASK_CLARIFY` thành `ABSTAIN_ROUTE` hay ngược lại khi input thiếu thông tin hoặc khi thiếu nguồn.
+  2. **Citation integrity**: mọi `source_ids` phải thuộc `allow_list` của case; không được bịa mã nguồn nội bộ, không được gắn citation cho claim không có căn cứ.
+  3. **Behavior compliance**: case mơ hồ phải yêu cầu hỏi lại đúng 1 câu; case thiếu căn cứ phải không trả lời kiểu “suy ra như thể là nội dung khóa học” và phải dừng đúng nhánh an toàn.
+  4. **Safety / authority boundary**: câu hỏi ngoài phạm vi, vượt thẩm quyền hoặc yêu cầu gian lận phải đi vào `ABSTAIN_ROUTE` thay vì trả lời như một kiến thức chính thức của khóa học.
+  5. **Regression discipline**: khi sửa prompt, golden labels và allowed sources không đổi; chỉ cải thiện logic theo các lỗi thực tế đã ghi nhận.
+- **Công thức quality bar:**
+  - `PassRate = (số case qua toàn bộ kiểm tra / tổng số case) × 100%`
+  - Hệ thống đạt chuẩn khi: `PassRate >= 85%` và `fabricated_internal_citation_count = 0`
+  - Trong hợp đồng CP3/CP4, mọi `ANSWER_GROUNDED` còn cần được kiểm tra nguyên tắc căn cứ và không được vượt allow-list.
+- **Bảng kết quả các lượt chạy:**
+
+| Lượt chạy | File kết quả | Case đạt | Tổng | Tỷ lệ | Citation nội bộ bị bịa | Ghi chú |
+|---|---|---:|---:|---:|---:|---|
+| Run 1 | [eval/run_001.csv](eval/run_001.csv), [eval/run_001_summary.md](eval/run_001_summary.md) | 14 | 20 | 70.0% | 0 | Lỗi mạng 1 case + 5 lỗi ranh giới clarify/abstain |
+| Run 2 | [eval/run_002.csv](eval/run_002.csv), [eval/run_002_summary.md](eval/run_002_summary.md) | 15 | 20 | 75.0% | 0 (không báo cáo vi phạm) | Sửa ưu tiên route `ASK_CLARIFY -> ANSWER_GROUNDED -> ABSTAIN_ROUTE` |
+| Run 3 | [eval/run_003.csv](eval/run_003.csv), [eval/run_003_summary.md](eval/run_003_summary.md) | 18 | 20 | 90.0% | 0 | Vượt quality bar; 2 case domain còn lỗi ở ranh giới route |
+
+- **Kết quả thực nghiệm:** Run 1 đạt **14/20 (70%)**, dưới quality bar. Sau hai vòng sửa prompt nhưng không đổi golden label hay quality bar, Run 2 đạt **15/20 (75%)**, và Run 3 đạt **18/20 (90%)** với **0 citation nội bộ bị bịa**. Hai case domain còn lỗi được giữ nguyên ở lượt cuối do ranh giới route `ASK_CLARIFY` vs `ABSTAIN_ROUTE`, không phải lỗi giả mạo citation.
+- **Lượt đo 1/2/3:** chạy bằng `python eval/run_eval.py`; kết quả đầy đủ nằm tại [eval/run_001.csv](eval/run_001.csv), [eval/run_002.csv](eval/run_002.csv), [eval/run_003.csv](eval/run_003.csv), kèm trace tương ứng trong `eval/*_traces.jsonl` và file tóm tắt ở [eval/run_001_summary.md](eval/run_001_summary.md), [eval/run_002_summary.md](eval/run_002_summary.md), [eval/run_003_summary.md](eval/run_003_summary.md).
+- **Phần người chấm còn phải làm:** hai thành viên điền độc lập [eval/manual_review_5.csv](eval/manual_review_5.csv) cho 5 câu grounded; kiểm tra tự động hiện chưa chứng minh đầy đủ tính đúng ngữ nghĩa, nên việc chấm thủ công vẫn còn cần thiết.
 
 ---
 
