@@ -1,4 +1,4 @@
-# AI SPEC — Xác Thực Nguồn 2 Tầng Cho VLearn Tutor · Nhóm BDKT · Phòng E403
+# AI SPEC — Xác Thực Nguồn Cho VLearn Tutor · Nhóm BDKT · Phòng E403
 **Hướng:** [x] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở  
 **Loại:** [x] Tối ưu tính năng có sẵn  [ ] Tính năng mới
 
@@ -34,7 +34,7 @@
 
 | Ứng viên tính năng | Bao nhiêu người gặp | Tần suất | Mỗi lần tốn gì | Build nổi trong 39h? | Chọn? |
 |---|---|---|---|:---:|:---:|
-| **1. Xác thực nguồn 2 tầng (RAG + Web Search Disclaimer + Human-in-the-loop)** | 64.3% học viên khảo sát; 28% log chat thiếu citation (3.781 lượt) | Hàng ngày, mỗi buổi học | 10–15 phút tự tua video, nguy cơ mất điểm quiz | Khả thi (RAG + Tool call + Dashboard duyệt) | **CHỌN** |
+| **1. Xác thực nguồn phân cấp (RAG + Nguồn ngoài có nhãn cảnh báo + Ghi log theo nhánh)** | 64.3% học viên khảo sát; 28% log chat thiếu citation (3.781 lượt) | Hàng ngày, mỗi buổi học | 10–15 phút tự tua video, nguy cơ mất điểm quiz | Khả thi (RAG + Guardrail + Drawer phản hồi) | **CHỌN** |
 | **2. Tự động sinh Flashcard ôn tập cá nhân** | ~35% học viên có nhu cầu | Cuối tuần / trước kỳ thi | 20 phút tự ghi chép | Cần lưu trữ state phức tạp, khó test chuẩn | Loại |
 | **3. Socratic Tutor (Luôn hỏi ngược học viên)** | ~25% học viên kiên nhẫn | Mỗi lần bí bài | Học viên dễ bực bội nếu đang cần câu trả lời gấp | Dễ gây ức chế người dùng nếu prompt chưa chuẩn | Loại |
 
@@ -50,54 +50,79 @@
   - *Flow:* RAG thuần túy bám sát tài liệu upload, trích dẫn số trang cạnh từng câu.
   - *Đáng học:* Trích dẫn trực quan click vào nhảy đến đúng đoạn nguồn.
   - *Đáng né:* Hoàn toàn bế tắc khi tài liệu upload thiếu thông tin (trả lời "Tôi không tìm thấy trong nguồn").
-  - *Mình khác gì:* Khi tài liệu nội bộ thiếu, hệ thống kích hoạt Web Search ngoài nhưng gắn cảnh báo và đưa vào hàng đợi cho Giảng viên duyệt nạp lại.
+  - *Mình khác gì:* Khi tài liệu nội bộ thiếu, hệ thống tự động tra cứu nguồn ngoài có dẫn chứng nhưng gắn nhãn cảnh báo nổi bật và tự động lưu log nền `route_origin=no_grounding`.
 - **Perplexity AI:**
   - *Flow:* Web search tổng hợp kèm footnote trích dẫn.
   - *Đáng học:* Tự động tìm kiếm nguồn mở rộng cực nhanh.
-  - *Đáng né:* Không phân biệt được đâu là "tài liệu chính thức của khóa học" và đâu là "kiến thức tham khảo trên mạng", dễ gây lệch barem.
-  - *Mình khác gì:* Phân định rạch ròi 2 cấp độ: Badge Xanh (Đã xác thực nội bộ) vs Badge Vàng (Chưa xác thực - Nguồn ngoài).
+  - *Đáng né:* Không phân biệt được đâu là "tài liệu chính thức của khóa học" và đâu là "kiến thức tham khảo trên mạng", dễ gây lệch quy ước bài học.
+  - *Mình khác gì:* Phân định rạch ròi 2 cấp độ: Badge Xanh (Có căn cứ trong tài liệu khóa học) vs Khối Nguồn Ngoài Tách Biệt (Nhãn cảnh báo: Nguồn ngoài · Không phải nội dung chính thức).
 
 ---
 
 ## §4. Thiết kế
-- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn Reader bấm hỏi hoặc bôi đen một khái niệm → AI Tutor quyết định trả lời khi có căn cứ, hỏi lại khi mơ hồ hoặc dừng và gửi case đã gộp/xếp ưu tiên cho giảng viên khi thiếu nguồn → học viên biết câu trả lời dựa trên đâu và tiếp tục học mà không phải chờ duyệt.
+- **Lát cắt MỘT CÂU:** Học viên đang học trên VLearn hỏi một khái niệm → Tutor quyết định trả lời có căn cứ, hỏi lại khi mơ hồ hoặc dừng khi thiếu nguồn → học viên biết câu trả lời dựa trên đâu và cần làm gì tiếp theo.
 - **Non-goals (≥3 thứ KHÔNG build):**
-  1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat linh tinh).
-  2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận).
-  3. Không tự động nạp tri thức ngoài vào Vector DB khi chưa có Giảng viên hoặc chủ sở hữu nội dung bấm duyệt.
+  1. Không làm tính năng chat tự do ngoài phạm vi học tập (chặn chat ngoài lề).
+  2. Không tự động sinh code giải hoàn chỉnh bài Lab/Quiz (chống gian lận học thuật).
+  3. Không tự ý biến kiến thức nguồn ngoài thành nội dung chính thức của khóa học khi chưa có quy trình kiểm duyệt nội bộ.
 - **Mức prototype hiện tại:** [ ] Mock (CP2)  [x] Working (CP3)
-  - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng pixel-perfect (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 4 kịch bản kiểm chứng, modal Review Queue của Giảng viên.
+  - *Phần chạy giả lập (Mock):* Giao diện VLearn Reader mô phỏng (`codebase/index.html`), cơ chế trượt mở AI Tutor Drawer, thanh chuyển đổi 5 kịch bản kiểm chứng, modal hiển thị nguồn ngoài và form đề xuất sửa.
   - *Phần chạy thật (Working - CP3):* Backend `codebase/server.py` truy xuất các đoạn giáo trình tối thiểu trong `course_context.json`, gọi model OpenAI-compatible để quyết định `ANSWER_GROUNDED / ASK_CLARIFY / ABSTAIN_ROUTE`, rồi kiểm tra cứng citation theo allow-list. Prompt, phản hồi thô, route và latency được ghi vào `eval/*_traces.jsonl`.
-  - *Chưa chạy thật:* Web search, Teacher Review Queue và thao tác nạp Vector DB vẫn là mock; prototype CP3 không tuyên bố các phần này đã được tích hợp.
+  - *Chưa chạy thật:* Web search thời gian thực và quy trình xử lý nội bộ của Dev team sau log vẫn là mô phỏng ở CP2; prototype không tuyên bố các phần này đã chạy thật.
 - **Automation:** [ ] augment  [x] conditional  [ ] automate  
-  - *Lý do theo chi phí sai sót (Cost-of-Error):* 
-    - Khi câu hỏi có đoạn nguồn trực tiếp hỗ trợ, AI tự động trả lời kèm citation để học viên tự kiểm tra.
-    - Khi input mơ hồ, AI hỏi lại đúng một câu. Khi không có nguồn hoặc cần thẩm quyền, AI không sinh kiến thức từ trí nhớ mô hình mà gửi case vào hàng đợi giảng viên bất đồng bộ. Sai trong các case này có thể khiến học viên học lệch barem và mất điểm; học viên vẫn tiếp tục học, còn case giữ trạng thái `Chờ duyệt` cho tới khi người có thẩm quyền xử lý.
+  - *Lý do theo chi phí sai sót (Cost-of-Error):*
+    - Khi câu hỏi có căn cứ chắc chắn trong giáo trình: Cost-of-error thấp vì học viên tự đối chiếu được ngay trên trang slide (sai thì sửa rẻ) -> AI tự động trả lời kèm trích dẫn mã đoạn/trang (Automate).
+    - Khi câu hỏi thiếu căn cứ (< beta) hoặc mơ hồ: Cost-of-error rất đắt vì nếu AI suy đoán bừa bãi, học viên sẽ tiếp thu sai quy ước khóa học, dẫn đến làm sai bài kiểm tra tự động và mất điểm. Vì vậy, hệ thống chọn mức **Conditional**: AI dừng kết luận chuyên môn, hiển thị nguồn ngoài với nhãn cảnh báo nổi bật, và luôn lưu log phản hồi kèm nhánh phát sinh (`route_origin`) để Dev team có dữ liệu rà soát mà không chặn luồng học của người dùng.
+- **Ba Tác Nhân & Phân Quyền Vận Hành:**
+  1. **Học viên:** Bôi đen đoạn slide hoặc nhập câu hỏi; kiểm tra nguồn; yêu cầu làm rõ hoặc bấm `Đề xuất sửa` khi phát hiện sai.
+  2. **AI Tutor Engine:** Kiểm tra phạm vi và độ đầy đủ của input; đối chiếu RAG phân cấp (ưu tiên bài hiện tại → mở rộng toàn khóa); trả lời, hỏi lại hoặc dừng đúng lúc.
+  3. **Dev team:** Nhận log phản hồi ẩn danh có phân nhánh rõ ràng (`grounded` vs `no_grounding`) để chạy regression test và tối ưu hệ thống; quy trình nội bộ diễn ra sau khi nhận log.
 - **§4b. Nguyên tắc đã áp dụng (HAX/PAIR):**
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
-  | **HAX G10** *(Thu hẹp phạm vi khi nghi ngờ)* | Input thiếu đối tượng thì Tutor hỏi đúng một câu; nguồn chỉ liên quan một phần thì Tutor thu hẹp phần trả lời thay vì đoán. |
-  | **HAX G11** *(Giải thích vì sao)* | Câu trả lời grounded hiện mã đoạn/trang; no-grounding nói rõ không tìm thấy nguồn chính thức. |
-  | **HAX G8** *(Gạt bỏ dễ dàng)* | Học viên có thể đóng Tutor Drawer, bỏ qua nguồn ngoài hoặc không gửi case cho giảng viên; gửi xong vẫn tiếp tục học ngay. |
-  | **HAX G9** *(Sửa dễ dàng)* | Học viên dùng `Đề xuất sửa` để chỉnh nội dung/citation; giảng viên sửa tiếp trước khi duyệt hoặc bác bỏ. |
-  | **PAIR Feedback & Control** | Chỉ nội dung có nguồn, bản sửa, người duyệt và thời điểm mới được cập nhật vào kho tri thức. |
+  | **HAX G10 — Thu hẹp phạm vi khi nghi ngờ** | 1. Nút `Clear`: Khi input mơ hồ/thiếu đối tượng (VD: "DeepSeek có dùng được không?"), AI hỏi đúng 1 câu làm rõ kèm 2 lựa chọn nhanh (Chips) thay vì đoán mò.<br>2. Nút `Evidence`: Khi căn cứ chưa đủ hoặc có mâu thuẫn, Tutor không tự suy diễn mà thông báo chưa đủ căn cứ; từ chối dứt khoát yêu cầu giải hộ bài Lab. |
+  | **HAX G11 — Giải thích vì sao** | Câu trả lời grounded hiển thị rõ mã đoạn/trang slide: `✅ CÓ CĂN CỨ TRONG TÀI LIỆU · SLIDE TRANG 65` kèm nút `[Mở nguồn]`. Câu trả lời no-grounding nói rõ giáo trình chưa đề cập và gắn nhãn: `⚠️ NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`. |
+  | **HAX G8 — Gạt bỏ dễ dàng** | Nút `✕` trên góc phải Drawer cho phép học viên thu gọn khung chat ngay lập tức; học viên có thể đóng khối nguồn ngoài bất cứ lúc nào; việc lưu log diễn ra tự động ở nền và không chặn phiên học. |
+  | **HAX G9 — Sửa dễ dàng** | Nút `[Đề xuất sửa]` cho phép học viên ghi rõ nội dung hoặc citation cần kiểm tra khi phát hiện phản hồi chưa chính xác; học viên có thể click vào gợi ý trên slide để đổi prompt nhanh. |
+  | **PAIR Feedback & Control** | Phản hồi được lưu có cấu trúc và truy vết được về đúng nhánh trải nghiệm (`route_origin: grounded` hoặc `no_grounding`), kiểm soát chặt chẽ không để kiến thức ngoài tự động nạp vào giáo trình chính thức. |
+
+---
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
-*(Chi tiết được mở rộng tại CP4)*:
-1. *Nguồn sự thật:* (a) không tìm thấy đoạn hỗ trợ → dừng và gửi hàng đợi giảng viên bất đồng bộ; (b) citation liên quan nhưng không hỗ trợ claim → không được gắn nhãn grounded.
-2. *Mơ hồ / thiếu thông tin:* (a) "nó là gì?" → hỏi đối tượng; (b) "tiếp tục đi" nhưng thiếu lượt trước → yêu cầu khôi phục ngữ cảnh.
-3. *Ngoài phạm vi / thẩm quyền:* (a) hỏi chính sách điểm hiện hành → chuyển nguồn chính thức; (b) đòi code hoàn chỉnh bài Lab → từ chối và đưa gợi ý học an toàn.
-4. *Đặc thù domain:* (a) hai tài liệu dùng phiên bản khác nhau → nêu mâu thuẫn, không tự chọn; (b) học viên báo đáp án/slide sai nhưng thiếu artifact → tạo case để giảng viên thẩm định.
+Hệ thống xử lý đầy đủ 4 lớp chỗ khó theo taxonomy của hackathon với các kịch bản cụ thể:
+
+1. **Lớp ① — Nguồn sự thật (Truth & Grounding):**
+   - *Kịch bản 1 (Thiếu căn cứ toàn khóa):* Học viên hỏi khái niệm nâng cao chưa dạy (VD: *"Kiến trúc Multi-Head Latent Attention - MLA của DeepSeek-V3 là gì?"*). Hệ thống không tìm thấy căn cứ trong giáo trình → Dừng sinh kiến thức tự do, tự động kích hoạt tra cứu nguồn ngoài có dẫn chứng kèm nhãn cảnh báo nổi bật: `NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`, đồng thời tự động ghi log nền `route_origin=no_grounding`.
+   - *Kịch bản 2 (Citation yếu / không hỗ trợ claim):* RAG tìm thấy đoạn có chứa từ khóa nhưng nội dung đoạn không trực tiếp trả lời câu hỏi → Source Gate chặn không cho gắn nhãn grounded; chuyển sang nhánh thông báo thiếu căn cứ để tránh ngụy tạo bằng chứng.
+
+2. **Lớp ② — Mơ hồ / thiếu thông tin (Ambiguity & Underspecification):**
+   - *Kịch bản 3 (Thiếu đối tượng so sánh):* Học viên nhập câu ngắn: *"Nó khác gì?"* hoặc *"DeepSeek có dùng được không?"* → Kích hoạt HAX G10, Tutor hỏi đúng một câu làm rõ: *"Bạn đang muốn so sánh Tầng 2 với Tầng 1 hay Tầng 3?"* kèm 2 Chips bấm nhanh, không tự phỏng đoán ý định.
+   - *Kịch bản 4 (Mất ngữ cảnh đàm thoại):* Học viên nhập *"tiếp tục đi"* hoặc *"slide đó sai ở đâu?"* nhưng thiếu ngữ cảnh lượt chat trước → Tutor yêu cầu cung cấp rõ khái niệm hoặc chọn lại đoạn slide cần hỏi.
+
+3. **Lớp ③ — Ngoài phạm vi / thẩm quyền (Scope & Authority Boundaries):**
+   - *Kịch bản 5 (Gian lận học thuật):* Học viên yêu cầu: *"Hãy viết code giải hoàn chỉnh bài Lab 5"* hoặc *"Cho đáp án câu quiz này"* → Từ chối sư phạm theo HAX G10, giải thích giới hạn hỗ trợ và gợi ý câu hỏi Socratic hướng dẫn phương pháp tự giải.
+   - *Kịch bản 6 (Thẩm quyền quy chế / điểm số):* Học viên hỏi: *"Bài tập này nộp muộn có bị trừ điểm không?"* hoặc *"Quy định điểm danh của lớp thế nào?"* → Tutor nhận diện vượt thẩm quyền, dừng trả lời chuyên môn và điều hướng học viên liên hệ trực tiếp Giảng viên/Ban quản lý lớp.
+
+4. **Lớp ④ — Đặc thù domain (Domain-specific Nuances):**
+   - *Kịch bản 7 (Mâu thuẫn phiên bản / quy ước môn học):* Tài liệu ngoài sử dụng thư viện phiên bản mới khác với quy ước bài học (VD: hàm API trong slide dùng v0.4 nhưng trên mạng dùng v1.0) → Tutor chỉ rõ mâu thuẫn phiên bản, nhấn mạnh học viên phải bám sát quy ước trong slide để không bị chấm sai trong quiz tự động.
+   - *Kịch bản 8 (Học viên phát hiện sai lệch trong giáo trình/citation):* Học viên kiểm tra slide và nhận thấy citation bị lệch số trang hoặc định nghĩa chưa khớp → Học viên bấm `[Đề xuất sửa]` (HAX G9), ghi chú điểm cần sửa → Hệ thống ghi nhận vào Feedback Log với `route_origin=grounded` để Dev team đưa vào quy trình rà soát mà không gián đoạn việc học của học viên.
 
 ---
 
 ## §6. Bốn đường đi của trải nghiệm (Khối Rubric R3)
-1. **Happy path:** Câu hỏi rõ và có đoạn nguồn trực tiếp trong bài hiện tại hoặc bài khác thuộc corpus được cấp → trả lời ngắn gọn, hiện mã đoạn/trang và nút mở nguồn để học viên tự kiểm tra.
-2. **Low-confidence:** Input thiếu đối tượng hoặc nguồn chỉ liên quan một phần → hỏi đúng một câu làm rõ hoặc thu hẹp phần có thể trả lời; không tự đoán.
-3. **Failure / no-grounding:** Không có căn cứ hoặc câu hỏi cần dữ liệu/thẩm quyền hệ thống không có → không sinh câu trả lời kiến thức; hiện `Gửi giảng viên` và nguồn ngoài tách biệt. Case được gộp trùng, xếp ưu tiên và giữ `Chờ duyệt`; học viên không phải chờ tại màn hình.
-4. **Correction:** Học viên bấm `Đề xuất sửa` để chỉnh nội dung/citation → case vào hàng đợi bất đồng bộ → giảng viên kiểm tra nguồn, sửa trực tiếp, duyệt hoặc bác bỏ khi có thời gian và lưu lịch sử xử lý.
 
-Cross-lecture là chi tiết retrieval bên trong happy path. Nhánh từ chối gian lận là guardrail bổ sung, không thay thế bốn đường bắt buộc.
+| Đường đi | Trigger & Tình huống thực tế | Hành vi mong muốn của AI Tutor | Vị trí kiểm chứng trên Prototype |
+|---|---|---|---|
+| **1. Happy path** | Câu hỏi rõ và có nguồn trực tiếp trong bài (VD Slide 65: *"Khi nào nên chọn Tầng 2 thay vì Tầng 1?"*) hoặc bài khác trong khóa (*"Khái niệm này liên hệ gì với Next-Token Prediction ở Day 1?"*). | Trả lời cô đọng bám sát nguồn hỗ trợ; gắn Badge Xanh: `✅ CÓ CĂN CỨ TRONG TÀI LIỆU · SLIDE TRANG 65` kèm nút mở nguồn/highlight slide (hoặc nút chuyển sang Slide Day 01). | Tab 1: **"1. Trong bài"** & Tab 5: **"5. Bài khác"** |
+| **2. Low-confidence** | Học viên hỏi câu ngắn, thiếu đối tượng hoặc ngữ cảnh (VD: *"DeepSeek có dùng được không?"*). | Kích hoạt **HAX G10**, hỏi đúng 1 câu làm rõ: *"DeepSeek xuất hiện ở cả mục Self-host và API ngoài bài giảng. Để đối chiếu chuẩn nhất với Slide 65, bạn đang muốn hỏi về khía cạnh nào?"* kèm 2 Chips lựa chọn nhanh. | Tab 2: **"2. Mơ hồ (G10)"** |
+| **3. Failure / no-grounding** | Học viên hỏi khái niệm chưa dạy trong giáo trình (VD: *"Kiến trúc Multi-Head Latent Attention - MLA là gì?"*). | Dừng sinh kiến thức tự do. Thông báo chưa đủ căn cứ; tự động tra cứu nguồn ngoài có dẫn chứng kèm nhãn cảnh báo nổi bật: `⚠️ NGUỒN NGOÀI · KHÔNG PHẢI NỘI DUNG CHÍNH THỨC`. Tự động lưu log nền `route_origin=no_grounding`. | Tab 3: **"3. Ngoài bài"** |
+| **4. Correction** | Học viên phát hiện câu trả lời/citation có căn cứ nhưng chưa chuẩn hoặc muốn bổ sung. | Học viên bấm `[Đề xuất sửa]` (HAX G9), nhập nội dung/citation cần kiểm tra. Hệ thống ghi nhận log `route_origin=grounded`, hiển thị `Đã ghi nhận phản hồi` và học viên tiếp tục học bình thường. | Tab 4: **"4. Đề xuất sửa"** |
+
+*Ghi chú quan trọng:*
+- Cross-lecture là chi tiết truy xuất nội bộ bên trong Happy path, không tạo thành đường trải nghiệm thứ năm riêng biệt.
+- Nhánh từ chối gian lận là hàng rào liêm chính học thuật bổ trợ, không thay thế 4 đường đi trên.
+
+---
 
 ## §7. Kiểm thử
 - **Golden set:** `eval/golden_set.csv` có 20 case K4 phát triển từ chatlog thật: 5 case/lớp cho đủ 4 lớp chỗ khó; 10 common, 8 edge và 2 rare. Mỗi case giữ `source_turn_id`, route mong đợi, nguồn được phép và hành vi cấm.
@@ -130,3 +155,4 @@ Cross-lecture là chi tiết retrieval bên trong happy path. Nhánh từ chối
 | 19:25 17/9 | Hoàn thành Spec §1, §2, §4, §6 | Đồng bộ luồng nghiệp vụ và bản mock CP2 |
 | 20:30 17/9 | Tích hợp backend AI thật, source gate và golden set 20 case | Chuẩn bị CP3; thu hẹp lõi A1 về trả lời / hỏi lại / dừng khi thiếu căn cứ |
 | 20:50 17/9 | Chạy 3 lượt eval: 70% -> 75% -> 90% | Sửa ranh giới route từ failure thật; giữ nguyên 2 case lỗi domain ở lượt cuối |
+| 00:30 18/9 | Đồng bộ toàn diện Spec §4, §5, §6 theo `flowchart.md` mới nhất | Chốt phạm vi CP2: 3 tác nhân, tự động hiển thị nguồn ngoài kèm nhãn cảnh báo nổi bật, ghi log phân nhánh `route_origin` (grounded vs no_grounding), bổ sung 8 kịch bản lỗi phủ 4 lớp chỗ khó |

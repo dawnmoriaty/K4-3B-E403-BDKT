@@ -5067,7 +5067,7 @@
         <!-- Edge paths -->
         <path data-edge-from="student_ask" data-edge-to="rag_guard" data-edge-label="gửi câu hỏi" data-edge-key="0" data-edge-id="e_ask_rag" data-composition-points="118,146;118,168;324,168;324,253;308,253" d="M 118 146 L 118 168 L 324 168 L 324 253 L 308 253" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="triband_eval" data-edge-to="clarify_g10" data-edge-label="mơ hồ [β, α)" data-edge-key="1" data-edge-id="e_eval_clarify" data-composition-points="468,287;468,303;683.6,303;683.6,287" d="M 468 287 L 468 303 L 683.6 303 L 683.6 287" class="a-dashed" data-animate="edge" style="--step:5" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label="≥ α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal" data-composition-points="468,219;468,203;851.6,203;851.6,219" d="M 468 219 L 468 203 L 851.6 203 L 851.6 219" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label=">= α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal" data-composition-points="468,219;468,203;851.6,203;851.6,219" d="M 468 219 L 468 203 L 851.6 203 L 851.6 219" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="triband_eval" data-edge-to="tool_search" data-edge-label="&lt; β (Ngoài bài)" data-edge-key="3" data-edge-id="e_eval_search" data-composition-points="468,287;468,387;613.6,387" d="M 468 287 L 468 387 L 613.6 387" class="a-dashed" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
         <path data-edge-from="external_ans" data-edge-to="review_queue" data-edge-label="tự động chuyển" data-edge-key="4" data-edge-id="e_external_queue" data-composition-points="921.6,387;937.6,387;937.6,574;851.6,574;851.6,545" d="M 921.6 387 L 937.6 387 L 937.6 574 L 851.6 574 L 851.6 545" class="a-security" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
         <path data-edge-from="clarify_g10" data-edge-to="student_clarify" data-edge-label="hỏi làm rõ" data-edge-key="5" data-edge-id="e_g10_student" data-composition-points="683.6,287;683.6,303;1213.601,303;1213.601,78;683.6,78;683.6,94" d="M 683.6 287 L 683.6 303 L 1213.601 303 L 1213.601 78 L 683.6 78 L 683.6 94" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
@@ -5228,9 +5228,9 @@
           <rect x="542" y="283" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="575.8" y="293" class="t-database" font-size="8" text-anchor="middle">mơ hồ [β, α)</text>
         </g>
-        <g data-detail="context" data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label="≥ α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal">
+        <g data-detail="context" data-edge-from="triband_eval" data-edge-to="internal_ans" data-edge-label=">= α (Trong bài)" data-edge-key="2" data-edge-id="e_eval_internal">
           <rect x="618.8" y="183" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="659.8" y="193" class="t-backend" font-size="8" text-anchor="middle">≥ α (Trong bài)</text>
+          <text x="659.8" y="193" class="t-backend" font-size="8" text-anchor="middle">>= α (Trong bài)</text>
         </g>
         <g data-detail="context" data-edge-from="triband_eval" data-edge-to="tool_search" data-edge-label="&lt; β (Ngoài bài)" data-edge-key="3" data-edge-id="e_eval_search">
           <rect x="499.79999999999995" y="367" width="82" height="14" rx="3" class="c-mask"/>
@@ -5483,8 +5483,8 @@
           <h3>Định tuyến 3 dải tự tin (CRAG)</h3>
         </div>
         <ul>
-          <li>&bull; ≥ α (Cục bộ): Trích xuất trực tiếp Slide hiện tại</li>
-          <li>&bull; ≥ α (Toàn khóa): RAG mở rộng 15 buổi học, điều hướng sang bài tương ứng</li>
+          <li>&bull; >= α (Cục bộ): Trích xuất trực tiếp Slide hiện tại</li>
+          <li>&bull; >= α (Toàn khóa): RAG mở rộng 15 buổi học, điều hướng sang bài tương ứng</li>
           <li>&bull; [β, α): Kích hoạt HAX G10 hỏi lại 1 câu làm rõ ý định</li>
           <li>&bull; &lt; β: Tra cứu ngoài có kiểm soát khi cả 15 buổi đều chưa dạy</li>
         </ul>
