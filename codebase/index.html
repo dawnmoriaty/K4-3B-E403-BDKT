@@ -126,7 +126,7 @@
 
       <footer class="reader-toolbar">
         <div></div>
-        <div class="page-nav"><button><i class="fa-solid fa-chevron-left"></i></button><b>65 / 83</b><button><i class="fa-solid fa-chevron-right"></i></button></div>
+        <div class="page-nav"><button><i class="fa-solid fa-chevron-left"></i></button><b>26 / 29</b><button><i class="fa-solid fa-chevron-right"></i></button></div>
         <div></div>
       </footer>
     </main>
@@ -138,11 +138,21 @@
           <div class="tutor-title"><strong>VLearn AI Tutor</strong><span>KIỂM CHỨNG NGUỒN</span></div>
           <small>Hỗ trợ học tập theo chuẩn bài giảng</small>
         </div>
-        <button class="icon-button tutor-close" id="close-tutor" aria-label="Đóng AI Tutor"><i class="fa-solid fa-xmark"></i></button>
+        <div class="tutor-header__actions">
+          <button class="icon-button" id="chat-history" aria-label="Lịch sử trò chuyện" title="Lịch sử"><i class="fa-solid fa-clock-rotate-left"></i></button>
+          <button class="icon-button" id="new-chat" aria-label="Tạo phiên chat mới" title="Phiên mới"><i class="fa-regular fa-square-plus"></i></button>
+          <button class="icon-button" id="end-chat" aria-label="Kết thúc phiên chat" title="Kết thúc phiên"><i class="fa-solid fa-stop"></i></button>
+          <button class="icon-button tutor-close" id="close-tutor" aria-label="Đóng AI Tutor"><i class="fa-solid fa-xmark"></i></button>
+        </div>
       </header>
 
+      <div class="session-bar">
+        <span class="session-state" id="session-state"><i class="fa-solid fa-circle"></i> Đang hoạt động</span>
+        <strong id="session-title">Phiên trò chuyện mới</strong>
+      </div>
+
       <div class="context-bar">
-        <span><i class="fa-solid fa-location-dot"></i> <b>Ngữ cảnh neo:</b> Day 1 · Slide trang 65 / 83</span>
+        <span><i class="fa-solid fa-location-dot"></i> <b>Ngữ cảnh neo:</b> Day 1 · trang PDF 26 / 29</span>
         <em>NGUỒN KHÓA HỌC</em>
       </div>
 
@@ -151,7 +161,7 @@
       <footer class="composer">
         <form id="chat-form">
           <label class="sr-only" for="chat-input">Câu hỏi cho AI Tutor</label>
-          <input id="chat-input" autocomplete="off" placeholder="Hỏi về Slide 65 hoặc chọn một nội dung trên slide...">
+          <input id="chat-input" autocomplete="off" placeholder="Hỏi về trang đang đọc hoặc chọn một nội dung trên slide...">
           <button type="submit" aria-label="Gửi câu hỏi"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
         <div class="composer__meta"><span>Câu trả lời chỉ được xác nhận khi có căn cứ trực tiếp.</span></div>
@@ -195,6 +205,17 @@
         <code id="source-id"></code>
         <p id="source-text"></p>
       </div>
+    </article>
+  </div>
+
+  <div class="modal" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-title" hidden>
+    <article class="history-card">
+      <header>
+        <div><span>LỊCH SỬ TUTOR</span><h2 id="history-title">Các phiên trò chuyện</h2></div>
+        <button type="button" class="icon-button" id="history-close" aria-label="Đóng lịch sử"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+      <div class="history-list" id="history-list"></div>
+      <footer><button type="button" id="history-new"><i class="fa-regular fa-square-plus"></i> Tạo phiên mới</button></footer>
     </article>
   </div>
 
